@@ -1,0 +1,72 @@
+<html>
+
+<head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w="
+    crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css"
+    integrity="sha256-/us3egi2cVp0mEkVR8cnqLsuDY6BmrDuvTPUuEr1HJQ=" crossorigin="anonymous" />
+</head>
+
+<body>
+  <div id="app" style="margin-left: 20%; margin-top:2%; margin-right: 20%;">
+
+    <div class="form-group">
+      <label for="url">Url:</label>
+      <input type="input" class="form-control" v-model="url" id="url">
+    </div>
+    <div class="form-group">
+      <label for="endpoint">Endpoint:</label>
+      <input type="input" class="form-control" v-model="endpoint" id="endpoint">
+    </div>
+    <div class="form-group">
+      <label for="method">Method:</label>
+      <div>
+        <select v-model="method" id="method" class="selectpicker">
+          <option>GET</option>
+          <option>POST</option>
+        </select>
+      </div>
+    </div>
+    <div v-if="method =='POST'" class="form-group">
+      <label for="body">Body:</label>
+      <textarea class="form-control" v-model="body" id="body">
+      </textarea>
+    </div>
+    <div class="form-group">
+      <label for="apikey">Apikey:</label>
+      <input type="input" class="form-control" v-model="apikey" id="apikey">
+    </div>
+    <div class="form-group">
+      <label for="secret">Secret:</label>
+      <input type="password" class="form-control" v-model="secret" id="secret">
+    </div>
+    <div class="form-group">
+      <button class="btn btn-warning" v-on:click="sendRequest" v-if="sign != ''">Submit</button>
+      <button class="btn btn-success" v-on:click="updateRequest">Sign</button>
+    </div>
+    <div class="form-group">
+      <label for="request">Request:</label>
+      <pre id="request">{{request}}</pre>
+    </div>
+    <div class="form-group">
+      <label for="response">Response:</label>
+      <pre id="response">{{response}}</pre>
+    </div>
+
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8="
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js" integrity="sha256-19J3rT3tQdidgtqqdQ3xNu++Gd7EoP/ag/0x1lHi0xY="
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.13/vue.min.js" integrity="sha256-1Q2q5hg2YXp9fYlM++sIEXOcUb8BRSDUsQ1zXvLBqmA="
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jsSHA/2.3.1/sha256.js" integrity="sha256-NyuvLfsvfCfE+ceV6/W19H+qVp3M8c9FzAgj72CW39w="
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js" integrity="sha256-mpnrJ5DpEZZkwkE1ZgkEQQJW/46CSEh/STrZKOB/qoM="
+    crossorigin="anonymous"></script>
+  <script type="text/javascript" src="main.js"></script>
+</body>
+
+</html>
