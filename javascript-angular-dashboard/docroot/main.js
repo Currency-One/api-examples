@@ -157,5 +157,71 @@ proDashboard.controller('proDashboardController', function($scope) {
       }
     };
 
+    /*----------  Navigation among currency pairs  ----------*/
+    $scope.navigation__selectedPair = 'EUR_PLN';
+
+    /*----------  Orderbook  ----------*/
+    $scope.orderbook__allPairs = {};
+
+    $scope.orderbook__getPair = function(pair) {
+      sendRequest({
+        endpoint: '/api/v1/public/market/orderbook/'+pair,
+        method: 'get',
+        body: '',
+        apikey: $scope.apiKey,
+        secret: $scope.secret,
+        onSuccess: function(response) {
+          $scope.orderbook__response = response.data;
+          $scope.orderbook__allPairs[pair] = response.data;
+          $scope.$applyAsync();
+          return response.data;
+        },
+        onError: function(error) {
+          console.log(error);
+        }
+      });
+    };
+
+    $scope.orderbook__getAllPairs = function() {
+      var supportedCurrencyPairs = [
+        'EUR_GBP',
+        'EUR_USD',
+        'EUR_CHF',
+        'EUR_PLN',
+        'GBP_USD',
+        'GBP_CHF',
+        'GBP_PLN',
+        'USD_CHF',
+        'USD_PLN',
+        'CHF_PLN',
+      ];
+
+      $.each(supportedCurrencyPairs, function(index, value) {
+        $scope.orderbook__getPair(value);
+      });
+    };
+
+    /*----------  My orders  ----------*/
+    $scope.myOrders__get = function() {
+      sendRequest({
+        endpoint: '/api/v1/market/orders',
+        method: 'get',
+        body: '',
+        apikey: $scope.apiKey,
+        secret: $scope.secret,
+        onSuccess: function(response) {
+          $scope.myOrders__response = response.data;
+          $scope.$applyAsync();
+          return response.data;
+        },
+        onError: function(error) {
+          console.log(error);
+        }
+      });
+    };
+
+    $scope.myOrders__response = {};
+
+    $scope.myOrders = [];
 
 });

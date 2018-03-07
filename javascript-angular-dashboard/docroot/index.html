@@ -1039,6 +1039,14 @@
         <button class="bem-button" ng-click="exchangeRates__get()">Get exchange rates</button>
         <pre ng-bind="exchangeRates__response|json"></pre>
       </div>
+      <div>
+        <button class="bem-button" ng-click="orderbook__getAllPairs()">Get orderbook</button>
+        <pre ng-bind="orderbook__allPairs|json"></pre>
+      </div>
+      <div>
+        <button class="bem-button" ng-click="myOrders__get()">Get my orders</button>
+        <pre ng-bind="myOrders__response|json"></pre>
+      </div>
     </div>
   </div>
 
