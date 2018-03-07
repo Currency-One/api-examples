@@ -1020,47 +1020,24 @@
         </div>
       </div>
     </div>
-    <!--authorization app -->
+
+    <!--authorization config -->
     <div class="authorize-form" style="margin-left: 20%; margin-top:2%; margin-right: 20%;">
       <div class="form-group">
-        <label for="url">Url:</label>
-        <input type="input" class="form-control" v-model="url" id="url">
-      </div>
-      <div class="form-group">
-        <label for="endpoint">Endpoint:</label>
-        <input type="input" class="form-control" v-model="endpoint" id="endpoint">
-      </div>
-      <div class="form-group">
-        <label for="method">Method:</label>
-        <select v-model="method" id="method">
-          <option>GET</option>
-          <option>POST</option>
-        </select>
-      </div>
-      <div v-if="method =='POST'" class="form-group">
-        <label for="body">Body:</label>
-        <textarea class="form-control" v-model="body" id="body">
-        </textarea>
-      </div>
-      <div class="form-group">
         <label for="apikey">Apikey:</label>
-        <input type="input" class="form-control" v-model="apikey" id="apikey">
+        <input type="input" class="form-control" ng-model="apiKey">
       </div>
       <div class="form-group">
         <label for="secret">Secret:</label>
-        <input type="password" class="form-control" v-model="secret" id="secret">
+        <input type="password" class="form-control" ng-model="secret">
       </div>
-      <div class="form-group">
-        <button class="btn btn-warning" v-on:click="sendRequest" v-if="sign != ''">Submit</button>
-        <button class="btn btn-success" v-on:click="updateRequest">Sign</button>
+      <div>
+        <button class="bem-button" ng-click="walletState__get()">Get wallet state</button>
+        <pre ng-bind="walletState__response|json"></pre>
       </div>
-      <div class="form-group">
-        <label for="request">Request:</label>
-        <pre id="request">{{request}}</pre>
-      </div>
-      <div class="form-group">
-        <label for="response">Response:</label>
-        <pre id="response">{{response}}</pre>
+      <div>
+        <button class="bem-button" ng-click="exchangeRates__get()">Get exchange rates</button>
+        <pre ng-bind="exchangeRates__response|json"></pre>
       </div>
     </div>
   </div>

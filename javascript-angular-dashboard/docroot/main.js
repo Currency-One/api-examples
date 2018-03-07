@@ -1,128 +1,161 @@
-new Vue({
-  el: '#app',
-  data: {
-    url: localStorage.getItem('url') || 'https://api.walutomat.pl',
-    endpoint: localStorage.getItem('endpoint') || '/api/v1/account/balances',
-    apikey: localStorage.getItem('apikey') || 'example apikey',
-    secret: localStorage.getItem('secret') || 'example secret',
-    method: localStorage.getItem('method') || 'GET',
-    timestamp: '' + (new Date()).getTime(),
-    sign: '',
-    request: {},
-    response: {},
-    body: '',
-    walletState: {
-      PLN: {
-        available: '–',
-        onMarket: '–',
-        total: '–',
-      },
-      EUR: {
-        available: '–',
-        onMarket: '–',
-        total: '–',
-      },
-      USD: {
-        available: '–',
-        onMarket: '–',
-        total: '–',
-      },
-      GBP: {
-        available: '–',
-        onMarket: '–',
-        total: '–',
-      },
-      CHF: {
-        available: '–',
-        onMarket: '–',
-        total: '–',
-      },
-    },
-    walletStateArray: [
-      {
-          "currency": "PLN",
-          "balanceAll": "–",
-          "balanceAvailable": "–",
-          "balanceReserved": "–"
-      },
-      {
-          "currency": "EUR",
-          "balanceAll": "–",
-          "balanceAvailable": "–",
-          "balanceReserved": "–"
-      },
-      {
-          "currency": "USD",
-          "balanceAll": "–",
-          "balanceAvailable": "–",
-          "balanceReserved": "–"
-      },
-      {
-          "currency": "CHF",
-          "balanceAll": "–",
-          "balanceAvailable": "–",
-          "balanceReserved": "–"
-      },
-      {
-          "currency": "GBP",
-          "balanceAll": "–",
-          "balanceAvailable": "–",
-          "balanceReserved": "–"
-      },
-    ]
-  },
-  watch: {
-    url: val => localStorage.setItem('url', val),
-    endpoint: val => localStorage.setItem('endpoint', val),
-    apikey: val => localStorage.setItem('apikey', val),
-    secret: val => localStorage.setItem('secret', val),
-    method: val => localStorage.setItem('method', val),
-    body: val => localStorage.setItem('body', val)
-  },
-  methods: {
-    updateRequest: function() {
-      this.timestamp = '' + (new Date()).getTime();
-      const shaObj = new jsSHA('SHA-256', 'TEXT');
-      shaObj.setHMACKey(this.secret, 'TEXT');
-      shaObj.update(this.endpoint + this.timestamp);
-      this.sign = shaObj.getHMAC('HEX');
+var APIURL = 'https://api.walutomat.pl';
+var APIURL_WITHOUT_SIGN = 'https://user.walutomat.pl';
 
-      this.request = JSON.stringify({
-        method: this.method.toLowerCase(),
-        url: this.url + this.endpoint,
-        body: this.body,
-        headers: {
-          'X-API-KEY': this.apikey,
-          'X-API-NONCE': this.timestamp,
-          'X-API-SIGNATURE': this.sign
-        }
-      }, null, 4);
-    },
-    sendRequest: function() {
-      this.updateRequest();
-      axios.post('/api', JSON.parse(this.request))
-        .then(response => {
-          this.response = response.data;
-          this.walletState.PLN = response.data[0];
+/*======================================================
+=            Functions for getting api data            =
+======================================================*/
+function signRequest(requestOptions) { //endpoint, method, body, apikey, secret
+  var timestamp = '' + (new Date()).getTime();
+  var shaObj = new jsSHA('SHA-256', 'TEXT');
+  shaObj.setHMACKey(requestOptions.secret, 'TEXT');
+  shaObj.update(requestOptions.endpoint + timestamp);
+  var sign = shaObj.getHMAC('HEX');
 
-          this.walletStateArray = response.data;
-
-        })
-        .catch(e => {
-          this.response = '(see console for details)\n' + e.message;
-        });
+  var updatedRequest = JSON.stringify({
+    method: requestOptions.method.toLowerCase(),
+    url: APIURL + requestOptions.endpoint,
+    body: requestOptions.body || '',
+    headers: {
+      'X-API-KEY': requestOptions.apikey,
+      'X-API-NONCE': timestamp,
+      'X-API-SIGNATURE': sign
     }
-  }
-});
+  }, null, 4);
+
+  return updatedRequest;
+}
+
+function sendRequest(requestOptions) {
+
+  /*
+  EXAMPLE
+  sendRequest({
+    endpoint: '/api/v1/account/balances',
+    method: 'get',
+    body: '',
+    apikey: 'xxxxxxxxx',
+    secret: 'xxxxxxxxx',
+    onSuccess: function(resonse) {},
+    onError: function(error) {},
+  })
+  */
+
+  var updatedRequest = signRequest(requestOptions);
+  console.log(updatedRequest);
+  axios.post('/api', JSON.parse(updatedRequest))
+    .then(function(response) {
+      if (typeof requestOptions.onSuccess === 'function') {
+        requestOptions.onSuccess(response);
+      }
+    })
+    .catch(function(error) {
+      if (typeof requestOptions.onError === 'function') {
+        requestOptions.onError(error.message);
+      }
+    });
+}
+
+function sendRequestWithouhtSign(requestOptions) {
+
+  //Needed for other public endpoints like exchange rates
+
+  /*
+  EXAMPLE
+  sendRequest({
+    endpoint: '/api/v1/account/balances',
+    method: 'get',
+    body: '',
+    onSuccess: function(resonse) {},
+    onError: function(error) {},
+  })
+  */
+
+  var request = JSON.stringify({
+    method: requestOptions.method.toLowerCase(),
+    url: APIURL_WITHOUT_SIGN + requestOptions.endpoint,
+    body: requestOptions.body || '',
+  }, null, 4);
+
+  axios.post('/api', JSON.parse(request))
+    .then(function(response) {
+      if (typeof requestOptions.onSuccess === 'function') {
+        requestOptions.onSuccess(response);
+      }
+    })
+    .catch(function(error) {
+      if (typeof requestOptions.onError === 'function') {
+        requestOptions.onError(error.message);
+      }
+    });
+}
+
+/*=====  End of Functions for getting api data  ======*/
+
+
 
 /* Angular 1.6.6 */
 var proDashboard = angular.module('proDashboard', []);
 proDashboard.controller('proDashboardController', function($scope) {
-    $scope.firstName = "John";
-    $scope.lastName = "Doe";
+
+    /*----------  Saving api keys to local storage  ----------*/
+    $scope.apiKey = localStorage.getItem('proDashboard__apikey') || '';
+    $scope.$watch("apiKey", function(newVal, oldVal) {
+      if (newVal !== oldVal) {
+        localStorage.setItem('proDashboard__apikey', newVal);
+      }
+    });
+
+    $scope.secret = localStorage.getItem('proDashboard__secret') || '';
+    $scope.$watch("secret", function(newVal, oldVal) {
+      if (newVal !== oldVal) {
+        localStorage.setItem('proDashboard__secret', newVal);
+      }
+    });
+
+    /*----------  Exchange rates table  ----------*/
+    $scope.exchangeRates__get = function() {
+      sendRequestWithouhtSign({
+        endpoint: '/api/public/marketBrief/',
+        method: 'get',
+        body: '',
+        onSuccess: function(response) {
+          $scope.exchangeRates__response = response.data;
+          $scope.$applyAsync();
+        },
+        onError: function(error) {
+          console.log(error);
+        }
+      });
+    };
+
+    $scope.exchangeRates__response = {};
+
+    /*----------  Wallet state  ----------*/
+    $scope.walletState__get = function() {
+      sendRequest({
+        endpoint: '/api/v1/account/balances',
+        method: 'get',
+        body: '',
+        apikey: $scope.apiKey,
+        secret: $scope.secret,
+        onSuccess: function(response) {
+          $scope.walletState__response = response.data;
+          $scope.$applyAsync();
+          return response.data;
+        },
+        onError: function(error) {
+          console.log(error);
+        }
+      });
+    };
+
+    $scope.walletState__response = {};
+
     $scope.walletState = {
       PLN: {
-        total: 'test',
+        total: '–',
       }
     };
+
+
 });
