@@ -55,7 +55,7 @@ function sendRequest(requestOptions) {
     });
 }
 
-function sendRequestWithouhtSign(requestOptions) {
+function sendRequestWithoutSign(requestOptions) {
 
   //Needed for other public endpoints like exchange rates
 
@@ -114,12 +114,17 @@ proDashboard.controller('proDashboardController', function($scope) {
 
     /*----------  Exchange rates table  ----------*/
     $scope.exchangeRates__get = function() {
-      sendRequestWithouhtSign({
+      sendRequestWithoutSign({
         endpoint: '/api/public/marketBrief/',
         method: 'get',
         body: '',
         onSuccess: function(response) {
           $scope.exchangeRates__response = response.data;
+
+          $scope.exchangeRates = $.extend($scope.exchangeRates, R.indexBy(R.prop('pair'), response.data));
+          console.log($scope.exchangeRates);
+          console.log($scope.exchangeRates.EUR_PLN.bestOffers.forex_now);
+
           $scope.$applyAsync();
         },
         onError: function(error) {
@@ -129,6 +134,7 @@ proDashboard.controller('proDashboardController', function($scope) {
     };
 
     $scope.exchangeRates__response = {};
+    $scope.exchangeRates = {};
 
     /*----------  Wallet state  ----------*/
     $scope.walletState__get = function() {
@@ -140,6 +146,7 @@ proDashboard.controller('proDashboardController', function($scope) {
         secret: $scope.secret,
         onSuccess: function(response) {
           $scope.walletState__response = response.data;
+          $scope.walletState = $.extend($scope.walletState, R.indexBy(R.prop('currency'), response.data));
           $scope.$applyAsync();
           return response.data;
         },
@@ -153,7 +160,29 @@ proDashboard.controller('proDashboardController', function($scope) {
 
     $scope.walletState = {
       PLN: {
-        total: '–',
+        balanceReserved: '–',
+        balanceAll: '–',
+        balanceAvailable: '–',
+      },
+      EUR: {
+        balanceReserved: '–',
+        balanceAll: '–',
+        balanceAvailable: '–',
+      },
+      USD: {
+        balanceReserved: '–',
+        balanceAll: '–',
+        balanceAvailable: '–',
+      },
+      GBP: {
+        balanceReserved: '–',
+        balanceAll: '–',
+        balanceAvailable: '–',
+      },
+      CHF: {
+        balanceReserved: '–',
+        balanceAll: '–',
+        balanceAvailable: '–',
       }
     };
 
@@ -200,6 +229,29 @@ proDashboard.controller('proDashboardController', function($scope) {
         $scope.orderbook__getPair(value);
       });
     };
+
+    /*----------  My orders  ----------*/
+    $scope.myOrders__get = function() {
+      sendRequest({
+        endpoint: '/api/v1/market/orders',
+        method: 'get',
+        body: '',
+        apikey: $scope.apiKey,
+        secret: $scope.secret,
+        onSuccess: function(response) {
+          $scope.myOrders__response = response.data;
+          $scope.$applyAsync();
+          return response.data;
+        },
+        onError: function(error) {
+          console.log(error);
+        }
+      });
+    };
+
+    $scope.myOrders__response = {};
+
+    $scope.myOrders = [];
 
     /*----------  My orders  ----------*/
     $scope.myOrders__get = function() {

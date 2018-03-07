@@ -5450,7 +5450,7 @@ a {
 
 .pro-card {
   min-height: 10px;
-  border: 1px solid #d7dce2;
+  border: 1px solid #c6cbd1;
   border-radius: 5px;
   background-color: #fff;
 }
@@ -5507,17 +5507,22 @@ a {
 }
 
 .pro-table-header {
+  height: 20px;
+  margin-top: -1px;
+  border-top: 1px solid transparent;
+  border-bottom: 1px solid #dee2e6;
   background-color: #f1f5f8;
 }
 
 .pro-table-row {
   position: relative;
+  height: 25px;
   padding-top: 3px;
   padding-bottom: 3px;
 }
 
 .pro-table-row:hover {
-  background-color: #c5e2ff;
+  background-color: #dbe3eb;
 }
 
 .pro-table-row.is-selected {
@@ -5530,7 +5535,7 @@ a {
 }
 
 .pro-table-row.is-even-row:hover {
-  background-color: #c5e2ff;
+  background-color: #dbe3eb;
 }
 
 .pro-table-row.is-even-row.is-selected {
@@ -5539,7 +5544,7 @@ a {
 }
 
 .pro-table-row.is-even-row.is-highlighted {
-  background-color: #c5e2ff;
+  background-color: #dbe3eb;
 }
 
 .pro-table-row.is-highlighted {
@@ -5548,6 +5553,10 @@ a {
 
 .pro-table-row.is-your-own {
   background-color: #fff6cd;
+}
+
+.pro-table-row.is-clickable {
+  cursor: pointer;
 }
 
 .pro-table-cell {
@@ -5656,6 +5665,7 @@ a {
 }
 
 .pro-table-header-label {
+  opacity: 0.81;
   font-size: 11px;
   font-weight: 600;
   text-transform: uppercase;
@@ -5710,6 +5720,11 @@ a {
   display: none;
 }
 
+.pro-offer-form {
+  position: relative;
+  z-index: 1;
+}
+
 .pro-add-offer-row__form {
   margin-top: -1px;
   padding: 5px 7px;
@@ -5740,6 +5755,7 @@ a {
 
 .pro-your-own-row-tag {
   display: inline-block;
+  margin-top: 1px;
   padding-top: 0px;
   padding-right: 7px;
   padding-left: 7px;
@@ -5910,6 +5926,7 @@ a {
 .pro-your-own-cancel-offer-button__wrapper {
   position: relative;
   display: inline-block;
+  margin-top: 1px;
   margin-right: 4px;
   float: right;
   border-radius: 5px;
