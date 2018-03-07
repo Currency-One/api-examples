@@ -1,0 +1,1077 @@
+<html>
+
+<head>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="normalize.css">
+  <link rel="stylesheet" href="webflow.css">
+  <link rel="stylesheet" href="c1-wt-pro.webflow.css">
+</head>
+
+<body>
+  <div id="app" ng-app="proDashboard" ng-controller="proDashboardController">
+    <div id="content-from-webflow">
+      <div class="pro-body">
+        <div class="pro-topbar w-clearfix">
+          <div class="pro-topbar__logo-holder w-clearfix">
+            <div class="pro-topbar__logo"></div>
+          </div>
+          <div class="pro-topbar__right-side"></div>
+        </div>
+        <div class="pro-below-topbar">
+          <div class="pro-main-content">
+            <div class="pro-main-column">
+              <div class="pro-main-column__row w-clearfix">
+                <div class="pro-main-column__left-side">
+                  <div class="pro-widget-wrapper">
+                    <div class="pro-card">
+                      <div class="pro-card-header w-clearfix">
+                        <div class="pro-card-header__left-side">
+                          <div class="pro-card-header__title">Kupno (EUR na PLN)</div>
+                        </div>
+                        <div class="pro-card-header__right-side"></div>
+                      </div>
+                      <div class="pro-card-content">
+                        <div class="pro-card-content__inner">
+                          <div class="pro-table">
+                            <div class="pro-offer-form">
+                              <div class="pro-add-offer-row__form">
+                                <div class="form-block-css-reset w-form">
+                                  <form id="email-form" name="email-form" data-name="Email Form" class="form-block-css-reset w-clearfix">
+                                    <div class="pro-offer-form__rate-cell"><input type="text" class="bem-text-input pro-input-in-offers-form w-input" maxlength="256" name="kurs-2" data-name="Kurs 2" placeholder="Kurs" id="kurs-2" required=""></div>
+                                    <div class="pro-offer-form__amount-cell"><input type="text" class="bem-text-input pro-input-in-offers-form w-input" maxlength="256" name="kwota-2" data-name="Kwota 2" placeholder="Kwota" id="kwota-2" required=""></div>
+                                    <div class="pro-offer-form__button-cell"><input type="submit" value="Wystaw" data-wait="Please wait..." class="bem-button pro-button-in-offers-form w-button"></div>
+                                    <div class="pro-add-offer-row__confirm-buttons is-hidden">
+                                      <div class="pro-add-offer-row__prompt-button-holder">
+                                        <div class="bem-button pro-button-in-offers-form is-secondary">Anuluj</div>
+                                      </div>
+                                      <div class="pro-add-offer-row__prompt-button-holder">
+                                        <div class="bem-button pro-button-in-offers-form">Potwierdź</div>
+                                      </div>
+                                    </div>
+                                  </form>
+                                  <div class="w-form-done">
+                                    <div>Thank you! Your submission has been received!</div>
+                                  </div>
+                                  <div class="w-form-fail">
+                                    <div>Oops! Something went wrong while submitting the form.</div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="pro-table-header w-clearfix">
+                              <div class="pro-table-cell for-offers__rate">
+                                <div class="pro-table-cell__inner">
+                                  <div class="pro-table-header-label">Kurs</div>
+                                </div>
+                              </div>
+                              <div class="pro-table-cell for-offers__amount">
+                                <div class="pro-table-cell__inner">
+                                  <div class="pro-table-header-label">Kwota</div>
+                                </div>
+                              </div>
+                              <div class="pro-table-cell for-offers__amount-accumulated">
+                                <div class="pro-table-cell__inner">
+                                  <div class="pro-table-header-label">Kwota skum.</div>
+                                </div>
+                              </div>
+                              <div class="pro-table-cell for-offers__offers-count">
+                                <div class="pro-table-cell__inner">
+                                  <div class="pro-table-header-label">Ile ofert</div>
+                                </div>
+                              </div>
+                              <div class="pro-table-cell for-offers__time">
+                                <div class="pro-table-cell__inner">
+                                  <div class="pro-table-header-label">od kiedy</div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="pro-table-content">
+                              <div class="pro-table-row w-clearfix">
+                                <div class="pro-table-cell for-offers__rate">
+                                  <div class="pro-table-cell__inner">
+                                    <div class="pro-table-cell__text is-blue-link">–</div>
+                                  </div>
+                                </div>
+                                <div class="pro-table-cell for-offers__amount">
+                                  <div class="pro-table-cell__inner">
+                                    <div class="pro-table-cell__text">–</div>
+                                  </div>
+                                </div>
+                                <div class="pro-table-cell for-offers__amount-accumulated">
+                                  <div class="pro-table-cell__inner">
+                                    <div class="pro-table-cell__text">–</div>
+                                  </div>
+                                </div>
+                                <div class="pro-table-cell for-offers__offers-count">
+                                  <div class="pro-table-cell__inner">
+                                    <div class="pro-table-cell__text"><span>–</span> (<span>–</span>)</div>
+                                  </div>
+                                </div>
+                                <div class="pro-table-cell for-offers__time">
+                                  <div class="pro-table-cell__inner">
+                                    <div class="pro-table-cell__text">–</div>
+                                  </div>
+                                </div>
+                                <div class="pro-table-row__right-actions-holder">
+                                  <div class="pro-table-action__button">
+                                    <div><span class="font-icon pro-table-action-chart-icon"></span>Kup</div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="pro-table-row is-even-row w-clearfix">
+                                <div class="pro-table-cell for-offers__rate">
+                                  <div class="pro-table-cell__inner">
+                                    <div class="pro-table-cell__text is-blue-link">–</div>
+                                  </div>
+                                </div>
+                                <div class="pro-table-cell for-offers__amount">
+                                  <div class="pro-table-cell__inner">
+                                    <div class="pro-table-cell__text">–</div>
+                                  </div>
+                                </div>
+                                <div class="pro-table-cell for-offers__amount-accumulated">
+                                  <div class="pro-table-cell__inner">
+                                    <div class="pro-table-cell__text">–</div>
+                                  </div>
+                                </div>
+                                <div class="pro-table-cell for-offers__offers-count">
+                                  <div class="pro-table-cell__inner">
+                                    <div class="pro-table-cell__text"><span>–</span> (<span>–</span>)</div>
+                                  </div>
+                                </div>
+                                <div class="pro-table-cell for-offers__time">
+                                  <div class="pro-table-cell__inner">
+                                    <div class="pro-table-cell__text">–</div>
+                                  </div>
+                                </div>
+                                <div class="pro-table-row__right-actions-holder">
+                                  <div class="pro-table-action__button">
+                                    <div><span class="font-icon pro-table-action-chart-icon"></span>Kup podświetlone</div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="pro-table-forex-divider">
+                                <div class="pro-table-forex-divider__line"></div>
+                                <div class="pro-table-forex-divider__text">FOREX</div>
+                              </div>
+                              <div class="pro-table-row is-your-own w-clearfix">
+                                <div class="pro-table-cell for-offers__rate">
+                                  <div class="pro-table-cell__inner">
+                                    <div class="pro-table-cell__text is-blue-link">–</div>
+                                  </div>
+                                </div>
+                                <div class="pro-table-cell for-offers__amount">
+                                  <div class="pro-table-cell__inner">
+                                    <div class="pro-table-cell__text">–</div>
+                                  </div>
+                                </div>
+                                <div class="pro-table-cell for-offers__amount-accumulated">
+                                  <div class="pro-table-cell__inner">
+                                    <div class="pro-table-cell__text">–</div>
+                                  </div>
+                                </div>
+                                <div class="pro-table-cell for-offers__offers-count">
+                                  <div class="pro-table-cell__inner">
+                                    <div class="pro-table-cell__text"><span>–</span> (<span>–</span>)</div>
+                                  </div>
+                                </div>
+                                <div class="pro-table-cell for-offers__time">
+                                  <div class="pro-table-cell__inner">
+                                    <div class="pro-table-cell__text">–</div>
+                                  </div>
+                                </div>
+                                <div class="pro-table-row__right-actions-holder w-clearfix">
+                                  <div class="pro-your-own-cancel-offer-button__wrapper w-clearfix">
+                                    <div class="pro-your-own-cancel-offer-button__prompt-wrapper is-hidden">
+                                      <div class="pro-your-own-cancel-offer-button__prompt-button-holder">
+                                        <div class="bem-button pro-button-in-your-own-cancel-prompt">Usuń</div>
+                                      </div>
+                                      <div class="pro-your-own-cancel-offer-button__prompt-button-holder">
+                                        <div class="bem-button pro-button-in-your-own-cancel-prompt is-secondary">Cofnij</div>
+                                      </div>
+                                    </div>
+                                    <div class="pro-your-own-cancel-offer-button__holder">
+                                      <div><span class="font-icon"></span></div>
+                                    </div>
+                                  </div>
+                                  <div class="pro-your-own-row-tag">Twoja</div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="pro-main-column__right-side">
+                  <div class="pro-widget-wrapper">
+                    <div class="pro-card">
+                      <div class="pro-card-header w-clearfix">
+                        <div class="pro-card-header__left-side">
+                          <div class="pro-card-header__title">Sprzedaż (EUR na PLN)</div>
+                        </div>
+                        <div class="pro-card-header__right-side"></div>
+                      </div>
+                      <div class="pro-card-content">
+                        <div class="pro-card-content__inner">
+                          <div class="pro-table">
+                            <div class="pro-offer-form">
+                              <div class="pro-add-offer-row__form">
+                                <div class="form-block-css-reset w-form">
+                                  <form id="email-form" name="email-form" data-name="Email Form" class="form-block-css-reset w-clearfix">
+                                    <div class="pro-offer-form__rate-cell"><input type="text" class="bem-text-input pro-input-in-offers-form w-input" maxlength="256" name="kurs" data-name="kurs" placeholder="Kurs" id="kurs" required=""></div>
+                                    <div class="pro-offer-form__amount-cell"><input type="text" class="bem-text-input pro-input-in-offers-form w-input" maxlength="256" name="kwota" data-name="kwota" placeholder="Kwota" id="kwota" required=""></div>
+                                    <div class="pro-offer-form__button-cell"><input type="submit" value="Wystaw" data-wait="Please wait..." class="bem-button pro-button-in-offers-form w-button"></div>
+                                    <div class="pro-add-offer-row__confirm-buttons is-hidden">
+                                      <div class="pro-add-offer-row__prompt-button-holder">
+                                        <div class="bem-button pro-button-in-offers-form is-secondary">Anuluj</div>
+                                      </div>
+                                      <div class="pro-add-offer-row__prompt-button-holder">
+                                        <div class="bem-button pro-button-in-offers-form">Potwierdź</div>
+                                      </div>
+                                    </div>
+                                  </form>
+                                  <div class="w-form-done">
+                                    <div>Thank you! Your submission has been received!</div>
+                                  </div>
+                                  <div class="w-form-fail">
+                                    <div>Oops! Something went wrong while submitting the form.</div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="pro-table-header w-clearfix">
+                              <div class="pro-table-cell for-offers__rate">
+                                <div class="pro-table-cell__inner">
+                                  <div class="pro-table-header-label">Kurs</div>
+                                </div>
+                              </div>
+                              <div class="pro-table-cell for-offers__amount">
+                                <div class="pro-table-cell__inner">
+                                  <div class="pro-table-header-label">Kwota</div>
+                                </div>
+                              </div>
+                              <div class="pro-table-cell for-offers__amount-accumulated">
+                                <div class="pro-table-cell__inner">
+                                  <div class="pro-table-header-label">Kwota skum.</div>
+                                </div>
+                              </div>
+                              <div class="pro-table-cell for-offers__offers-count">
+                                <div class="pro-table-cell__inner">
+                                  <div class="pro-table-header-label">Ile ofert</div>
+                                </div>
+                              </div>
+                              <div class="pro-table-cell for-offers__time">
+                                <div class="pro-table-cell__inner">
+                                  <div class="pro-table-header-label">od kiedy</div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="pro-table-content">
+                              <div class="pro-table-row w-clearfix">
+                                <div class="pro-table-cell for-offers__rate">
+                                  <div class="pro-table-cell__inner">
+                                    <div class="pro-table-cell__text is-blue-link">–</div>
+                                  </div>
+                                </div>
+                                <div class="pro-table-cell for-offers__amount">
+                                  <div class="pro-table-cell__inner">
+                                    <div class="pro-table-cell__text">–</div>
+                                  </div>
+                                </div>
+                                <div class="pro-table-cell for-offers__amount-accumulated">
+                                  <div class="pro-table-cell__inner">
+                                    <div class="pro-table-cell__text">–</div>
+                                  </div>
+                                </div>
+                                <div class="pro-table-cell for-offers__offers-count">
+                                  <div class="pro-table-cell__inner">
+                                    <div class="pro-table-cell__text"><span>–</span> (<span>–</span>)</div>
+                                  </div>
+                                </div>
+                                <div class="pro-table-cell for-offers__time">
+                                  <div class="pro-table-cell__inner">
+                                    <div class="pro-table-cell__text">–</div>
+                                  </div>
+                                </div>
+                                <div class="pro-table-row__right-actions-holder">
+                                  <div class="pro-table-action__button">
+                                    <div><span class="font-icon pro-table-action-chart-icon"></span>Kup</div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="pro-table-row is-even-row w-clearfix">
+                                <div class="pro-table-cell for-offers__rate">
+                                  <div class="pro-table-cell__inner">
+                                    <div class="pro-table-cell__text is-blue-link">–</div>
+                                  </div>
+                                </div>
+                                <div class="pro-table-cell for-offers__amount">
+                                  <div class="pro-table-cell__inner">
+                                    <div class="pro-table-cell__text">–</div>
+                                  </div>
+                                </div>
+                                <div class="pro-table-cell for-offers__amount-accumulated">
+                                  <div class="pro-table-cell__inner">
+                                    <div class="pro-table-cell__text">–</div>
+                                  </div>
+                                </div>
+                                <div class="pro-table-cell for-offers__offers-count">
+                                  <div class="pro-table-cell__inner">
+                                    <div class="pro-table-cell__text"><span>–</span> (<span>–</span>)</div>
+                                  </div>
+                                </div>
+                                <div class="pro-table-cell for-offers__time">
+                                  <div class="pro-table-cell__inner">
+                                    <div class="pro-table-cell__text">–</div>
+                                  </div>
+                                </div>
+                                <div class="pro-table-row__right-actions-holder">
+                                  <div class="pro-table-action__button">
+                                    <div><span class="font-icon pro-table-action-chart-icon"></span>Kup podświetlone</div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="pro-table-row is-your-own w-clearfix">
+                                <div class="pro-table-cell for-offers__rate">
+                                  <div class="pro-table-cell__inner">
+                                    <div class="pro-table-cell__text is-blue-link">–</div>
+                                  </div>
+                                </div>
+                                <div class="pro-table-cell for-offers__amount">
+                                  <div class="pro-table-cell__inner">
+                                    <div class="pro-table-cell__text">–</div>
+                                  </div>
+                                </div>
+                                <div class="pro-table-cell for-offers__amount-accumulated">
+                                  <div class="pro-table-cell__inner">
+                                    <div class="pro-table-cell__text">–</div>
+                                  </div>
+                                </div>
+                                <div class="pro-table-cell for-offers__offers-count">
+                                  <div class="pro-table-cell__inner">
+                                    <div class="pro-table-cell__text"><span>–</span> (<span>–</span>)</div>
+                                  </div>
+                                </div>
+                                <div class="pro-table-cell for-offers__time">
+                                  <div class="pro-table-cell__inner">
+                                    <div class="pro-table-cell__text">–</div>
+                                  </div>
+                                </div>
+                                <div class="pro-table-row__right-actions-holder w-clearfix">
+                                  <div class="pro-your-own-cancel-offer-button__wrapper w-clearfix">
+                                    <div class="pro-your-own-cancel-offer-button__prompt-wrapper is-hidden">
+                                      <div class="pro-your-own-cancel-offer-button__prompt-button-holder">
+                                        <div class="bem-button pro-button-in-your-own-cancel-prompt">Usuń</div>
+                                      </div>
+                                      <div class="pro-your-own-cancel-offer-button__prompt-button-holder">
+                                        <div class="bem-button pro-button-in-your-own-cancel-prompt is-secondary">Cofnij</div>
+                                      </div>
+                                    </div>
+                                    <div class="pro-your-own-cancel-offer-button__holder">
+                                      <div><span class="font-icon"></span></div>
+                                    </div>
+                                  </div>
+                                  <div class="pro-your-own-row-tag">Twoja</div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="pro-main-column__row w-clearfix">
+                <div class="pro-main-column__left-side">
+                  <div class="pro-widget-wrapper">
+                    <div class="pro-card">
+                      <div class="pro-card-header w-clearfix">
+                        <div class="pro-card-header__left-side">
+                          <div class="pro-card-header__title">Ostatnie wymiany EUR / PLN</div>
+                        </div>
+                        <div class="pro-card-header__right-side"></div>
+                      </div>
+                      <div class="pro-card-content">
+                        <div class="pro-card-content__inner">
+                          <div class="pro-table">
+                            <div class="pro-table-header w-clearfix">
+                              <div class="pro-table-cell for-last-transactions__time">
+                                <div class="pro-table-cell__inner">
+                                  <div class="pro-table-header-label">Kiedy</div>
+                                </div>
+                              </div>
+                              <div class="pro-table-cell for-last-transactions__rate">
+                                <div class="pro-table-cell__inner">
+                                  <div class="pro-table-header-label">Kurs</div>
+                                </div>
+                              </div>
+                              <div class="pro-table-cell for-last-transactions__amount">
+                                <div class="pro-table-cell__inner">
+                                  <div class="pro-table-header-label">Kwota</div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="pro-table-content">
+                              <div class="pro-table-row w-clearfix">
+                                <div class="pro-table-cell for-last-transactions__time">
+                                  <div class="pro-table-cell__inner">
+                                    <div class="pro-table-cell__text">–</div>
+                                  </div>
+                                </div>
+                                <div class="pro-table-cell for-last-transactions__rate">
+                                  <div class="pro-table-cell__inner">
+                                    <div class="pro-number-with-bar-chart">
+                                      <div class="pro-number-with-bar-chart__text">–</div>
+                                      <div class="pro-number-with-bar-chart__bar-wrapper">
+                                        <div class="pro-number-with-bar-chart__bar-inner"></div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="pro-table-cell for-last-transactions__amount">
+                                  <div class="pro-table-cell__inner">
+                                    <div class="pro-table-cell__text">–</div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="pro-main-column__right-side">
+                  <div class="pro-widget-wrapper">
+                    <div class="pro-card">
+                      <div class="pro-card-header w-clearfix">
+                        <div class="pro-card-header__left-side">
+                          <div class="pro-card-header__title">Moje aktywne oferty EUR / PLN</div>
+                        </div>
+                        <div class="pro-card-header__right-side"></div>
+                      </div>
+                      <div class="pro-card-content">
+                        <div class="pro-card-content__inner">
+                          <div class="pro-table">
+                            <div class="pro-table-header w-clearfix">
+                              <div class="pro-table-cell for-my-offers__currency">
+                                <div class="pro-table-cell__inner">
+                                  <div class="pro-table-header-label">Sprzedaję</div>
+                                </div>
+                              </div>
+                              <div class="pro-table-cell for-my-offers__rate">
+                                <div class="pro-table-cell__inner">
+                                  <div class="pro-table-header-label">Kurs</div>
+                                </div>
+                              </div>
+                              <div class="pro-table-cell for-my-offers__amount">
+                                <div class="pro-table-cell__inner">
+                                  <div class="pro-table-header-label">Kwota</div>
+                                </div>
+                              </div>
+                              <div class="pro-table-cell for-my-offers__offers-count">
+                                <div class="pro-table-cell__inner">
+                                  <div class="pro-table-header-label">Ile Lepszych ofert</div>
+                                </div>
+                              </div>
+                              <div class="pro-table-cell for-my-offers__amount-accumulated">
+                                <div class="pro-table-cell__inner">
+                                  <div class="pro-table-header-label">Kwota lepszych</div>
+                                </div>
+                              </div>
+                              <div class="pro-table-cell for-my-offers__time">
+                                <div class="pro-table-cell__inner">
+                                  <div class="pro-table-header-label">Od kiedy</div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="pro-table-content">
+                              <div class="pro-table-row w-clearfix">
+                                <div class="pro-table-cell for-my-offers__currency">
+                                  <div class="pro-table-cell__inner">
+                                    <div class="pro-table-cell__text">–</div>
+                                  </div>
+                                </div>
+                                <div class="pro-table-cell for-my-offers__rate">
+                                  <div class="pro-table-cell__inner">
+                                    <div class="pro-table-cell__text">–</div>
+                                  </div>
+                                </div>
+                                <div class="pro-table-cell for-my-offers__amount">
+                                  <div class="pro-table-cell__inner">
+                                    <div class="pro-table-cell__text">–</div>
+                                  </div>
+                                </div>
+                                <div class="pro-table-cell for-my-offers__offers-count">
+                                  <div class="pro-table-cell__inner">
+                                    <div class="pro-table-cell__text"><span>–</span> (<span>–</span>)</div>
+                                  </div>
+                                </div>
+                                <div class="pro-table-cell for-my-offers__amount-accumulated">
+                                  <div class="pro-table-cell__inner">
+                                    <div class="pro-table-cell__text">–</div>
+                                  </div>
+                                </div>
+                                <div class="pro-table-cell for-my-offers__time">
+                                  <div class="pro-table-cell__inner">
+                                    <div class="pro-table-cell__text">–</div>
+                                  </div>
+                                </div>
+                                <div class="pro-table-row__right-actions-holder w-clearfix">
+                                  <div class="pro-your-own-cancel-offer-button__wrapper w-clearfix">
+                                    <div class="pro-your-own-cancel-offer-button__prompt-wrapper is-hidden">
+                                      <div class="pro-your-own-cancel-offer-button__prompt-button-holder">
+                                        <div class="bem-button pro-button-in-your-own-cancel-prompt">Usuń</div>
+                                      </div>
+                                      <div class="pro-your-own-cancel-offer-button__prompt-button-holder">
+                                        <div class="bem-button pro-button-in-your-own-cancel-prompt is-secondary">Cofnij</div>
+                                      </div>
+                                    </div>
+                                    <div class="pro-your-own-cancel-offer-button__holder">
+                                      <div><span class="font-icon"></span></div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="pro-left-sidebar">
+              <div class="pro-widget-wrapper">
+                <div class="pro-card">
+                  <div class="pro-card-header w-clearfix">
+                    <div class="pro-card-header__left-side">
+                      <div class="pro-card-header__title">Stan portfela</div>
+                    </div>
+                    <div class="pro-card-header__right-side"></div>
+                  </div>
+                  <div class="pro-card-content">
+                    <div class="pro-card-content__inner">
+                      <div class="pro-table">
+                        <div class="pro-table-header w-clearfix">
+                          <div class="pro-table-cell for-wallet-state__currency">
+                            <div class="pro-table-cell__inner">
+                              <div class="pro-table-header-label">Waluta</div>
+                            </div>
+                          </div>
+                          <div class="pro-table-cell for-wallet-state__available">
+                            <div class="pro-table-cell__inner">
+                              <div class="pro-table-header-label">Dostępne</div>
+                            </div>
+                          </div>
+                          <div class="pro-table-cell for-wallet-state__on-market">
+                            <div class="pro-table-cell__inner">
+                              <div class="pro-table-header-label">Wystawione</div>
+                            </div>
+                          </div>
+                          <div class="pro-table-cell for-wallet-state__total">
+                            <div class="pro-table-cell__inner">
+                              <div class="pro-table-header-label">Razem</div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="pro-table-content">
+                          <div class="pro-table-row w-clearfix">
+                            <div class="pro-table-cell for-wallet-state__currency">
+                              <div class="pro-table-cell__inner">
+                                <div class="pro-table-cell__text">PLN</div>
+                              </div>
+                            </div>
+                            <div class="pro-table-cell for-wallet-state__available">
+                              <div class="pro-table-cell__inner">
+                                <div v-text="walletState.PLN.available" class="pro-table-cell__text">–</div>
+                              </div>
+                            </div>
+                            <div class="pro-table-cell for-wallet-state__on-market">
+                              <div class="pro-table-cell__inner">
+                                <div ng-bind="walletState.PLN.onMarket" class="pro-table-cell__text">–</div>
+                              </div>
+                            </div>
+                            <div class="pro-table-cell for-wallet-state__total">
+                              <div class="pro-table-cell__inner">
+                                <div ng-bind="walletState.PLN.total" class="pro-table-cell__text">–</div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div v-for="item in walletStateArray">
+                            <div class="pro-table-row is-even-row w-clearfix">
+                              <div class="pro-table-cell for-wallet-state__currency">
+                                <div class="pro-table-cell__inner">
+                                  <div class="pro-table-cell__text" v-text="item.currency">EUR</div>
+                                </div>
+                              </div>
+                              <div class="pro-table-cell for-wallet-state__available">
+                                <div class="pro-table-cell__inner">
+                                  <div pro-data="walletState.EUR.available" class="pro-table-cell__text">–</div>
+                                </div>
+                              </div>
+                              <div class="pro-table-cell for-wallet-state__on-market">
+                                <div class="pro-table-cell__inner">
+                                  <div pro-data="walletState.EUR.onMarket" class="pro-table-cell__text">–</div>
+                                </div>
+                              </div>
+                              <div class="pro-table-cell for-wallet-state__total">
+                                <div class="pro-table-cell__inner">
+                                  <div pro-data="walletState.EUR.total" class="pro-table-cell__text" v-text="item.balanceAll">–</div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="pro-table-row w-clearfix">
+                            <div class="pro-table-cell for-wallet-state__currency">
+                              <div class="pro-table-cell__inner">
+                                <div class="pro-table-cell__text">USD</div>
+                              </div>
+                            </div>
+                            <div class="pro-table-cell for-wallet-state__available">
+                              <div class="pro-table-cell__inner">
+                                <div pro-data="walletState.USD.available" class="pro-table-cell__text">–</div>
+                              </div>
+                            </div>
+                            <div class="pro-table-cell for-wallet-state__on-market">
+                              <div class="pro-table-cell__inner">
+                                <div pro-data="walletState.USD.onMarket" class="pro-table-cell__text">–</div>
+                              </div>
+                            </div>
+                            <div class="pro-table-cell for-wallet-state__total">
+                              <div class="pro-table-cell__inner">
+                                <div pro-data="walletState.USD.total" class="pro-table-cell__text">–</div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="pro-table-row is-even-row w-clearfix">
+                            <div class="pro-table-cell for-wallet-state__currency">
+                              <div class="pro-table-cell__inner">
+                                <div class="pro-table-cell__text">GBP</div>
+                              </div>
+                            </div>
+                            <div class="pro-table-cell for-wallet-state__available">
+                              <div class="pro-table-cell__inner">
+                                <div pro-data="walletState.GBP.available" class="pro-table-cell__text">–</div>
+                              </div>
+                            </div>
+                            <div class="pro-table-cell for-wallet-state__on-market">
+                              <div class="pro-table-cell__inner">
+                                <div pro-data="walletState.GBP.onMarket" class="pro-table-cell__text">–</div>
+                              </div>
+                            </div>
+                            <div class="pro-table-cell for-wallet-state__total">
+                              <div class="pro-table-cell__inner">
+                                <div pro-data="walletState.GBP.total" class="pro-table-cell__text">–</div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="pro-table-row w-clearfix">
+                            <div class="pro-table-cell for-wallet-state__currency">
+                              <div class="pro-table-cell__inner">
+                                <div class="pro-table-cell__text">CHF</div>
+                              </div>
+                            </div>
+                            <div class="pro-table-cell for-wallet-state__available">
+                              <div class="pro-table-cell__inner">
+                                <div pro-data="walletState.CHF.available" class="pro-table-cell__text">–</div>
+                              </div>
+                            </div>
+                            <div class="pro-table-cell for-wallet-state__on-market">
+                              <div class="pro-table-cell__inner">
+                                <div pro-data="walletState.CHF.onMarket" class="pro-table-cell__text">–</div>
+                              </div>
+                            </div>
+                            <div class="pro-table-cell for-wallet-state__total">
+                              <div class="pro-table-cell__inner">
+                                <div pro-data="walletState.CHF.total" class="pro-table-cell__text">–</div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="pro-widget-wrapper">
+                <div class="pro-card">
+                  <div class="pro-card-header w-clearfix">
+                    <div class="pro-card-header__left-side">
+                      <div class="pro-card-header__title">Kursy</div>
+                    </div>
+                    <div class="pro-card-header__right-side"></div>
+                  </div>
+                  <div class="pro-card-content">
+                    <div class="pro-card-content__inner">
+                      <div class="pro-table">
+                        <div class="pro-table-header w-clearfix">
+                          <div class="pro-table-cell for-rates__pair">
+                            <div class="pro-table-cell__inner">
+                              <div class="pro-table-header-label">Para</div>
+                            </div>
+                          </div>
+                          <div class="pro-table-cell for-rates__avg">
+                            <div class="pro-table-cell__inner">
+                              <div class="pro-table-header-label">Średni</div>
+                            </div>
+                          </div>
+                          <div class="pro-table-cell for-rates__we-sell">
+                            <div class="pro-table-cell__inner">
+                              <div class="pro-table-header-label">Kupno</div>
+                            </div>
+                          </div>
+                          <div class="pro-table-cell for-rates__we-buy">
+                            <div class="pro-table-cell__inner">
+                              <div class="pro-table-header-label">Sprzedaż</div>
+                            </div>
+                          </div>
+                          <div class="pro-table-cell for-rates__spread">
+                            <div class="pro-table-cell__inner">
+                              <div class="pro-table-header-label">Spread</div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="pro-table-content">
+                          <div class="pro-table-row is-selected w-clearfix">
+                            <div class="pro-table-cell for-rates__pair">
+                              <div class="pro-table-cell__inner">
+                                <div class="pro-table-cell__text">EUR / PLN</div>
+                              </div>
+                            </div>
+                            <div class="pro-table-cell for-rates__avg">
+                              <div class="pro-table-cell__inner">
+                                <div pro-data="rates.EUR_PLN.avg" class="pro-table-cell__text">–</div>
+                              </div>
+                            </div>
+                            <div class="pro-table-cell for-rates__we-buy">
+                              <div class="pro-table-cell__inner">
+                                <div pro-data="rates.EUR_PLN.weSell" class="pro-table-cell__text">–</div>
+                              </div>
+                            </div>
+                            <div class="pro-table-cell for-rates__we-sell">
+                              <div class="pro-table-cell__inner">
+                                <div pro-data="rates.EUR_PLN.weBuy" class="pro-table-cell__text">–</div>
+                              </div>
+                            </div>
+                            <div class="pro-table-cell for-rates__spread">
+                              <div class="pro-table-cell__inner">
+                                <div pro-data="rates.EUR_PLN.spread" class="pro-table-cell__text">–</div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="pro-table-row is-even-row w-clearfix">
+                            <div class="pro-table-cell for-rates__pair">
+                              <div class="pro-table-cell__inner">
+                                <div class="pro-table-cell__text">USD / PLN</div>
+                              </div>
+                            </div>
+                            <div class="pro-table-cell for-rates__avg">
+                              <div class="pro-table-cell__inner">
+                                <div pro-data="rates.EUR_PLN.avg" class="pro-table-cell__text">–</div>
+                              </div>
+                            </div>
+                            <div class="pro-table-cell for-rates__we-buy">
+                              <div class="pro-table-cell__inner">
+                                <div pro-data="rates.EUR_PLN.weSell" class="pro-table-cell__text">–</div>
+                              </div>
+                            </div>
+                            <div class="pro-table-cell for-rates__we-sell">
+                              <div class="pro-table-cell__inner">
+                                <div pro-data="rates.EUR_PLN.weBuy" class="pro-table-cell__text">–</div>
+                              </div>
+                            </div>
+                            <div class="pro-table-cell for-rates__spread">
+                              <div class="pro-table-cell__inner">
+                                <div pro-data="rates.EUR_PLN.spread" class="pro-table-cell__text">–</div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="pro-table-row w-clearfix">
+                            <div class="pro-table-cell for-rates__pair">
+                              <div class="pro-table-cell__inner">
+                                <div class="pro-table-cell__text">CHF / PLN</div>
+                              </div>
+                            </div>
+                            <div class="pro-table-cell for-rates__avg">
+                              <div class="pro-table-cell__inner">
+                                <div pro-data="rates.EUR_PLN.avg" class="pro-table-cell__text">–</div>
+                              </div>
+                            </div>
+                            <div class="pro-table-cell for-rates__we-buy">
+                              <div class="pro-table-cell__inner">
+                                <div pro-data="rates.EUR_PLN.weSell" class="pro-table-cell__text">–</div>
+                              </div>
+                            </div>
+                            <div class="pro-table-cell for-rates__we-sell">
+                              <div class="pro-table-cell__inner">
+                                <div pro-data="rates.EUR_PLN.weBuy" class="pro-table-cell__text">–</div>
+                              </div>
+                            </div>
+                            <div class="pro-table-cell for-rates__spread">
+                              <div class="pro-table-cell__inner">
+                                <div pro-data="rates.EUR_PLN.spread" class="pro-table-cell__text">–</div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="pro-table-row is-even-row w-clearfix">
+                            <div class="pro-table-cell for-rates__pair">
+                              <div class="pro-table-cell__inner">
+                                <div class="pro-table-cell__text">GBP / PLN</div>
+                              </div>
+                            </div>
+                            <div class="pro-table-cell for-rates__avg">
+                              <div class="pro-table-cell__inner">
+                                <div pro-data="rates.EUR_PLN.avg" class="pro-table-cell__text">–</div>
+                              </div>
+                            </div>
+                            <div class="pro-table-cell for-rates__we-buy">
+                              <div class="pro-table-cell__inner">
+                                <div pro-data="rates.EUR_PLN.weSell" class="pro-table-cell__text">–</div>
+                              </div>
+                            </div>
+                            <div class="pro-table-cell for-rates__we-sell">
+                              <div class="pro-table-cell__inner">
+                                <div pro-data="rates.EUR_PLN.weBuy" class="pro-table-cell__text">–</div>
+                              </div>
+                            </div>
+                            <div class="pro-table-cell for-rates__spread">
+                              <div class="pro-table-cell__inner">
+                                <div pro-data="rates.EUR_PLN.spread" class="pro-table-cell__text">–</div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="pro-table-row w-clearfix">
+                            <div class="pro-table-cell for-rates__pair">
+                              <div class="pro-table-cell__inner">
+                                <div class="pro-table-cell__text">EUR / USD</div>
+                              </div>
+                            </div>
+                            <div class="pro-table-cell for-rates__avg">
+                              <div class="pro-table-cell__inner">
+                                <div pro-data="rates.EUR_PLN.avg" class="pro-table-cell__text">–</div>
+                              </div>
+                            </div>
+                            <div class="pro-table-cell for-rates__we-buy">
+                              <div class="pro-table-cell__inner">
+                                <div pro-data="rates.EUR_PLN.weSell" class="pro-table-cell__text">–</div>
+                              </div>
+                            </div>
+                            <div class="pro-table-cell for-rates__we-sell">
+                              <div class="pro-table-cell__inner">
+                                <div pro-data="rates.EUR_PLN.weBuy" class="pro-table-cell__text">–</div>
+                              </div>
+                            </div>
+                            <div class="pro-table-cell for-rates__spread">
+                              <div class="pro-table-cell__inner">
+                                <div pro-data="rates.EUR_PLN.spread" class="pro-table-cell__text">–</div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="pro-table-row is-even-row w-clearfix">
+                            <div class="pro-table-cell for-rates__pair">
+                              <div class="pro-table-cell__inner">
+                                <div class="pro-table-cell__text">EUR / GBP</div>
+                              </div>
+                            </div>
+                            <div class="pro-table-cell for-rates__avg">
+                              <div class="pro-table-cell__inner">
+                                <div pro-data="rates.EUR_PLN.avg" class="pro-table-cell__text">–</div>
+                              </div>
+                            </div>
+                            <div class="pro-table-cell for-rates__we-buy">
+                              <div class="pro-table-cell__inner">
+                                <div pro-data="rates.EUR_PLN.weSell" class="pro-table-cell__text">–</div>
+                              </div>
+                            </div>
+                            <div class="pro-table-cell for-rates__we-sell">
+                              <div class="pro-table-cell__inner">
+                                <div pro-data="rates.EUR_PLN.weBuy" class="pro-table-cell__text">–</div>
+                              </div>
+                            </div>
+                            <div class="pro-table-cell for-rates__spread">
+                              <div class="pro-table-cell__inner">
+                                <div pro-data="rates.EUR_PLN.spread" class="pro-table-cell__text">–</div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="pro-table-row w-clearfix">
+                            <div class="pro-table-cell for-rates__pair">
+                              <div class="pro-table-cell__inner">
+                                <div class="pro-table-cell__text">EUR / CHF</div>
+                              </div>
+                            </div>
+                            <div class="pro-table-cell for-rates__avg">
+                              <div class="pro-table-cell__inner">
+                                <div pro-data="rates.EUR_PLN.avg" class="pro-table-cell__text">–</div>
+                              </div>
+                            </div>
+                            <div class="pro-table-cell for-rates__we-buy">
+                              <div class="pro-table-cell__inner">
+                                <div pro-data="rates.EUR_PLN.weSell" class="pro-table-cell__text">–</div>
+                              </div>
+                            </div>
+                            <div class="pro-table-cell for-rates__we-sell">
+                              <div class="pro-table-cell__inner">
+                                <div pro-data="rates.EUR_PLN.weBuy" class="pro-table-cell__text">–</div>
+                              </div>
+                            </div>
+                            <div class="pro-table-cell for-rates__spread">
+                              <div class="pro-table-cell__inner">
+                                <div pro-data="rates.EUR_PLN.spread" class="pro-table-cell__text">–</div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="pro-table-row is-even-row w-clearfix">
+                            <div class="pro-table-cell for-rates__pair">
+                              <div class="pro-table-cell__inner">
+                                <div class="pro-table-cell__text">GBP / USD</div>
+                              </div>
+                            </div>
+                            <div class="pro-table-cell for-rates__avg">
+                              <div class="pro-table-cell__inner">
+                                <div pro-data="rates.EUR_PLN.avg" class="pro-table-cell__text">–</div>
+                              </div>
+                            </div>
+                            <div class="pro-table-cell for-rates__we-buy">
+                              <div class="pro-table-cell__inner">
+                                <div pro-data="rates.EUR_PLN.weSell" class="pro-table-cell__text">–</div>
+                              </div>
+                            </div>
+                            <div class="pro-table-cell for-rates__we-sell">
+                              <div class="pro-table-cell__inner">
+                                <div pro-data="rates.EUR_PLN.weBuy" class="pro-table-cell__text">–</div>
+                              </div>
+                            </div>
+                            <div class="pro-table-cell for-rates__spread">
+                              <div class="pro-table-cell__inner">
+                                <div pro-data="rates.EUR_PLN.spread" class="pro-table-cell__text">–</div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="pro-table-row w-clearfix">
+                            <div class="pro-table-cell for-rates__pair">
+                              <div class="pro-table-cell__inner">
+                                <div class="pro-table-cell__text">USD / CHF</div>
+                              </div>
+                            </div>
+                            <div class="pro-table-cell for-rates__avg">
+                              <div class="pro-table-cell__inner">
+                                <div pro-data="rates.EUR_PLN.avg" class="pro-table-cell__text">–</div>
+                              </div>
+                            </div>
+                            <div class="pro-table-cell for-rates__we-buy">
+                              <div class="pro-table-cell__inner">
+                                <div pro-data="rates.EUR_PLN.weSell" class="pro-table-cell__text">–</div>
+                              </div>
+                            </div>
+                            <div class="pro-table-cell for-rates__we-sell">
+                              <div class="pro-table-cell__inner">
+                                <div pro-data="rates.EUR_PLN.weBuy" class="pro-table-cell__text">–</div>
+                              </div>
+                            </div>
+                            <div class="pro-table-cell for-rates__spread">
+                              <div class="pro-table-cell__inner">
+                                <div pro-data="rates.EUR_PLN.spread" class="pro-table-cell__text">–</div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="pro-table-row is-even-row w-clearfix">
+                            <div class="pro-table-cell for-rates__pair">
+                              <div class="pro-table-cell__inner">
+                                <div class="pro-table-cell__text">GBP / CHF</div>
+                              </div>
+                            </div>
+                            <div class="pro-table-cell for-rates__avg">
+                              <div class="pro-table-cell__inner">
+                                <div pro-data="rates.EUR_PLN.avg" class="pro-table-cell__text">–</div>
+                              </div>
+                            </div>
+                            <div class="pro-table-cell for-rates__we-buy">
+                              <div class="pro-table-cell__inner">
+                                <div pro-data="rates.EUR_PLN.weSell" class="pro-table-cell__text">–</div>
+                              </div>
+                            </div>
+                            <div class="pro-table-cell for-rates__we-sell">
+                              <div class="pro-table-cell__inner">
+                                <div pro-data="rates.EUR_PLN.weBuy" class="pro-table-cell__text">–</div>
+                              </div>
+                            </div>
+                            <div class="pro-table-cell for-rates__spread">
+                              <div class="pro-table-cell__inner">
+                                <div pro-data="rates.EUR_PLN.spread" class="pro-table-cell__text">–</div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--authorization app -->
+    <div class="authorize-form" style="margin-left: 20%; margin-top:2%; margin-right: 20%;">
+      <div class="form-group">
+        <label for="url">Url:</label>
+        <input type="input" class="form-control" v-model="url" id="url">
+      </div>
+      <div class="form-group">
+        <label for="endpoint">Endpoint:</label>
+        <input type="input" class="form-control" v-model="endpoint" id="endpoint">
+      </div>
+      <div class="form-group">
+        <label for="method">Method:</label>
+        <select v-model="method" id="method">
+          <option>GET</option>
+          <option>POST</option>
+        </select>
+      </div>
+      <div v-if="method =='POST'" class="form-group">
+        <label for="body">Body:</label>
+        <textarea class="form-control" v-model="body" id="body">
+        </textarea>
+      </div>
+      <div class="form-group">
+        <label for="apikey">Apikey:</label>
+        <input type="input" class="form-control" v-model="apikey" id="apikey">
+      </div>
+      <div class="form-group">
+        <label for="secret">Secret:</label>
+        <input type="password" class="form-control" v-model="secret" id="secret">
+      </div>
+      <div class="form-group">
+        <button class="btn btn-warning" v-on:click="sendRequest" v-if="sign != ''">Submit</button>
+        <button class="btn btn-success" v-on:click="updateRequest">Sign</button>
+      </div>
+      <div class="form-group">
+        <label for="request">Request:</label>
+        <pre id="request">{{request}}</pre>
+      </div>
+      <div class="form-group">
+        <label for="response">Response:</label>
+        <pre id="response">{{response}}</pre>
+      </div>
+    </div>
+  </div>
+
+  <script type="text/javascript" src="https://vuejs.org/js/vue.min.js"></script>
+  <script type="text/javascript" src="https://unpkg.com/uiv/dist/uiv.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jsSHA/2.3.1/sha256.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/zepto/1.2.0/zepto.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.6/angular.js"></script>
+  <script type="text/javascript" src="main.js"></script>
+</body>
+
+</html>
