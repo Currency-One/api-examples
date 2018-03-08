@@ -342,5 +342,9 @@ proDashboard.controller('proDashboardController', function($scope) {
     //Dodawanie zleceń z formularza
     //Usuwanie swoich zleceń
     //Pokazywanie własnych zleceń na liście wszystkich zleceń
+    //Success messages / error messages
+    //Wstawianie kursu o jeden pips większego w formularz po kliknięciu niebieskiego kursu
+    //Formatowanie czasu przez moment.js żeby pokazywać krótki 1d, 1h itd.
+    //Liczenie kwoty skumulowanej w ofertach
 
 });
