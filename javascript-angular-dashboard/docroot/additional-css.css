@@ -1,0 +1,43 @@
+body.pro-dashboard-body {
+	background-color: #e1e6eb;
+}
+
+.content-from-webflow {
+	min-height: 100%;
+}
+
+.pro-table-row:nth-child(even) {
+ 	background-color: #f0f5f8;
+}
+
+.pro-table-row:nth-child(even):hover  {
+ 	background-color: #dbe3eb;
+}
+
+.pro-table-row:nth-child(even).is-selected  {
+ 	background-color: #304359;
+ 	color: #fff;
+}
+
+.pro-table-row:nth-child(even).is-highlighted  {
+ 	background-color: rgba(0, 128, 253, 0.24);
+}
+
+.pro-table-row__right-actions-holder {
+	opacity: 0;
+}
+
+.pro-table-row:hover .pro-table-row__right-actions-holder {
+	opacity: 1;
+}
+
+.pro-table-header {
+    white-space: nowrap;
+}
+
+.pro-table-purchase-action-wrapper {
+	margin-top: -2px;
+	padding-top: 2px;
+	margin-bottom: -3px;
+	padding-bottom: 3px;
+}

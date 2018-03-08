@@ -1,6 +1,19 @@
 var APIURL = 'https://api.walutomat.pl';
 var APIURL_WITHOUT_SIGN = 'https://user.walutomat.pl';
 
+var SUPPORTED_CURRENCY_PAIRS = [
+  'EUR_GBP',
+  'EUR_USD',
+  'EUR_CHF',
+  'EUR_PLN',
+  'GBP_USD',
+  'GBP_CHF',
+  'GBP_PLN',
+  'USD_CHF',
+  'USD_PLN',
+  'CHF_PLN',
+];
+
 /*======================================================
 =            Functions for getting api data            =
 ======================================================*/
@@ -41,7 +54,6 @@ function sendRequest(requestOptions) {
   */
 
   var updatedRequest = signRequest(requestOptions);
-  console.log(updatedRequest);
   axios.post('/api', JSON.parse(updatedRequest))
     .then(function(response) {
       if (typeof requestOptions.onSuccess === 'function') {
@@ -113,6 +125,9 @@ proDashboard.controller('proDashboardController', function($scope) {
     });
 
     /*----------  Exchange rates table  ----------*/
+    $scope.exchangeRates__response = {};
+    $scope.exchangeRates = {};
+
     $scope.exchangeRates__get = function() {
       sendRequestWithoutSign({
         endpoint: '/api/public/marketBrief/',
@@ -122,8 +137,10 @@ proDashboard.controller('proDashboardController', function($scope) {
           $scope.exchangeRates__response = response.data;
 
           $scope.exchangeRates = $.extend($scope.exchangeRates, R.indexBy(R.prop('pair'), response.data));
-          console.log($scope.exchangeRates);
-          console.log($scope.exchangeRates.EUR_PLN.bestOffers.forex_now);
+          $.each($scope.exchangeRates, function(key, value) {
+            var thisKey = $scope.exchangeRates[key];
+            thisKey.bestOffers.spread_now = thisKey.bestOffers.ask_now - thisKey.bestOffers.bid_now;
+          });
 
           $scope.$applyAsync();
         },
@@ -133,8 +150,27 @@ proDashboard.controller('proDashboardController', function($scope) {
       });
     };
 
-    $scope.exchangeRates__response = {};
-    $scope.exchangeRates = {};
+    $.each(SUPPORTED_CURRENCY_PAIRS, function(index, value) {
+      $scope.exchangeRates[value] = {
+        pair: value,
+        bestOffers: {
+          forex_now: '–,––––',
+          bid_now: '–,––––',
+          ask_now: '–,––––',
+          spread_now: '–––',
+        },
+        lastExchanges: [],
+        dayExchanges: []
+      };
+    });
+
+    $scope.exchangeRates__formattedNumber = function(valueToFormat) {
+      if (typeof valueToFormat === 'number') {
+        return valueToFormat.toFixed(4).replace('.', ',');
+      } else {
+        return valueToFormat;
+      }
+    };
 
     /*----------  Wallet state  ----------*/
     $scope.walletState__get = function() {
@@ -188,6 +224,18 @@ proDashboard.controller('proDashboardController', function($scope) {
 
     /*----------  Navigation among currency pairs  ----------*/
     $scope.navigation__selectedPair = 'EUR_PLN';
+    $scope.navigation__chooseSelectedPair = function(pairToSelect) {
+      $scope.navigation__selectedPair = pairToSelect;
+    };
+
+    $scope.navigation__authorisationModalIsShown = false;
+    $scope.navigation__showAuthorisationModal = function() {
+      $scope.navigation__authorisationModalIsShown = true;
+    };
+    $scope.navigation__hideAuthorisationModal = function() {
+      $scope.navigation__authorisationModalIsShown = false;
+    };
+
 
     /*----------  Orderbook  ----------*/
     $scope.orderbook__allPairs = {};
@@ -212,20 +260,7 @@ proDashboard.controller('proDashboardController', function($scope) {
     };
 
     $scope.orderbook__getAllPairs = function() {
-      var supportedCurrencyPairs = [
-        'EUR_GBP',
-        'EUR_USD',
-        'EUR_CHF',
-        'EUR_PLN',
-        'GBP_USD',
-        'GBP_CHF',
-        'GBP_PLN',
-        'USD_CHF',
-        'USD_PLN',
-        'CHF_PLN',
-      ];
-
-      $.each(supportedCurrencyPairs, function(index, value) {
+      $.each(SUPPORTED_CURRENCY_PAIRS, function(index, value) {
         $scope.orderbook__getPair(value);
       });
     };
@@ -240,6 +275,7 @@ proDashboard.controller('proDashboardController', function($scope) {
         secret: $scope.secret,
         onSuccess: function(response) {
           $scope.myOrders__response = response.data;
+          $scope.myOrders = $.extend($scope.myOrders, response.data);
           $scope.$applyAsync();
           return response.data;
         },
@@ -253,27 +289,58 @@ proDashboard.controller('proDashboardController', function($scope) {
 
     $scope.myOrders = [];
 
-    /*----------  My orders  ----------*/
-    $scope.myOrders__get = function() {
-      sendRequest({
-        endpoint: '/api/v1/market/orders',
-        method: 'get',
-        body: '',
-        apikey: $scope.apiKey,
-        secret: $scope.secret,
-        onSuccess: function(response) {
-          $scope.myOrders__response = response.data;
-          $scope.$applyAsync();
-          return response.data;
-        },
-        onError: function(error) {
-          console.log(error);
-        }
-      });
+    $scope.orderbook__highlightOrdersToBuy = function(event) {
+      var thisRow = $(event.currentTarget).closest('.pro-table-row');
+      var previousRows = thisRow.prevAll();
+      thisRow.addClass('is-highlighted');
+      previousRows.addClass('is-highlighted');
     };
 
-    $scope.myOrders__response = {};
+    $scope.orderbook__removeHighlightFromOrdersToBuy = function(event) {
+      var thisRow = $(event.currentTarget).closest('.pro-table-row');
+      var previousRows = thisRow.prevAll();
+      thisRow.removeClass('is-highlighted');
+      previousRows.removeClass('is-highlighted');
+    };
 
-    $scope.myOrders = [];
+    $scope.orderbook__cancelPurchase = function(event) {
+      var thisRow = $(event.currentTarget).closest('.pro-table-row');
+      //also hide the confirmation buttons
+      thisRow.find('.pro-table-action__confirm-buttons').addClass('is-hidden');
+      thisRow.find('.pro-table-action__button').removeClass('is-hidden');
+    };
+
+    $scope.orderbook__showConfirmationButtons = function(event) {
+      $(event.currentTarget).addClass('is-hidden');
+      var thisRow = $(event.currentTarget).closest('.pro-table-row');
+      thisRow.find('.pro-table-action__confirm-buttons').removeClass('is-hidden');
+    };
+
+    $scope.orderbook__confirmPurchase = function(purchasePrice, purchaseVolume) {
+      console.log(purchasePrice);
+      //TODO: calculate purchase volume so that it will buy all the highlighted orders
+      //Should it refresh the state before purchase to prevent errors?
+      //Should it calculate this on server?
+    };
+
+
+    /*----------  Init  ----------*/
+    function proTable__getAllData() {
+      $scope.walletState__get();
+      $scope.exchangeRates__get();
+      $scope.orderbook__getAllPairs();
+      $scope.myOrders__get();
+    }
+
+    proTable__getAllData();
+    setInterval(function() {
+      proTable__getAllData();
+    }, 10000);
+
+    //TODO
+    //Ostatnie wymiany jeśli API public dostępne
+    //Dodawanie zleceń z formularza
+    //Usuwanie swoich zleceń
+    //Pokazywanie własnych zleceń na liście wszystkich zleceń
 
 });
