@@ -79,7 +79,9 @@
                       <div class="pro-card">
                         <div class="pro-card-header w-clearfix">
                           <div class="pro-card-header__left-side">
-                            <div class="pro-card-header__title">Kupno</div>
+                            <div class="pro-card-header__title">Oferty kupna (składasz ofertę wymiany 
+                              <span ng-bind="navigation__selectedPair__other">PLN</span> na <span ng-bind="navigation__selectedPair__base">EUR</span>)
+                            </div>
                           </div>
                           <div class="pro-card-header__right-side"></div>
                         </div>
@@ -255,7 +257,9 @@
                       <div class="pro-card">
                         <div class="pro-card-header w-clearfix">
                           <div class="pro-card-header__left-side">
-                            <div class="pro-card-header__title">Sprzedaż</div>
+                            <div class="pro-card-header__title">Oferty sprzedaży (składasz ofertę wymiany 
+                              <span ng-bind="navigation__selectedPair__base">PLN</span> na <span ng-bind="navigation__selectedPair__other">EUR</span>)
+                            </div>
                           </div>
                           <div class="pro-card-header__right-side"></div>
                         </div>
@@ -295,7 +299,7 @@
                                 </div>
                                 <div class="pro-table-cell for-offers__amount">
                                   <div class="pro-table-cell__inner">
-                                    <div class="pro-table-header-label">Kwota</div>
+                                    <div class="pro-table-header-label">Kwota w <span ng-bind="navigation__selectedPair__base"></span></div>
                                   </div>
                                 </div>
                                 <div class="pro-table-cell for-offers__amount-accumulated">

@@ -230,6 +230,7 @@ proDashboard.controller('proDashboardController', function($scope) {
         secret: $scope.apiCredentials.secret,
         onSuccess: function(response) {
           $scope.walletState__response = response.data;
+          console.log(response);
           $scope.walletState = $.extend($scope.walletState, R.indexBy(R.prop('currency'), response.data));
           $scope.$applyAsync();
           return response.data;
