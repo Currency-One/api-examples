@@ -32,7 +32,7 @@ function signRequest(requestOptions) { //endpoint, method, body, apikey, secret
       'X-API-KEY': requestOptions.apikey,
       'X-API-NONCE': timestamp,
       'X-API-SIGNATURE': sign
-    }
+    },
   }, null, 4);
 
   return updatedRequest;
@@ -54,6 +54,9 @@ function sendRequest(requestOptions) {
   */
 
   var updatedRequest = signRequest(requestOptions);
+
+  console.log(updatedRequest);
+
   axios.post('/api', JSON.parse(updatedRequest))
     .then(function(response) {
       if (typeof requestOptions.onSuccess === 'function') {
@@ -62,7 +65,7 @@ function sendRequest(requestOptions) {
     })
     .catch(function(error) {
       if (typeof requestOptions.onError === 'function') {
-        requestOptions.onError(error.message);
+        requestOptions.onError(error);
       }
     });
 }
@@ -110,19 +113,44 @@ var proDashboard = angular.module('proDashboard', []);
 proDashboard.controller('proDashboardController', function($scope) {
 
     /*----------  Saving api keys to local storage  ----------*/
-    $scope.apiKey = localStorage.getItem('proDashboard__apikey') || '';
-    $scope.$watch("apiKey", function(newVal, oldVal) {
+    $scope.apiCredentials = {};
+
+    if (typeof localStorage.getItem('proDashboard__apikey') === 'string' || typeof localStorage.getItem('proDashboard__secret') === 'number') {
+      $scope.apiCredentials.apiKey = localStorage.getItem('proDashboard__apikey');
+    } else {
+      $scope.apiCredentials.apiKey = '';
+    }
+
+    $scope.$watch("apiCredentials.apiKey", function(newVal, oldVal) {
       if (newVal !== oldVal) {
         localStorage.setItem('proDashboard__apikey', newVal);
       }
     });
 
-    $scope.secret = localStorage.getItem('proDashboard__secret') || '';
-    $scope.$watch("secret", function(newVal, oldVal) {
+    if (typeof localStorage.getItem('proDashboard__secret') === 'string' || typeof localStorage.getItem('proDashboard__secret') === 'number') {
+      $scope.apiCredentials.secret = localStorage.getItem('proDashboard__secret');
+    } else {
+      $scope.apiCredentials.secret = '';
+    }
+
+    $scope.$watch("apiCredentials.secret", function(newVal, oldVal) {
       if (newVal !== oldVal) {
         localStorage.setItem('proDashboard__secret', newVal);
       }
     });
+
+    /*----------  General helpers  ----------*/
+    $scope.formattedNumber = function(valueToFormat, decimalPlaces) {
+      if (typeof decimalPlaces !== 'number') {
+        decimalPlaces = 2;
+      }
+
+      if (typeof valueToFormat == 'number') {
+        return valueToFormat.toFixed(decimalPlaces).replace('.', ',');
+      } else {
+        return valueToFormat.replace('.', ',');
+      }
+    };
 
     /*----------  Exchange rates table  ----------*/
     $scope.exchangeRates__response = {};
@@ -140,16 +168,46 @@ proDashboard.controller('proDashboardController', function($scope) {
           $.each($scope.exchangeRates, function(key, value) {
             var thisKey = $scope.exchangeRates[key];
             thisKey.bestOffers.spread_now = thisKey.bestOffers.ask_now - thisKey.bestOffers.bid_now;
-          });
+
+            var findMinAndMaxFromLastExchanges = function() {
+              var lastExchangesMin = 100000; //TODO don't hardcode number here
+              var lastExchangesMax = 0;
+
+              $.each(thisKey.lastExchanges, function(index, value) {
+                if (value.price < lastExchangesMin) {
+                  lastExchangesMin = value.price; //TODO refactor
+                }
+              });
+              thisKey.lastExchanges.min = lastExchangesMin;
+
+              $.each(thisKey.lastExchanges, function(index, value) {
+                if (value.price > lastExchangesMax) {
+                  lastExchangesMax = value.price; //TODO refactor
+                }
+              });
+              thisKey.lastExchanges.max = lastExchangesMax;
+            };
+            findMinAndMaxFromLastExchanges();
+
+          }); //-- end each
 
           $scope.$applyAsync();
         },
         onError: function(error) {
+          FlashingNotifications.showAndHideNotification('error', 'Problem z pobraniem danych.');
           console.log(error);
         }
       });
     };
 
+    $scope.exchangeRates__calculateBarChartWidth = function(priceToCompare) {
+      var lastExchangesWithMinAndMax = $scope.exchangeRates[$scope.navigation__selectedPair].lastExchanges;
+      var calculatedBarChartWidth = ( (priceToCompare - lastExchangesWithMinAndMax.min)/(lastExchangesWithMinAndMax.max - lastExchangesWithMinAndMax.min) )*100;
+      if (calculatedBarChartWidth < 1) {
+        calculatedBarChartWidth = 1;
+      }
+      return calculatedBarChartWidth;
+    };
     $.each(SUPPORTED_CURRENCY_PAIRS, function(index, value) {
       $scope.exchangeRates[value] = {
         pair: value,
@@ -164,22 +222,14 @@ proDashboard.controller('proDashboardController', function($scope) {
       };
     });
 
-    $scope.exchangeRates__formattedNumber = function(valueToFormat) {
-      if (typeof valueToFormat === 'number') {
-        return valueToFormat.toFixed(4).replace('.', ',');
-      } else {
-        return valueToFormat;
-      }
-    };
-
     /*----------  Wallet state  ----------*/
     $scope.walletState__get = function() {
       sendRequest({
         endpoint: '/api/v1/account/balances',
         method: 'get',
         body: '',
-        apikey: $scope.apiKey,
-        secret: $scope.secret,
+        apikey: $scope.apiCredentials.apiKey,
+        secret: $scope.apiCredentials.secret,
         onSuccess: function(response) {
           $scope.walletState__response = response.data;
           $scope.walletState = $.extend($scope.walletState, R.indexBy(R.prop('currency'), response.data));
@@ -187,6 +237,7 @@ proDashboard.controller('proDashboardController', function($scope) {
           return response.data;
         },
         onError: function(error) {
+          FlashingNotifications.showAndHideNotification('error', 'Problem z pobraniem danych.');
           console.log(error);
         }
       });
@@ -245,8 +296,8 @@ proDashboard.controller('proDashboardController', function($scope) {
         endpoint: '/api/v1/public/market/orderbook/'+pair,
         method: 'get',
         body: '',
-        apikey: $scope.apiKey,
-        secret: $scope.secret,
+        apikey: $scope.apiCredentials.apiKey,
+        secret: $scope.apiCredentials.secret,
         onSuccess: function(response) {
           $scope.orderbook__response = response.data;
           $scope.orderbook__allPairs[pair] = response.data;
@@ -254,6 +305,7 @@ proDashboard.controller('proDashboardController', function($scope) {
           return response.data;
         },
         onError: function(error) {
+          FlashingNotifications.showAndHideNotification('error', 'Problem z pobraniem danych.');
           console.log(error);
         }
       });
@@ -265,30 +317,7 @@ proDashboard.controller('proDashboardController', function($scope) {
       });
     };
 
-    /*----------  My orders  ----------*/
-    $scope.myOrders__get = function() {
-      sendRequest({
-        endpoint: '/api/v1/market/orders',
-        method: 'get',
-        body: '',
-        apikey: $scope.apiKey,
-        secret: $scope.secret,
-        onSuccess: function(response) {
-          $scope.myOrders__response = response.data;
-          $scope.myOrders = $.extend($scope.myOrders, response.data);
-          $scope.$applyAsync();
-          return response.data;
-        },
-        onError: function(error) {
-          console.log(error);
-        }
-      });
-    };
-
-    $scope.myOrders__response = {};
-
-    $scope.myOrders = [];
-
+    /*----------  Orders buying  ----------*/
     $scope.orderbook__highlightOrdersToBuy = function(event) {
       var thisRow = $(event.currentTarget).closest('.pro-table-row');
       var previousRows = thisRow.prevAll();
@@ -305,7 +334,6 @@ proDashboard.controller('proDashboardController', function($scope) {
 
     $scope.orderbook__cancelPurchase = function(event) {
       var thisRow = $(event.currentTarget).closest('.pro-table-row');
-      //also hide the confirmation buttons
       thisRow.find('.pro-table-action__confirm-buttons').addClass('is-hidden');
       thisRow.find('.pro-table-action__button').removeClass('is-hidden');
     };
@@ -319,26 +347,189 @@ proDashboard.controller('proDashboardController', function($scope) {
     $scope.orderbook__confirmPurchase = function(purchasePrice, purchaseVolume) {
       console.log(purchasePrice);
       //TODO: calculate purchase volume so that it will buy all the highlighted orders
+      //TODO: preloader after confirming and waiting for response, prevent double submit
       //Should it refresh the state before purchase to prevent errors?
       //Should it calculate this on server?
     };
 
+    /*----------  Adding new orders  ----------*/
+    $scope.addNewOrder = {
+      inBids: {
+        price: "" || localStorage.getItem("proDashboard__addNewOrder__inBids__price"),
+        volume: "" || localStorage.getItem("proDashboard__addNewOrder__inBids__volume"),
+      },
+      inAsks: {
+        price: "" || localStorage.getItem("proDashboard__addNewOrder__inAsks__price"),
+        volume: "" || localStorage.getItem("proDashboard__addNewOrder__inAsks__volume"),
+      }
+    };
+
+    //TODO shorten and refactor storing in localstorage
+    $scope.$watch("addNewOrder.inBids.price", function(newVal, oldVal) {
+      if (newVal !== oldVal) {
+        localStorage.setItem('proDashboard__addNewOrder__inBids__price', newVal);
+      }
+    });
+
+    $scope.$watch("addNewOrder.inAsks.price", function(newVal, oldVal) {
+      if (newVal !== oldVal) {
+        localStorage.setItem('proDashboard__addNewOrder__inAsks__price', newVal);
+      }
+    });
+
+    $scope.$watch("addNewOrder.inBids.volume", function(newVal, oldVal) {
+      if (newVal !== oldVal) {
+        localStorage.setItem('proDashboard__addNewOrder__inBids__volume', newVal);
+      }
+    });
+
+    $scope.$watch("addNewOrder.inAsks.volume", function(newVal, oldVal) {
+      if (newVal !== oldVal) {
+        localStorage.setItem('proDashboard__addNewOrder__inAsks__volume', newVal);
+      }
+    });
+
+    $scope.addNewOrder__post = function(requestOptions) {
+      var requestParams = {
+        pair: requestOptions.pair,
+        submitId: uuid.v4(),
+        buySell: requestOptions.buySell,
+        price: Number(requestOptions.price.replace(',', '.')),
+        volume: Number(requestOptions.volume.replace(',', '.')),
+        volumeCurrency: requestOptions.volumeCurrency,
+        otherCurrency: requestOptions.otherCurrency,
+      };
+
+      console.log($.param(requestParams));
+
+      sendRequest({
+        endpoint: '/api/v1/market/orders/'+'?'+$.param(requestParams),
+        method: 'post',
+        apikey: $scope.apiCredentials.apiKey,
+        secret: $scope.apiCredentials.secret,
+        onSuccess: function(response) {
+          $scope.addNewOrder__response = response.data;
+          console.log(response.data);
+
+          if (response.data.orderId) {
+            FlashingNotifications.showAndHideNotification('success', 'Dodałeś zlecenie.');
+          }
+
+          if (response.data && response.data.data && response.data.data.errors) {
+            FlashingNotifications.showAndHideNotification('error', 'Problem z dodaniem zlecenia. ' + JSON.stringify(response.data.data.errors));
+          }
+
+          $scope.refreshData(); //after adding new order refresh state of my orders
+          //no need to $scope.$applyAsync(); because it is triggered in refreshData()
+
+          return response.data;
+        },
+        onError: function(error) {
+          FlashingNotifications.showAndHideNotification('error', 'Problem z wystawieniem zlecenia.');
+          console.log(error);
+        }
+      });
+    };
+
+    $scope.addNewOrder__showConfirmationButtons = function(event) {
+      $(event.currentTarget).closest('.pro-offer-form__button-cell').addClass('is-hidden');
+      var thisRow = $(event.currentTarget).closest('.pro-add-offer-row__form'); //TODO separate css classes from login using attributes
+      thisRow.find('.pro-add-offer-row__confirm-buttons').removeClass('is-hidden');
+    };
+
+    $scope.addNewOrder__hideConfirmationButtons = function(event) {
+      var thisRow = $(event.currentTarget).closest('.pro-add-offer-row__form');
+      thisRow.find('.pro-add-offer-row__confirm-buttons').addClass('is-hidden');
+      thisRow.find('.pro-offer-form__button-cell').removeClass('is-hidden');
+    };
+
+    $scope.addNewOrder__confirmNewOrder = function(inBidsOrInAsks) {
+      if (inBidsOrInAsks === 'inBids') {
+        $scope.addNewOrder__post({
+          pair: $scope.navigation__selectedPair,
+          price: $scope.addNewOrder.inBids.price,
+          volume: $scope.addNewOrder.inBids.volume,
+          buySell: 'BUY',
+          volumeCurrency: $scope.navigation__selectedPair.split('_')[0],
+          otherCurrency: $scope.navigation__selectedPair.split('_')[1],
+        });
+      }
+    };
+
+    $scope.addNewOrder__updatePriceInputInBids = function(newPrice) {
+      $scope.addNewOrder.inBids.price = (Number(newPrice)+(0.0001)).toFixed(4); //TODO - this will not support currencies with different decimal ratio, like HUF
+    };
+
+    $scope.addNewOrder__updatePriceInputInAsks = function(newPrice) {
+      $scope.addNewOrder.inAsks.price = (Number(newPrice)+(0.0001)).toFixed(4);
+    };
+
+    /*----------  My orders  ----------*/
+    $scope.myOrders__get = function() {
+      sendRequest({
+        endpoint: '/api/v1/market/orders',
+        method: 'get',
+        body: '',
+        apikey: $scope.apiCredentials.apiKey,
+        secret: $scope.apiCredentials.secret,
+        onSuccess: function(response) {
+          $scope.myOrders__response = response.data;
+          $scope.myOrders = $.extend($scope.myOrders, response.data);
+          $scope.$applyAsync();
+          return response.data;
+        },
+        onError: function(error) {
+          FlashingNotifications.showAndHideNotification('error', 'Problem z pobraniem danych.');
+          console.log(error);
+        }
+      });
+    };
+
+    $scope.myOrders__response = {};
+
+    $scope.myOrders = [];
+
+    /*----------  Moment.js formatting times  ----------*/
+    $scope.formattedTime = function(timeToFormat) {
+      return moment(timeToFormat).fromNow();
+    };
+
+    /*----------  Refreshing data  ----------*/
+    $scope.refreshData = function() {
+      proTable__getAllData();
+    };
 
     /*----------  Init  ----------*/
-    function proTable__getAllData() {
-      $scope.walletState__get();
+    function proTable__getPublicData() {
       $scope.exchangeRates__get();
       $scope.orderbook__getAllPairs();
-      $scope.myOrders__get();
+    }
+
+    function proTable__getPrivateData() {
+      if ($scope.apiCredentials.apiKey !== '') {
+        $scope.walletState__get();
+        $scope.myOrders__get();
+      }
+    }
+
+    function proTable__getAllData() {
+      proTable__getPublicData();
+      proTable__getPrivateData();
     }
 
     proTable__getAllData();
     setInterval(function() {
       proTable__getAllData();
-    }, 10000);
+    }, 10500);
+
+    //Show config modal if no apikey provided
+    if ($scope.apiCredentials.apiKey === '') {
+      $scope.navigation__showAuthorisationModal();
+    }
+
+    $('.initial-load-overlay').addClass('is-hidden');
 
     //TODO
-    //Ostatnie wymiany jeśli API public dostępne
     //Dodawanie zleceń z formularza
     //Usuwanie swoich zleceń
     //Pokazywanie własnych zleceń na liście wszystkich zleceń
@@ -346,5 +537,6 @@ proDashboard.controller('proDashboardController', function($scope) {
     //Wstawianie kursu o jeden pips większego w formularz po kliknięciu niebieskiego kursu
     //Formatowanie czasu przez moment.js żeby pokazywać krótki 1d, 1h itd.
     //Liczenie kwoty skumulowanej w ofertach
+    //Ostrzeżenie przy wpisywaniu zbyt odstającego od rynku kursu
 
 });

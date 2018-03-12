@@ -1617,15 +1617,15 @@ a {
 }
 
 .pro-table-cell.for-last-transactions__time {
-  width: 15%;
+  width: 20%;
 }
 
 .pro-table-cell.for-last-transactions__rate {
-  width: 70%;
+  width: 55%;
 }
 
 .pro-table-cell.for-last-transactions__amount {
-  width: 15%;
+  width: 25%;
 }
 
 .pro-table-cell.for-my-offers__currency {
@@ -1730,6 +1730,10 @@ a {
   float: left;
 }
 
+.pro-offer-form__button-cell.is-hidden {
+  display: none;
+}
+
 .pro-your-own-row-tag {
   display: inline-block;
   margin-top: 1px;
@@ -1749,6 +1753,7 @@ a {
   float: left;
   border-radius: 4px;
   color: #bb1520;
+  cursor: pointer;
 }
 
 .pro-your-own-cancel-offer-button__holder:hover {

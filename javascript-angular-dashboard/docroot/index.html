@@ -5,11 +5,55 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <link rel="stylesheet" href="normalize.css">
   <link rel="stylesheet" href="webflow.css">
+  <link rel="stylesheet" href="flashing-notifications.css">
   <link rel="stylesheet" href="c1-wt-pro.webflow.css">
   <link rel="stylesheet" href="additional-css.css">
 </head>
 
 <body class="pro-dashboard-body">
+
+  <!-- Flashing notifications https://github.com/maciejsaw/jQuery-FlashingNotifications --> 
+  <div class="flashing-notifications-wrapper">
+    <div js-selector="flashing-notification__neutral" class="flashing-notification is-transparent is-hidden">
+      <div class="flashing-notification__padding-wrapper">
+        <div class="flashing-notification__box">
+          <div class="flashing-notification__icon-on-right-holder">
+            <div flashing-notifications__action-close-notification="true" class="flashing-notification__icon is-close-icon"></div>
+          </div>
+          <div class="flashing-notification__icon-holder">
+            <div class="flashing-notification__icon is-info-icon"></div>
+          </div>
+          <div js-selector="flashing-notification-text" class="flashing-notification__text">Notification!</div>
+        </div>
+      </div>
+    </div>
+    <div js-selector="flashing-notification__success" class="flashing-notification is-transparent is-hidden">
+      <div class="flashing-notification__padding-wrapper">
+        <div class="flashing-notification__box is-green-success">
+          <div class="flashing-notification__icon-on-right-holder"></div>
+          <div class="flashing-notification__icon-holder">
+            <div class="flashing-notification__icon is-check"></div>
+          </div>
+          <div js-selector="flashing-notification-text" class="flashing-notification__text">Success!</div>
+        </div>
+      </div>
+    </div>
+    <div js-selector="flashing-notification__error" class="flashing-notification is-transparent is-hidden">
+      <div class="flashing-notification__padding-wrapper">
+        <div class="flashing-notification__box is-red-error">
+          <div class="flashing-notification__icon-on-right-holder">
+            <div class="flashing-notification__icon is-close-icon" flashing-notifications__action-close-notification="true"></div>
+          </div>
+          <div class="flashing-notification__icon-holder">
+            <div class="flashing-notification__icon is-error"></div>
+          </div>
+          <div js-selector="flashing-notification-text" class="flashing-notification__text">Oops... Something went wrong.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- End of flashing notifications https://github.com/maciejsaw/jQuery-FlashingNotifications --> 
+
   <div id="app" ng-app="proDashboard" ng-controller="proDashboardController">
     <div id="content-from-webflow">
       <div class="pro-body">
@@ -45,16 +89,24 @@
                               <div class="pro-offer-form">
                                 <div class="pro-add-offer-row__form">
                                   <div class="form-block-css-reset w-form">
-                                    <form name="email-form" data-name="Email Form" class="form-block-css-reset w-clearfix">
-                                      <div class="pro-offer-form__rate-cell"><input type="text" class="bem-text-input pro-input-in-offers-form w-input" maxlength="256" name="kurs-2" data-name="Kurs 2" placeholder="Kurs" id="kurs-2" required=""></div>
-                                      <div class="pro-offer-form__amount-cell"><input type="text" class="bem-text-input pro-input-in-offers-form w-input" maxlength="256" name="kwota-2" data-name="Kwota 2" placeholder="Kwota" id="kwota-2" required=""></div>
-                                      <div class="pro-offer-form__button-cell"><input type="submit" value="Wystaw" data-wait="Please wait..." class="bem-button pro-button-in-offers-form w-button"></div>
+                                    <form class="form-block-css-reset w-clearfix">
+                                      <div class="pro-offer-form__rate-cell">
+                                        <input type="text" class="bem-text-input pro-input-in-offers-form w-input" maxlength="6" name="kurs-2" data-name="Kurs 2" placeholder="Kurs" required=""
+                                               ng-model="addNewOrder.inBids.price">
+                                      </div>
+                                      <div class="pro-offer-form__amount-cell">
+                                        <input type="text" class="bem-text-input pro-input-in-offers-form w-input" maxlength="256" name="kwota-2" data-name="Kwota 2" placeholder="Kwota" required=""
+                                               ng-model="addNewOrder.inBids.volume">
+                                      </div>
+                                      <div class="pro-offer-form__button-cell">
+                                        <input type="submit" onClick="event.preventDefault()" ng-click="addNewOrder__showConfirmationButtons($event)" value="Wystaw" class="bem-button pro-button-in-offers-form w-button">
+                                      </div>
                                       <div class="pro-add-offer-row__confirm-buttons is-hidden">
                                         <div class="pro-add-offer-row__prompt-button-holder">
-                                          <div class="bem-button pro-button-in-offers-form is-secondary">Anuluj</div>
+                                          <div class="bem-button pro-button-in-offers-form is-secondary" ng-click="addNewOrder__hideConfirmationButtons($event)">Anuluj</div>
                                         </div>
                                         <div class="pro-add-offer-row__prompt-button-holder">
-                                          <div class="bem-button pro-button-in-offers-form">Potwierdź</div>
+                                          <div class="bem-button pro-button-in-offers-form" ng-click="addNewOrder__confirmNewOrder('inBids'); addNewOrder__hideConfirmationButtons($event);">Potwierdź</div>
                                         </div>
                                       </div>
                                     </form>
@@ -98,12 +150,12 @@
                                 <div class="pro-table-row w-clearfix" ng-repeat="order in orderbook__allPairs[navigation__selectedPair].bids">
                                   <div class="pro-table-cell for-offers__rate">
                                     <div class="pro-table-cell__inner">
-                                      <div class="pro-table-cell__text is-blue-link" ng-bind="order.price">–</div>
+                                      <div class="pro-table-cell__text is-blue-link" ng-bind="formattedNumber(order.price, 4)" ng-click="addNewOrder__updatePriceInputInBids(order.price)">–</div>
                                     </div>
                                   </div>
                                   <div class="pro-table-cell for-offers__amount">
                                     <div class="pro-table-cell__inner">
-                                      <div class="pro-table-cell__text" ng-bind="order.baseVolume">–</div>
+                                      <div class="pro-table-cell__text" ng-bind="formattedNumber(order.baseVolume)">–</div>
                                     </div>
                                   </div>
                                   <div class="pro-table-cell for-offers__amount-accumulated">
@@ -266,12 +318,12 @@
                                 <div class="pro-table-row w-clearfix" ng-repeat="order in orderbook__allPairs[navigation__selectedPair].asks">
                                   <div class="pro-table-cell for-offers__rate">
                                     <div class="pro-table-cell__inner">
-                                      <div class="pro-table-cell__text is-blue-link" ng-bind="order.price">–</div>
+                                      <div class="pro-table-cell__text is-blue-link" ng-bind="formattedNumber(order.price, 4)">–</div>
                                     </div>
                                   </div>
                                   <div class="pro-table-cell for-offers__amount">
                                     <div class="pro-table-cell__inner">
-                                      <div class="pro-table-cell__text" ng-bind="order.baseVolume">–</div>
+                                      <div class="pro-table-cell__text" ng-bind="formattedNumber(order.baseVolume)">–</div>
                                     </div>
                                   </div>
                                   <div class="pro-table-cell for-offers__amount-accumulated">
@@ -398,25 +450,25 @@
                                 </div>
                               </div>
                               <div class="pro-table-content">
-                                <div class="pro-table-row w-clearfix">
+                                <div class="pro-table-row w-clearfix" ng-repeat="lastExchange in exchangeRates[navigation__selectedPair].lastExchanges">
                                   <div class="pro-table-cell for-last-transactions__time">
                                     <div class="pro-table-cell__inner">
-                                      <div class="pro-table-cell__text">–</div>
+                                      <div class="pro-table-cell__text" ng-bind="formattedTime(lastExchange.ts)">–</div>
                                     </div>
                                   </div>
                                   <div class="pro-table-cell for-last-transactions__rate">
                                     <div class="pro-table-cell__inner">
                                       <div class="pro-number-with-bar-chart">
-                                        <div class="pro-number-with-bar-chart__text">–</div>
+                                        <div class="pro-number-with-bar-chart__text" ng-bind="formattedNumber(lastExchange.price, 4)">–</div>
                                         <div class="pro-number-with-bar-chart__bar-wrapper">
-                                          <div class="pro-number-with-bar-chart__bar-inner"></div>
+                                          <div class="pro-number-with-bar-chart__bar-inner" style="width: {{exchangeRates__calculateBarChartWidth(lastExchange.price)}}%"></div>
                                         </div>
                                       </div>
                                     </div>
                                   </div>
                                   <div class="pro-table-cell for-last-transactions__amount">
                                     <div class="pro-table-cell__inner">
-                                      <div class="pro-table-cell__text">–</div>
+                                      <div class="pro-table-cell__text" ng-bind="formattedNumber(lastExchange.volume)">–</div>
                                     </div>
                                   </div>
                                 </div>
@@ -500,7 +552,7 @@
                                   </div>
                                   <div class="pro-table-cell for-my-offers__time">
                                     <div class="pro-table-cell__inner">
-                                      <div class="pro-table-cell__text" ng-bind="order.submitTs|date:'short'">–</div>
+                                      <div class="pro-table-cell__text" ng-bind="formattedTime(order.submitTs)">–</div>
                                     </div>
                                   </div>
                                   <div class="pro-table-row__right-actions-holder w-clearfix">
@@ -571,17 +623,17 @@
                               </div>
                               <div class="pro-table-cell for-wallet-state__available">
                                 <div class="pro-table-cell__inner">
-                                  <div ng-bind="walletState.PLN.balanceAvailable" class="pro-table-cell__text">–</div>
+                                  <div ng-bind="formattedNumber(walletState.PLN.balanceAvailable)" class="pro-table-cell__text">–</div>
                                 </div>
                               </div>
                               <div class="pro-table-cell for-wallet-state__on-market">
                                 <div class="pro-table-cell__inner">
-                                  <div ng-bind="walletState.PLN.balanceReserved" class="pro-table-cell__text">–</div>
+                                  <div ng-bind="formattedNumber(walletState.PLN.balanceReserved)" class="pro-table-cell__text">–</div>
                                 </div>
                               </div>
                               <div class="pro-table-cell for-wallet-state__total">
                                 <div class="pro-table-cell__inner">
-                                  <div ng-bind="walletState.PLN.balanceAll" class="pro-table-cell__text">–</div>
+                                  <div ng-bind="formattedNumber(walletState.PLN.balanceAll)" class="pro-table-cell__text">–</div>
                                 </div>
                               </div>
                             </div>
@@ -593,17 +645,17 @@
                               </div>
                               <div class="pro-table-cell for-wallet-state__available">
                                 <div class="pro-table-cell__inner">
-                                  <div ng-bind="walletState.EUR.balanceAvailable" class="pro-table-cell__text">–</div>
+                                  <div ng-bind="formattedNumber(walletState.EUR.balanceAvailable)" class="pro-table-cell__text">–</div>
                                 </div>
                               </div>
                               <div class="pro-table-cell for-wallet-state__on-market">
                                 <div class="pro-table-cell__inner">
-                                  <div ng-bind="walletState.EUR.balanceReserved" class="pro-table-cell__text">–</div>
+                                  <div ng-bind="formattedNumber(walletState.EUR.balanceReserved)" class="pro-table-cell__text">–</div>
                                 </div>
                               </div>
                               <div class="pro-table-cell for-wallet-state__total">
                                 <div class="pro-table-cell__inner">
-                                  <div ng-bind="walletState.EUR.balanceAll" class="pro-table-cell__text">–</div>
+                                  <div ng-bind="formattedNumber(walletState.EUR.balanceAll)" class="pro-table-cell__text">–</div>
                                 </div>
                               </div>
                             </div>
@@ -615,17 +667,17 @@
                               </div>
                               <div class="pro-table-cell for-wallet-state__available">
                                 <div class="pro-table-cell__inner">
-                                  <div ng-bind="walletState.USD.balanceAvailable" class="pro-table-cell__text">–</div>
+                                  <div ng-bind="formattedNumber(walletState.USD.balanceAvailable)" class="pro-table-cell__text">–</div>
                                 </div>
                               </div>
                               <div class="pro-table-cell for-wallet-state__on-market">
                                 <div class="pro-table-cell__inner">
-                                  <div ng-bind="walletState.USD.balanceReserved" class="pro-table-cell__text">–</div>
+                                  <div ng-bind="formattedNumber(walletState.USD.balanceReserved)" class="pro-table-cell__text">–</div>
                                 </div>
                               </div>
                               <div class="pro-table-cell for-wallet-state__total">
                                 <div class="pro-table-cell__inner">
-                                  <div ng-bind="walletState.USD.balanceAll" class="pro-table-cell__text">–</div>
+                                  <div ng-bind="formattedNumber(walletState.USD.balanceAll)" class="pro-table-cell__text">–</div>
                                 </div>
                               </div>
                             </div>
@@ -637,17 +689,17 @@
                               </div>
                               <div class="pro-table-cell for-wallet-state__available">
                                 <div class="pro-table-cell__inner">
-                                  <div ng-bind="walletState.GBP.balanceAvailable" class="pro-table-cell__text">–</div>
+                                  <div ng-bind="formattedNumber(walletState.GBP.balanceAvailable)" class="pro-table-cell__text">–</div>
                                 </div>
                               </div>
                               <div class="pro-table-cell for-wallet-state__on-market">
                                 <div class="pro-table-cell__inner">
-                                  <div ng-bind="walletState.GBP.balanceReserved" class="pro-table-cell__text">–</div>
+                                  <div ng-bind="formattedNumber(walletState.GBP.balanceReserved)" class="pro-table-cell__text">–</div>
                                 </div>
                               </div>
                               <div class="pro-table-cell for-wallet-state__total">
                                 <div class="pro-table-cell__inner">
-                                  <div ng-bind="walletState.GBP.balanceAll" class="pro-table-cell__text">–</div>
+                                  <div ng-bind="formattedNumber(walletState.GBP.balanceAll)" class="pro-table-cell__text">–</div>
                                 </div>
                               </div>
                             </div>
@@ -659,17 +711,17 @@
                               </div>
                               <div class="pro-table-cell for-wallet-state__available">
                                 <div class="pro-table-cell__inner">
-                                  <div ng-bind="walletState.CHF.balanceAvailable" class="pro-table-cell__text">–</div>
+                                  <div ng-bind="formattedNumber(walletState.CHF.balanceAvailable)" class="pro-table-cell__text">–</div>
                                 </div>
                               </div>
                               <div class="pro-table-cell for-wallet-state__on-market">
                                 <div class="pro-table-cell__inner">
-                                  <div ng-bind="walletState.CHF.balanceReserved" class="pro-table-cell__text">–</div>
+                                  <div ng-bind="formattedNumber(walletState.CHF.balanceReserved)" class="pro-table-cell__text">–</div>
                                 </div>
                               </div>
                               <div class="pro-table-cell for-wallet-state__total">
                                 <div class="pro-table-cell__inner">
-                                  <div ng-bind="walletState.CHF.balanceAll" class="pro-table-cell__text">–</div>
+                                  <div ng-bind="formattedNumber(walletState.CHF.balanceAll)" class="pro-table-cell__text">–</div>
                                 </div>
                               </div>
                             </div>
@@ -728,22 +780,22 @@
                               </div>
                               <div class="pro-table-cell for-rates__avg">
                                 <div class="pro-table-cell__inner">
-                                  <div ng-bind="exchangeRates__formattedNumber(exchangeRates.EUR_PLN.bestOffers.forex_now)" class="pro-table-cell__text">–</div>
+                                  <div ng-bind="formattedNumber(exchangeRates.EUR_PLN.bestOffers.forex_now, 4)" class="pro-table-cell__text">–</div>
                                 </div>
                               </div>
                               <div class="pro-table-cell for-rates__we-buy">
                                 <div class="pro-table-cell__inner">
-                                  <div ng-bind="exchangeRates__formattedNumber(exchangeRates.EUR_PLN.bestOffers.bid_now)" class="pro-table-cell__text">–</div>
+                                  <div ng-bind="formattedNumber(exchangeRates.EUR_PLN.bestOffers.bid_now, 4)" class="pro-table-cell__text">–</div>
                                 </div>
                               </div>
                               <div class="pro-table-cell for-rates__we-sell">
                                 <div class="pro-table-cell__inner">
-                                  <div ng-bind="exchangeRates__formattedNumber(exchangeRates.EUR_PLN.bestOffers.ask_now)" class="pro-table-cell__text">–</div>
+                                  <div ng-bind="formattedNumber(exchangeRates.EUR_PLN.bestOffers.ask_now, 4)" class="pro-table-cell__text">–</div>
                                 </div>
                               </div>
                               <div class="pro-table-cell for-rates__spread">
                                 <div class="pro-table-cell__inner">
-                                  <div ng-bind="exchangeRates__formattedNumber(exchangeRates.EUR_PLN.bestOffers.spread_now)" class="pro-table-cell__text">–</div>
+                                  <div ng-bind="formattedNumber(exchangeRates.EUR_PLN.bestOffers.spread_now, 4)" class="pro-table-cell__text">–</div>
                                 </div>
                               </div>
                             </div>
@@ -757,22 +809,22 @@
                               </div>
                               <div class="pro-table-cell for-rates__avg">
                                 <div class="pro-table-cell__inner">
-                                  <div ng-bind="exchangeRates__formattedNumber(exchangeRates.USD_PLN.bestOffers.forex_now)" class="pro-table-cell__text">–</div>
+                                  <div ng-bind="formattedNumber(exchangeRates.USD_PLN.bestOffers.forex_now, 4)" class="pro-table-cell__text">–</div>
                                 </div>
                               </div>
                               <div class="pro-table-cell for-rates__we-buy">
                                 <div class="pro-table-cell__inner">
-                                  <div ng-bind="exchangeRates__formattedNumber(exchangeRates.USD_PLN.bestOffers.bid_now)" class="pro-table-cell__text">–</div>
+                                  <div ng-bind="formattedNumber(exchangeRates.USD_PLN.bestOffers.bid_now, 4)" class="pro-table-cell__text">–</div>
                                 </div>
                               </div>
                               <div class="pro-table-cell for-rates__we-sell">
                                 <div class="pro-table-cell__inner">
-                                  <div ng-bind="exchangeRates__formattedNumber(exchangeRates.USD_PLN.bestOffers.ask_now)" class="pro-table-cell__text">–</div>
+                                  <div ng-bind="formattedNumber(exchangeRates.USD_PLN.bestOffers.ask_now, 4)" class="pro-table-cell__text">–</div>
                                 </div>
                               </div>
                               <div class="pro-table-cell for-rates__spread">
                                 <div class="pro-table-cell__inner">
-                                  <div ng-bind="exchangeRates__formattedNumber(exchangeRates.USD_PLN.bestOffers.spread_now)" class="pro-table-cell__text">–</div>
+                                  <div ng-bind="formattedNumber(exchangeRates.USD_PLN.bestOffers.spread_now, 4)" class="pro-table-cell__text">–</div>
                                 </div>
                               </div>
                             </div>
@@ -786,22 +838,22 @@
                               </div>
                               <div class="pro-table-cell for-rates__avg">
                                 <div class="pro-table-cell__inner">
-                                  <div ng-bind="exchangeRates__formattedNumber(exchangeRates.CHF_PLN.bestOffers.forex_now)" class="pro-table-cell__text">–</div>
+                                  <div ng-bind="formattedNumber(exchangeRates.CHF_PLN.bestOffers.forex_now, 4)" class="pro-table-cell__text">–</div>
                                 </div>
                               </div>
                               <div class="pro-table-cell for-rates__we-buy">
                                 <div class="pro-table-cell__inner">
-                                  <div ng-bind="exchangeRates__formattedNumber(exchangeRates.CHF_PLN.bestOffers.bid_now)" class="pro-table-cell__text">–</div>
+                                  <div ng-bind="formattedNumber(exchangeRates.CHF_PLN.bestOffers.bid_now, 4)" class="pro-table-cell__text">–</div>
                                 </div>
                               </div>
                               <div class="pro-table-cell for-rates__we-sell">
                                 <div class="pro-table-cell__inner">
-                                  <div ng-bind="exchangeRates__formattedNumber(exchangeRates.CHF_PLN.bestOffers.ask_now)" class="pro-table-cell__text">–</div>
+                                  <div ng-bind="formattedNumber(exchangeRates.CHF_PLN.bestOffers.ask_now, 4)" class="pro-table-cell__text">–</div>
                                 </div>
                               </div>
                               <div class="pro-table-cell for-rates__spread">
                                 <div class="pro-table-cell__inner">
-                                  <div ng-bind="exchangeRates__formattedNumber(exchangeRates.CHF_PLN.bestOffers.spread_now)" class="pro-table-cell__text">–</div>
+                                  <div ng-bind="formattedNumber(exchangeRates.CHF_PLN.bestOffers.spread_now, 4)" class="pro-table-cell__text">–</div>
                                 </div>
                               </div>
                             </div>
@@ -815,22 +867,22 @@
                               </div>
                               <div class="pro-table-cell for-rates__avg">
                                 <div class="pro-table-cell__inner">
-                                  <div ng-bind="exchangeRates__formattedNumber(exchangeRates.GBP_PLN.bestOffers.forex_now)" class="pro-table-cell__text">–</div>
+                                  <div ng-bind="formattedNumber(exchangeRates.GBP_PLN.bestOffers.forex_now, 4)" class="pro-table-cell__text">–</div>
                                 </div>
                               </div>
                               <div class="pro-table-cell for-rates__we-buy">
                                 <div class="pro-table-cell__inner">
-                                  <div ng-bind="exchangeRates__formattedNumber(exchangeRates.GBP_PLN.bestOffers.bid_now)" class="pro-table-cell__text">–</div>
+                                  <div ng-bind="formattedNumber(exchangeRates.GBP_PLN.bestOffers.bid_now, 4)" class="pro-table-cell__text">–</div>
                                 </div>
                               </div>
                               <div class="pro-table-cell for-rates__we-sell">
                                 <div class="pro-table-cell__inner">
-                                  <div ng-bind="exchangeRates__formattedNumber(exchangeRates.GBP_PLN.bestOffers.ask_now)" class="pro-table-cell__text">–</div>
+                                  <div ng-bind="formattedNumber(exchangeRates.GBP_PLN.bestOffers.ask_now, 4)" class="pro-table-cell__text">–</div>
                                 </div>
                               </div>
                               <div class="pro-table-cell for-rates__spread">
                                 <div class="pro-table-cell__inner">
-                                  <div ng-bind="exchangeRates__formattedNumber(exchangeRates.GBP_PLN.bestOffers.spread_now)" class="pro-table-cell__text">–</div>
+                                  <div ng-bind="formattedNumber(exchangeRates.GBP_PLN.bestOffers.spread_now, 4)" class="pro-table-cell__text">–</div>
                                 </div>
                               </div>
                             </div>
@@ -844,22 +896,22 @@
                               </div>
                               <div class="pro-table-cell for-rates__avg">
                                 <div class="pro-table-cell__inner">
-                                  <div ng-bind="exchangeRates__formattedNumber(exchangeRates.EUR_USD.bestOffers.forex_now)" class="pro-table-cell__text">–</div>
+                                  <div ng-bind="formattedNumber(exchangeRates.EUR_USD.bestOffers.forex_now, 4)" class="pro-table-cell__text">–</div>
                                 </div>
                               </div>
                               <div class="pro-table-cell for-rates__we-buy">
                                 <div class="pro-table-cell__inner">
-                                  <div ng-bind="exchangeRates__formattedNumber(exchangeRates.EUR_USD.bestOffers.bid_now)" class="pro-table-cell__text">–</div>
+                                  <div ng-bind="formattedNumber(exchangeRates.EUR_USD.bestOffers.bid_now, 4)" class="pro-table-cell__text">–</div>
                                 </div>
                               </div>
                               <div class="pro-table-cell for-rates__we-sell">
                                 <div class="pro-table-cell__inner">
-                                  <div ng-bind="exchangeRates__formattedNumber(exchangeRates.EUR_USD.bestOffers.ask_now)" class="pro-table-cell__text">–</div>
+                                  <div ng-bind="formattedNumber(exchangeRates.EUR_USD.bestOffers.ask_now, 4)" class="pro-table-cell__text">–</div>
                                 </div>
                               </div>
                               <div class="pro-table-cell for-rates__spread">
                                 <div class="pro-table-cell__inner">
-                                  <div ng-bind="exchangeRates__formattedNumber(exchangeRates.EUR_USD.bestOffers.spread_now)" class="pro-table-cell__text">–</div>
+                                  <div ng-bind="formattedNumber(exchangeRates.EUR_USD.bestOffers.spread_now, 4)" class="pro-table-cell__text">–</div>
                                 </div>
                               </div>
                             </div>
@@ -873,22 +925,22 @@
                               </div>
                               <div class="pro-table-cell for-rates__avg">
                                 <div class="pro-table-cell__inner">
-                                  <div ng-bind="exchangeRates__formattedNumber(exchangeRates.EUR_GBP.bestOffers.forex_now)" class="pro-table-cell__text">–</div>
+                                  <div ng-bind="formattedNumber(exchangeRates.EUR_GBP.bestOffers.forex_now, 4)" class="pro-table-cell__text">–</div>
                                 </div>
                               </div>
                               <div class="pro-table-cell for-rates__we-buy">
                                 <div class="pro-table-cell__inner">
-                                  <div ng-bind="exchangeRates__formattedNumber(exchangeRates.EUR_GBP.bestOffers.bid_now)" class="pro-table-cell__text">–</div>
+                                  <div ng-bind="formattedNumber(exchangeRates.EUR_GBP.bestOffers.bid_now, 4)" class="pro-table-cell__text">–</div>
                                 </div>
                               </div>
                               <div class="pro-table-cell for-rates__we-sell">
                                 <div class="pro-table-cell__inner">
-                                  <div ng-bind="exchangeRates__formattedNumber(exchangeRates.EUR_GBP.bestOffers.ask_now)" class="pro-table-cell__text">–</div>
+                                  <div ng-bind="formattedNumber(exchangeRates.EUR_GBP.bestOffers.ask_now, 4)" class="pro-table-cell__text">–</div>
                                 </div>
                               </div>
                               <div class="pro-table-cell for-rates__spread">
                                 <div class="pro-table-cell__inner">
-                                  <div ng-bind="exchangeRates__formattedNumber(exchangeRates.EUR_GBP.bestOffers.spread_now)" class="pro-table-cell__text">–</div>
+                                  <div ng-bind="formattedNumber(exchangeRates.EUR_GBP.bestOffers.spread_now, 4)" class="pro-table-cell__text">–</div>
                                 </div>
                               </div>
                             </div>
@@ -902,22 +954,22 @@
                               </div>
                               <div class="pro-table-cell for-rates__avg">
                                 <div class="pro-table-cell__inner">
-                                  <div ng-bind="exchangeRates__formattedNumber(exchangeRates.EUR_CHF.bestOffers.forex_now)" class="pro-table-cell__text">–</div>
+                                  <div ng-bind="formattedNumber(exchangeRates.EUR_CHF.bestOffers.forex_now, 4)" class="pro-table-cell__text">–</div>
                                 </div>
                               </div>
                               <div class="pro-table-cell for-rates__we-buy">
                                 <div class="pro-table-cell__inner">
-                                  <div ng-bind="exchangeRates__formattedNumber(exchangeRates.EUR_CHF.bestOffers.bid_now)" class="pro-table-cell__text">–</div>
+                                  <div ng-bind="formattedNumber(exchangeRates.EUR_CHF.bestOffers.bid_now, 4)" class="pro-table-cell__text">–</div>
                                 </div>
                               </div>
                               <div class="pro-table-cell for-rates__we-sell">
                                 <div class="pro-table-cell__inner">
-                                  <div ng-bind="exchangeRates__formattedNumber(exchangeRates.EUR_CHF.bestOffers.ask_now)" class="pro-table-cell__text">–</div>
+                                  <div ng-bind="formattedNumber(exchangeRates.EUR_CHF.bestOffers.ask_now, 4)" class="pro-table-cell__text">–</div>
                                 </div>
                               </div>
                               <div class="pro-table-cell for-rates__spread">
                                 <div class="pro-table-cell__inner">
-                                  <div ng-bind="exchangeRates__formattedNumber(exchangeRates.EUR_CHF.bestOffers.spread_now)" class="pro-table-cell__text">–</div>
+                                  <div ng-bind="formattedNumber(exchangeRates.EUR_CHF.bestOffers.spread_now, 4)" class="pro-table-cell__text">–</div>
                                 </div>
                               </div>
                             </div>
@@ -931,22 +983,22 @@
                               </div>
                               <div class="pro-table-cell for-rates__avg">
                                 <div class="pro-table-cell__inner">
-                                  <div ng-bind="exchangeRates__formattedNumber(exchangeRates.GBP_USD.bestOffers.forex_now)" class="pro-table-cell__text">–</div>
+                                  <div ng-bind="formattedNumber(exchangeRates.GBP_USD.bestOffers.forex_now, 4)" class="pro-table-cell__text">–</div>
                                 </div>
                               </div>
                               <div class="pro-table-cell for-rates__we-buy">
                                 <div class="pro-table-cell__inner">
-                                  <div ng-bind="exchangeRates__formattedNumber(exchangeRates.GBP_USD.bestOffers.bid_now)" class="pro-table-cell__text">–</div>
+                                  <div ng-bind="formattedNumber(exchangeRates.GBP_USD.bestOffers.bid_now, 4)" class="pro-table-cell__text">–</div>
                                 </div>
                               </div>
                               <div class="pro-table-cell for-rates__we-sell">
                                 <div class="pro-table-cell__inner">
-                                  <div ng-bind="exchangeRates__formattedNumber(exchangeRates.GBP_USD.bestOffers.ask_now)" class="pro-table-cell__text">–</div>
+                                  <div ng-bind="formattedNumber(exchangeRates.GBP_USD.bestOffers.ask_now, 4)" class="pro-table-cell__text">–</div>
                                 </div>
                               </div>
                               <div class="pro-table-cell for-rates__spread">
                                 <div class="pro-table-cell__inner">
-                                  <div ng-bind="exchangeRates__formattedNumber(exchangeRates.GBP_USD.bestOffers.spread_now)" class="pro-table-cell__text">–</div>
+                                  <div ng-bind="formattedNumber(exchangeRates.GBP_USD.bestOffers.spread_now, 4)" class="pro-table-cell__text">–</div>
                                 </div>
                               </div>
                             </div>
@@ -960,22 +1012,22 @@
                               </div>
                               <div class="pro-table-cell for-rates__avg">
                                 <div class="pro-table-cell__inner">
-                                  <div ng-bind="exchangeRates__formattedNumber(exchangeRates.USD_CHF.bestOffers.forex_now)" class="pro-table-cell__text">–</div>
+                                  <div ng-bind="formattedNumber(exchangeRates.USD_CHF.bestOffers.forex_now, 4)" class="pro-table-cell__text">–</div>
                                 </div>
                               </div>
                               <div class="pro-table-cell for-rates__we-buy">
                                 <div class="pro-table-cell__inner">
-                                  <div ng-bind="exchangeRates__formattedNumber(exchangeRates.USD_CHF.bestOffers.bid_now)" class="pro-table-cell__text">–</div>
+                                  <div ng-bind="formattedNumber(exchangeRates.USD_CHF.bestOffers.bid_now, 4)" class="pro-table-cell__text">–</div>
                                 </div>
                               </div>
                               <div class="pro-table-cell for-rates__we-sell">
                                 <div class="pro-table-cell__inner">
-                                  <div ng-bind="exchangeRates__formattedNumber(exchangeRates.USD_CHF.bestOffers.ask_now)" class="pro-table-cell__text">–</div>
+                                  <div ng-bind="formattedNumber(exchangeRates.USD_CHF.bestOffers.ask_now, 4)" class="pro-table-cell__text">–</div>
                                 </div>
                               </div>
                               <div class="pro-table-cell for-rates__spread">
                                 <div class="pro-table-cell__inner">
-                                  <div ng-bind="exchangeRates__formattedNumber(exchangeRates.USD_CHF.bestOffers.spread_now)" class="pro-table-cell__text">–</div>
+                                  <div ng-bind="formattedNumber(exchangeRates.USD_CHF.bestOffers.spread_now, 4)" class="pro-table-cell__text">–</div>
                                 </div>
                               </div>
                             </div>
@@ -989,22 +1041,22 @@
                               </div>
                               <div class="pro-table-cell for-rates__avg">
                                 <div class="pro-table-cell__inner">
-                                  <div ng-bind="exchangeRates__formattedNumber(exchangeRates.GBP_CHF.bestOffers.forex_now)" class="pro-table-cell__text">–</div>
+                                  <div ng-bind="formattedNumber(exchangeRates.GBP_CHF.bestOffers.forex_now, 4)" class="pro-table-cell__text">–</div>
                                 </div>
                               </div>
                               <div class="pro-table-cell for-rates__we-buy">
                                 <div class="pro-table-cell__inner">
-                                  <div ng-bind="exchangeRates__formattedNumber(exchangeRates.GBP_CHF.bestOffers.bid_now)" class="pro-table-cell__text">–</div>
+                                  <div ng-bind="formattedNumber(exchangeRates.GBP_CHF.bestOffers.bid_now, 4)" class="pro-table-cell__text">–</div>
                                 </div>
                               </div>
                               <div class="pro-table-cell for-rates__we-sell">
                                 <div class="pro-table-cell__inner">
-                                  <div ng-bind="exchangeRates__formattedNumber(exchangeRates.GBP_CHF.bestOffers.ask_now)" class="pro-table-cell__text">–</div>
+                                  <div ng-bind="formattedNumber(exchangeRates.GBP_CHF.bestOffers.ask_now, 4)" class="pro-table-cell__text">–</div>
                                 </div>
                               </div>
                               <div class="pro-table-cell for-rates__spread">
                                 <div class="pro-table-cell__inner">
-                                  <div ng-bind="exchangeRates__formattedNumber(exchangeRates.GBP_CHF.bestOffers.spread_now)" class="pro-table-cell__text">–</div>
+                                  <div ng-bind="formattedNumber(exchangeRates.GBP_CHF.bestOffers.spread_now, 4)" class="pro-table-cell__text">–</div>
                                 </div>
                               </div>
                             </div>
@@ -1040,11 +1092,11 @@
                   <div>Aby skorzystać z tego panelu musisz posiadać klucz API. Nie wiesz o co chodzi? Skontaktuj się z Biurem Obsługi Klienta</div>
                   <div class="generic-form__fieldset">
                     <label for="apikey">ID / Apikey:</label>
-                    <input type="password" class="bem-text-input" ng-model="apiKey">
+                    <input type="password" class="bem-text-input" ng-model="apiCredentials.apiKey">
                   </div>
                   <div class="generic-form__fieldset">
                     <label for="secret">Kod Secret:</label>
-                    <input type="password" class="bem-text-input" ng-model="secret">
+                    <input type="password" class="bem-text-input" ng-model="apiCredentials.secret">
                   </div>
                   <!-- <div>
                     <button class="bem-button" ng-click="walletState__get()">Get wallet state</button>
@@ -1066,7 +1118,7 @@
               </div>
               <div class="modal-window__footer w-clearfix">
                 <div class="modal-window__footer-buttons on-left">
-                  <div ng-click="navigation__hideAuthorisationModal()" class="bem-button">Zamknij</div>
+                  <div ng-click="navigation__hideAuthorisationModal(); refreshData();" class="bem-button">Zamknij</div>
                 </div>
               </div>
             </div>
@@ -1074,14 +1126,23 @@
         </div>
       </div>
     </div>
+    <div class="initial-load-overlay">
+      <div class="initial-load-overlay__spinner">
+        <div animation-spin="true" class="bem-spinner">
+        </div>
+      </div>
+    </div>
   </div>
 
-  <script type="text/javascript" src="https://vuejs.org/js/vue.min.js"></script>
   <script type="text/javascript" src="https://unpkg.com/uiv/dist/uiv.min.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jsSHA/2.3.1/sha256.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E=" crossorigin="anonymous"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/ramda/0.25.0/ramda.min.js"></script>
+  <script type="text/javascript" src="flashing-notifications.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.21.0/moment.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/node-uuid/1.4.8/uuid.min.js"></script>
+  <script type="text/javascript" src="moment.custom.locale.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.6/angular.js"></script>
   <script type="text/javascript" src="main.js"></script>
 </body>
