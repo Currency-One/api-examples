@@ -55,8 +55,6 @@ function sendRequest(requestOptions) {
 
   var updatedRequest = signRequest(requestOptions);
 
-  console.log(updatedRequest);
-
   axios.post('/api', JSON.parse(updatedRequest))
     .then(function(response) {
       if (typeof requestOptions.onSuccess === 'function') {
@@ -275,9 +273,19 @@ proDashboard.controller('proDashboardController', function($scope) {
 
     /*----------  Navigation among currency pairs  ----------*/
     $scope.navigation__selectedPair = 'EUR_PLN';
+    $scope.navigation__selectedPair__base = 'EUR';
+    $scope.navigation__selectedPair__other = 'PLN';
+
     $scope.navigation__chooseSelectedPair = function(pairToSelect) {
       $scope.navigation__selectedPair = pairToSelect;
     };
+
+    $scope.$watch("navigation__selectedPair", function(newVal, oldVal) {
+      if (newVal !== oldVal) {
+        $scope.navigation__selectedPair__base = newVal.split('_')[0];
+        $scope.navigation__selectedPair__other = newVal.split('_')[1];
+      }
+    });
 
     $scope.navigation__authorisationModalIsShown = false;
     $scope.navigation__showAuthorisationModal = function() {
@@ -449,9 +457,9 @@ proDashboard.controller('proDashboardController', function($scope) {
           pair: $scope.navigation__selectedPair,
           price: $scope.addNewOrder.inBids.price,
           volume: $scope.addNewOrder.inBids.volume,
-          buySell: 'BUY',
-          volumeCurrency: $scope.navigation__selectedPair.split('_')[0],
-          otherCurrency: $scope.navigation__selectedPair.split('_')[1],
+          buySell: 'SELL',
+          volumeCurrency: $scope.navigation__selectedPair__other,
+          otherCurrency: $scope.navigation__selectedPair__base,
         });
       }
     };

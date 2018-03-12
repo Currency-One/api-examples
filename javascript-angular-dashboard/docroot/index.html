@@ -127,7 +127,7 @@
                                 </div>
                                 <div class="pro-table-cell for-offers__amount">
                                   <div class="pro-table-cell__inner">
-                                    <div class="pro-table-header-label">Kwota</div>
+                                    <div class="pro-table-header-label">Kwota w <span ng-bind="navigation__selectedPair__other"></span></div>
                                   </div>
                                 </div>
                                 <div class="pro-table-cell for-offers__amount-accumulated">
@@ -155,7 +155,7 @@
                                   </div>
                                   <div class="pro-table-cell for-offers__amount">
                                     <div class="pro-table-cell__inner">
-                                      <div class="pro-table-cell__text" ng-bind="formattedNumber(order.baseVolume)">–</div>
+                                      <div class="pro-table-cell__text" ng-bind="formattedNumber(order.marketVolume)">–</div>
                                     </div>
                                   </div>
                                   <div class="pro-table-cell for-offers__amount-accumulated">
