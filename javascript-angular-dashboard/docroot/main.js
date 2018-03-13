@@ -134,6 +134,9 @@ proDashboard.controller('proDashboardController', function($scope) {
     $scope.$watch("apiCredentials.secret", function(newVal, oldVal) {
       if (newVal !== oldVal) {
         localStorage.setItem('proDashboard__secret', newVal);
+        if (newVal === "" || typeof newVal === 'undefined') {
+          localStorage.removeItem('proDashboard__secret');
+        }
       }
     });
 
@@ -230,7 +233,6 @@ proDashboard.controller('proDashboardController', function($scope) {
         secret: $scope.apiCredentials.secret,
         onSuccess: function(response) {
           $scope.walletState__response = response.data;
-          console.log(response);
           $scope.walletState = $.extend($scope.walletState, R.indexBy(R.prop('currency'), response.data));
           $scope.$applyAsync();
           return response.data;
@@ -328,29 +330,29 @@ proDashboard.controller('proDashboardController', function($scope) {
 
     /*----------  Orders buying  ----------*/
     $scope.orderbook__highlightOrdersToBuy = function(event) {
-      var thisRow = $(event.currentTarget).closest('.pro-table-row');
+      var thisRow = $(event.currentTarget).closest('[js-selector="orderbook-row"]');
       var previousRows = thisRow.prevAll();
       thisRow.addClass('is-highlighted');
       previousRows.addClass('is-highlighted');
     };
 
     $scope.orderbook__removeHighlightFromOrdersToBuy = function(event) {
-      var thisRow = $(event.currentTarget).closest('.pro-table-row');
+      var thisRow = $(event.currentTarget).closest('[js-selector="orderbook-row"]');
       var previousRows = thisRow.prevAll();
       thisRow.removeClass('is-highlighted');
       previousRows.removeClass('is-highlighted');
     };
 
     $scope.orderbook__cancelPurchase = function(event) {
-      var thisRow = $(event.currentTarget).closest('.pro-table-row');
-      thisRow.find('.pro-table-action__confirm-buttons').addClass('is-hidden');
-      thisRow.find('.pro-table-action__button').removeClass('is-hidden');
+      var thisRow = $(event.currentTarget).closest('[js-selector="orderbook-row"]');
+      thisRow.find('[js-selector="orderbook-confirm-buttons"]').addClass('is-hidden');
+      thisRow.find('[js-selector="orderbook-action-button"]').removeClass('is-hidden');
     };
 
     $scope.orderbook__showConfirmationButtons = function(event) {
       $(event.currentTarget).addClass('is-hidden');
-      var thisRow = $(event.currentTarget).closest('.pro-table-row');
-      thisRow.find('.pro-table-action__confirm-buttons').removeClass('is-hidden');
+      var thisRow = $(event.currentTarget).closest('[js-selector="orderbook-row"]');
+      thisRow.find('[js-selector="orderbook-confirm-buttons"]').removeClass('is-hidden');
     };
 
     $scope.orderbook__confirmPurchase = function(purchasePrice, purchaseVolume) {
@@ -377,28 +379,46 @@ proDashboard.controller('proDashboardController', function($scope) {
     $scope.$watch("addNewOrder.inBids.price", function(newVal, oldVal) {
       if (newVal !== oldVal) {
         localStorage.setItem('proDashboard__addNewOrder__inBids__price', newVal);
+        if (newVal === "" || typeof newVal === 'undefined') {
+          localStorage.removeItem('proDashboard__addNewOrder__inBids__price');
+        }
       }
     });
 
     $scope.$watch("addNewOrder.inAsks.price", function(newVal, oldVal) {
       if (newVal !== oldVal) {
         localStorage.setItem('proDashboard__addNewOrder__inAsks__price', newVal);
+        if (newVal === "" || typeof newVal === 'undefined') {
+          localStorage.removeItem('proDashboard__addNewOrder__inAsks__price');
+        }
       }
     });
 
     $scope.$watch("addNewOrder.inBids.volume", function(newVal, oldVal) {
       if (newVal !== oldVal) {
         localStorage.setItem('proDashboard__addNewOrder__inBids__volume', newVal);
+        if (newVal === "" || typeof newVal === 'undefined') {
+          localStorage.removeItem('proDashboard__addNewOrder__inBids__volume');
+        }
       }
     });
 
     $scope.$watch("addNewOrder.inAsks.volume", function(newVal, oldVal) {
       if (newVal !== oldVal) {
         localStorage.setItem('proDashboard__addNewOrder__inAsks__volume', newVal);
+        if (newVal === "" || typeof newVal === 'undefined') {
+          localStorage.removeItem('proDashboard__addNewOrder__inAsks__volume');
+        }
       }
     });
 
     $scope.addNewOrder__post = function(requestOptions) {
+      //basic frontend validation...
+      if (!requestOptions.price || !requestOptions.volume) {
+        FlashingNotifications.showAndHideNotification('error', 'Niepoprawny kurs lub kwota');
+        return;
+      }
+
       var requestParams = {
         pair: requestOptions.pair,
         submitId: uuid.v4(),
@@ -428,8 +448,14 @@ proDashboard.controller('proDashboardController', function($scope) {
             FlashingNotifications.showAndHideNotification('error', 'Problem z dodaniem zlecenia. ' + JSON.stringify(response.data.data.errors));
           }
 
-          $scope.refreshData(); //after adding new order refresh state of my orders
-          //no need to $scope.$applyAsync(); because it is triggered in refreshData()
+          if (response.data && response.data.data && response.data.data.problem) {
+            FlashingNotifications.showAndHideNotification('error', 'Problem z dodaniem zlecenia. ' + JSON.stringify(response.data.data.problem));
+          }
+
+          setTimeout(function() {
+            $scope.refreshData(); //after adding new order refresh state of my orders
+            //no need to $scope.$applyAsync(); because it is triggered in refreshData()
+          }, 500); //timeout needed to give server some time to refersh data
 
           return response.data;
         },
@@ -441,15 +467,15 @@ proDashboard.controller('proDashboardController', function($scope) {
     };
 
     $scope.addNewOrder__showConfirmationButtons = function(event) {
-      $(event.currentTarget).closest('.pro-offer-form__button-cell').addClass('is-hidden');
-      var thisRow = $(event.currentTarget).closest('.pro-add-offer-row__form'); //TODO separate css classes from login using attributes
-      thisRow.find('.pro-add-offer-row__confirm-buttons').removeClass('is-hidden');
+      var thisRow = $(event.currentTarget).closest('[js-selector="add-offer-form-row"]');
+      $(event.currentTarget).closest('[js-selector="offer-button-cell"]').addClass('is-hidden');
+      thisRow.find('[js-selector="add-offer-form-confirm-buttons"]').removeClass('is-hidden');
     };
 
     $scope.addNewOrder__hideConfirmationButtons = function(event) {
-      var thisRow = $(event.currentTarget).closest('.pro-add-offer-row__form');
-      thisRow.find('.pro-add-offer-row__confirm-buttons').addClass('is-hidden');
-      thisRow.find('.pro-offer-form__button-cell').removeClass('is-hidden');
+      var thisRow = $(event.currentTarget).closest('[js-selector="add-offer-form-row"]');
+      thisRow.find('[js-selector="add-offer-form-confirm-buttons"]').addClass('is-hidden');
+      thisRow.find('[js-selector="offer-button-cell"]').removeClass('is-hidden');
     };
 
     $scope.addNewOrder__confirmNewOrder = function(inBidsOrInAsks) {
@@ -462,6 +488,15 @@ proDashboard.controller('proDashboardController', function($scope) {
           volumeCurrency: $scope.navigation__selectedPair__other,
           otherCurrency: $scope.navigation__selectedPair__base,
         });
+      } else if (inBidsOrInAsks === 'inAsks') {
+        $scope.addNewOrder__post({
+          pair: $scope.navigation__selectedPair,
+          price: $scope.addNewOrder.inAsks.price,
+          volume: $scope.addNewOrder.inAsks.volume,
+          buySell: 'SELL',
+          volumeCurrency: $scope.navigation__selectedPair__base,
+          otherCurrency: $scope.navigation__selectedPair__other,
+        });
       }
     };
 
@@ -470,7 +505,7 @@ proDashboard.controller('proDashboardController', function($scope) {
     };
 
     $scope.addNewOrder__updatePriceInputInAsks = function(newPrice) {
-      $scope.addNewOrder.inAsks.price = (Number(newPrice)+(0.0001)).toFixed(4);
+      $scope.addNewOrder.inAsks.price = (Number(newPrice)-(0.0001)).toFixed(4);
     };
 
     /*----------  My orders  ----------*/
@@ -483,7 +518,7 @@ proDashboard.controller('proDashboardController', function($scope) {
         secret: $scope.apiCredentials.secret,
         onSuccess: function(response) {
           $scope.myOrders__response = response.data;
-          $scope.myOrders = $.extend($scope.myOrders, response.data);
+          $scope.myOrders = response.data;
           $scope.$applyAsync();
           return response.data;
         },
@@ -498,6 +533,63 @@ proDashboard.controller('proDashboardController', function($scope) {
 
     $scope.myOrders = [];
 
+    /*----------  Closing orders  ----------*/
+    $scope.closeOrder__post = function(requestOptions) {
+      var orderToClose = requestOptions.orderId;
+
+      sendRequest({
+        endpoint: '/api/v1/market/orders/close/'+orderToClose,
+        method: 'post',
+        apikey: $scope.apiCredentials.apiKey,
+        secret: $scope.apiCredentials.secret,
+        onSuccess: function(response) {
+          $scope.orderToClose__response = response.data;
+          console.log(response.data);
+
+          if (response.data.orderId) {
+            FlashingNotifications.showAndHideNotification('success', 'Zamknąłeś zlecenie.');
+          }
+
+          if (response.data && response.data.data && response.data.data.errors) {
+            FlashingNotifications.showAndHideNotification('error', 'Problem.' + JSON.stringify(response.data.data.errors));
+          }
+
+          if (response.data.data) {
+            FlashingNotifications.showAndHideNotification('error', 'Problem.' + JSON.stringify(response.data.data));
+          }
+
+          setTimeout(function() {
+            $scope.refreshData(); //after adding new order refresh state of my orders
+            //no need to $scope.$applyAsync(); because it is triggered in refreshData()
+          }, 500); //timeout needed to give server some time to refersh data
+
+          return response.data;
+        },
+        onError: function(error) {
+          FlashingNotifications.showAndHideNotification('error', 'Problem.');
+          console.log(error);
+        }
+      });
+    };
+
+    $scope.closeOrder__confirmCloseOrder = function(orderIdToClose) {
+      $scope.closeOrder__post({
+        orderId: orderIdToClose,
+      });
+    };
+
+    $scope.closeOrder__showConfirmationButtons = function(event) {
+      var thisParent = $(event.currentTarget).closest('[js-selector="cancel-offer-buttons-wrapper"]');
+      thisParent.find('[js-selector="cancel-offer-confirm-buttons"]').removeClass('is-hidden');
+      thisParent.find('[js-selector="cancel-offer-close-button"]').addClass('is-hidden');
+    };
+
+    $scope.closeOrder__hideConfirmationButtons = function(event) {
+      var thisParent = $(event.currentTarget).closest('[js-selector="cancel-offer-buttons-wrapper"]');
+      thisParent.find('[js-selector="cancel-offer-confirm-buttons"]').addClass('is-hidden');
+      thisParent.find('[js-selector="cancel-offer-close-button"]').removeClass('is-hidden');
+    };
+
     /*----------  Moment.js formatting times  ----------*/
     $scope.formattedTime = function(timeToFormat) {
       return moment(timeToFormat).fromNow();
@@ -511,13 +603,17 @@ proDashboard.controller('proDashboardController', function($scope) {
     /*----------  Init  ----------*/
     function proTable__getPublicData() {
       $scope.exchangeRates__get();
-      $scope.orderbook__getAllPairs();
+      setTimeout(function() {
+        $scope.orderbook__getAllPairs();
+      }, 5); //timeout to ensure that API-NONCE is unique (signature is from different timestamp) otherwise api returns error
     }
 
     function proTable__getPrivateData() {
       if ($scope.apiCredentials.apiKey !== '') {
         $scope.walletState__get();
-        $scope.myOrders__get();
+        setTimeout(function() {
+          $scope.myOrders__get();
+        }, 10); //timeout to ensure that API-NONCE is unique (signature is from different timestamp)
       }
     }
 
@@ -536,16 +632,13 @@ proDashboard.controller('proDashboardController', function($scope) {
       $scope.navigation__showAuthorisationModal();
     }
 
-    $('.initial-load-overlay').addClass('is-hidden');
+    $('[js-selector="initial-load-overlay"]').addClass('is-hidden');
 
     //TODO
-    //Dodawanie zleceń z formularza
-    //Usuwanie swoich zleceń
-    //Pokazywanie własnych zleceń na liście wszystkich zleceń
-    //Success messages / error messages
-    //Wstawianie kursu o jeden pips większego w formularz po kliknięciu niebieskiego kursu
-    //Formatowanie czasu przez moment.js żeby pokazywać krótki 1d, 1h itd.
+    //Pokazywanie własnych zleceń na liście wszystkich zleceń - oznaczanie "W TYM TWOJA"
     //Liczenie kwoty skumulowanej w ofertach
     //Ostrzeżenie przy wpisywaniu zbyt odstającego od rynku kursu
+    //Preloader po kliknięciu w button wysyłający request
+    //Pasek postępu pokazujący ile zostało sekund do odświeżenia
 
 });

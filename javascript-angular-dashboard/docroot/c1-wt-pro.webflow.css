@@ -1760,6 +1760,10 @@ a {
   background-color: rgba(252, 36, 51, .16);
 }
 
+.pro-your-own-cancel-offer-button__holder.is-hidden {
+  display: none;
+}
+
 .pro-main-column__right-side {
   width: 50%;
   padding-right: 8px;
@@ -1828,6 +1832,7 @@ a {
 
 .pro-your-own-cancel-offer-button__prompt-wrapper {
   float: left;
+  background-color: #fff;
 }
 
 .pro-your-own-cancel-offer-button__prompt-wrapper.is-hidden {

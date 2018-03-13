@@ -89,8 +89,8 @@
                           <div class="pro-card-content__inner">
                             <div class="pro-table">
                               <div class="pro-offer-form">
-                                <div class="pro-add-offer-row__form">
-                                  <div class="form-block-css-reset w-form">
+                                <div class="pro-add-offer-row__form" js-selector="add-offer-form-row">
+                                  <div class="form-block-css-reset">
                                     <form class="form-block-css-reset w-clearfix">
                                       <div class="pro-offer-form__rate-cell">
                                         <input type="text" class="bem-text-input pro-input-in-offers-form w-input" maxlength="6" name="kurs-2" data-name="Kurs 2" placeholder="Kurs" required=""
@@ -100,10 +100,10 @@
                                         <input type="text" class="bem-text-input pro-input-in-offers-form w-input" maxlength="256" name="kwota-2" data-name="Kwota 2" placeholder="Kwota" required=""
                                                ng-model="addNewOrder.inBids.volume">
                                       </div>
-                                      <div class="pro-offer-form__button-cell">
+                                      <div class="pro-offer-form__button-cell" js-selector="offer-button-cell">
                                         <input type="submit" onClick="event.preventDefault()" ng-click="addNewOrder__showConfirmationButtons($event)" value="Wystaw" class="bem-button pro-button-in-offers-form w-button">
                                       </div>
-                                      <div class="pro-add-offer-row__confirm-buttons is-hidden">
+                                      <div class="pro-add-offer-row__confirm-buttons is-hidden" js-selector="add-offer-form-confirm-buttons">
                                         <div class="pro-add-offer-row__prompt-button-holder">
                                           <div class="bem-button pro-button-in-offers-form is-secondary" ng-click="addNewOrder__hideConfirmationButtons($event)">Anuluj</div>
                                         </div>
@@ -112,12 +112,6 @@
                                         </div>
                                       </div>
                                     </form>
-                                    <div class="w-form-done">
-                                      <div>Thank you! Your submission has been received!</div>
-                                    </div>
-                                    <div class="w-form-fail">
-                                      <div>Oops! Something went wrong while submitting the form.</div>
-                                    </div>
                                   </div>
                                 </div>
                               </div>
@@ -149,7 +143,7 @@
                                 </div>
                               </div>
                               <div class="pro-table-content">
-                                <div class="pro-table-row w-clearfix" ng-repeat="order in orderbook__allPairs[navigation__selectedPair].bids">
+                                <div class="pro-table-row w-clearfix" js-selector="orderbook-row" ng-repeat="order in orderbook__allPairs[navigation__selectedPair].bids">
                                   <div class="pro-table-cell for-offers__rate">
                                     <div class="pro-table-cell__inner">
                                       <div class="pro-table-cell__text is-blue-link" ng-bind="formattedNumber(order.price, 4)" ng-click="addNewOrder__updatePriceInputInBids(order.price)">–</div>
@@ -180,14 +174,16 @@
                                          ng-mouseenter="orderbook__highlightOrdersToBuy($event)"
                                          ng-mouseleave="orderbook__removeHighlightFromOrdersToBuy($event)">
                                       <div ng-if="$first" class="pro-table-action__button"
-                                           ng-click="orderbook__showConfirmationButtons($event)">
+                                           ng-click="orderbook__showConfirmationButtons($event)"
+                                           js-selector="orderbook-action-button">
                                         <div><span class="font-icon pro-table-action-chart-icon"></span>Kup</div>
                                       </div>
                                       <div ng-if="!$first" class="pro-table-action__button"
-                                           ng-click="orderbook__showConfirmationButtons($event)">
+                                           ng-click="orderbook__showConfirmationButtons($event)"
+                                           js-selector="orderbook-action-button">
                                         <div><span class="font-icon pro-table-action-chart-icon"></span>Kup podświetlone</div>
                                       </div>
-                                      <div class="pro-table-action__confirm-buttons is-hidden" ng-mouseleave="orderbook__cancelPurchase($event)">
+                                      <div class="pro-table-action__confirm-buttons is-hidden" js-selector="orderbook-confirm-buttons" ng-mouseleave="orderbook__cancelPurchase($event)">
                                         <div class="pro-button-in-row-confirmation__holder">
                                           <div ng-click="orderbook__confirmPurchase(order.price)" class="bem-button pro-button-in-row-confirmation">Potwierdź</div>
                                         </div>
@@ -198,53 +194,6 @@
                                     </div>
                                   </div>
                                 </div>
-                                <!-- <div class="pro-table-forex-divider">
-                                  <div class="pro-table-forex-divider__line"></div>
-                                  <div class="pro-table-forex-divider__text">FOREX</div>
-                                </div>
-                                <div class="pro-table-row is-your-own w-clearfix">
-                                  <div class="pro-table-cell for-offers__rate">
-                                    <div class="pro-table-cell__inner">
-                                      <div class="pro-table-cell__text is-blue-link">–</div>
-                                    </div>
-                                  </div>
-                                  <div class="pro-table-cell for-offers__amount">
-                                    <div class="pro-table-cell__inner">
-                                      <div class="pro-table-cell__text">–</div>
-                                    </div>
-                                  </div>
-                                  <div class="pro-table-cell for-offers__amount-accumulated">
-                                    <div class="pro-table-cell__inner">
-                                      <div class="pro-table-cell__text">–</div>
-                                    </div>
-                                  </div>
-                                  <div class="pro-table-cell for-offers__offers-count">
-                                    <div class="pro-table-cell__inner">
-                                      <div class="pro-table-cell__text"><span>–</span> (<span>–</span>)</div>
-                                    </div>
-                                  </div>
-                                  <div class="pro-table-cell for-offers__time">
-                                    <div class="pro-table-cell__inner">
-                                      <div class="pro-table-cell__text">–</div>
-                                    </div>
-                                  </div>
-                                  <div class="pro-table-row__right-actions-holder w-clearfix">
-                                    <div class="pro-your-own-cancel-offer-button__wrapper w-clearfix">
-                                      <div class="pro-your-own-cancel-offer-button__prompt-wrapper is-hidden">
-                                        <div class="pro-your-own-cancel-offer-button__prompt-button-holder">
-                                          <div class="bem-button pro-button-in-your-own-cancel-prompt">Usuń</div>
-                                        </div>
-                                        <div class="pro-your-own-cancel-offer-button__prompt-button-holder">
-                                          <div class="bem-button pro-button-in-your-own-cancel-prompt is-secondary">Cofnij</div>
-                                        </div>
-                                      </div>
-                                      <div class="pro-your-own-cancel-offer-button__holder">
-                                        <div><span class="font-icon"></span></div>
-                                      </div>
-                                    </div>
-                                    <div class="pro-your-own-row-tag">Twoja</div>
-                                  </div>
-                                </div> -->
                               </div>
                             </div>
                           </div>
@@ -267,27 +216,29 @@
                           <div class="pro-card-content__inner">
                             <div class="pro-table">
                               <div class="pro-offer-form">
-                                <div class="pro-add-offer-row__form">
-                                  <div class="form-block-css-reset w-form">
-                                    <form name="email-form" data-name="Email Form" class="form-block-css-reset w-clearfix">
-                                      <div class="pro-offer-form__rate-cell"><input type="text" class="bem-text-input pro-input-in-offers-form w-input" maxlength="256" name="kurs" data-name="kurs" placeholder="Kurs" id="kurs" required=""></div>
-                                      <div class="pro-offer-form__amount-cell"><input type="text" class="bem-text-input pro-input-in-offers-form w-input" maxlength="256" name="kwota" data-name="kwota" placeholder="Kwota" id="kwota" required=""></div>
-                                      <div class="pro-offer-form__button-cell"><input type="submit" value="Wystaw" data-wait="Please wait..." class="bem-button pro-button-in-offers-form w-button"></div>
-                                      <div class="pro-add-offer-row__confirm-buttons is-hidden">
+                                <div class="pro-add-offer-row__form" js-selector="add-offer-form-row">
+                                  <div class="form-block-css-reset">
+                                    <form class="form-block-css-reset w-clearfix">
+                                      <div class="pro-offer-form__rate-cell">
+                                        <input type="text" class="bem-text-input pro-input-in-offers-form w-input" maxlength="6" name="kurs-2" data-name="Kurs 2" placeholder="Kurs" required=""
+                                               ng-model="addNewOrder.inAsks.price">
+                                      </div>
+                                      <div class="pro-offer-form__amount-cell">
+                                        <input type="text" class="bem-text-input pro-input-in-offers-form w-input" maxlength="256" name="kwota-2" data-name="Kwota 2" placeholder="Kwota" required=""
+                                               ng-model="addNewOrder.inAsks.volume">
+                                      </div>
+                                      <div class="pro-offer-form__button-cell" js-selector="offer-button-cell">
+                                        <input type="submit" onClick="event.preventDefault()" ng-click="addNewOrder__showConfirmationButtons($event)" value="Wystaw" class="bem-button pro-button-in-offers-form w-button">
+                                      </div>
+                                      <div class="pro-add-offer-row__confirm-buttons is-hidden" js-selector="add-offer-form-confirm-buttons">
                                         <div class="pro-add-offer-row__prompt-button-holder">
-                                          <div class="bem-button pro-button-in-offers-form is-secondary">Anuluj</div>
+                                          <div class="bem-button pro-button-in-offers-form is-secondary" ng-click="addNewOrder__hideConfirmationButtons($event)">Anuluj</div>
                                         </div>
                                         <div class="pro-add-offer-row__prompt-button-holder">
-                                          <div class="bem-button pro-button-in-offers-form">Potwierdź</div>
+                                          <div class="bem-button pro-button-in-offers-form" ng-click="addNewOrder__confirmNewOrder('inAsks'); addNewOrder__hideConfirmationButtons($event);">Potwierdź</div>
                                         </div>
                                       </div>
                                     </form>
-                                    <div class="w-form-done">
-                                      <div>Thank you! Your submission has been received!</div>
-                                    </div>
-                                    <div class="w-form-fail">
-                                      <div>Oops! Something went wrong while submitting the form.</div>
-                                    </div>
                                   </div>
                                 </div>
                               </div>
@@ -322,7 +273,7 @@
                                 <div class="pro-table-row w-clearfix" ng-repeat="order in orderbook__allPairs[navigation__selectedPair].asks">
                                   <div class="pro-table-cell for-offers__rate">
                                     <div class="pro-table-cell__inner">
-                                      <div class="pro-table-cell__text is-blue-link" ng-bind="formattedNumber(order.price, 4)">–</div>
+                                      <div class="pro-table-cell__text is-blue-link" ng-bind="formattedNumber(order.price, 4)" ng-click="addNewOrder__updatePriceInputInAsks(order.price)">–</div>
                                     </div>
                                   </div>
                                   <div class="pro-table-cell for-offers__amount">
@@ -372,49 +323,7 @@
                                   <div class="pro-table-forex-divider__line"></div>
                                   <div class="pro-table-forex-divider__text">FOREX</div>
                                 </div>
-                                <div class="pro-table-row is-your-own w-clearfix">
-                                  <div class="pro-table-cell for-offers__rate">
-                                    <div class="pro-table-cell__inner">
-                                      <div class="pro-table-cell__text is-blue-link">–</div>
-                                    </div>
-                                  </div>
-                                  <div class="pro-table-cell for-offers__amount">
-                                    <div class="pro-table-cell__inner">
-                                      <div class="pro-table-cell__text">–</div>
-                                    </div>
-                                  </div>
-                                  <div class="pro-table-cell for-offers__amount-accumulated">
-                                    <div class="pro-table-cell__inner">
-                                      <div class="pro-table-cell__text">–</div>
-                                    </div>
-                                  </div>
-                                  <div class="pro-table-cell for-offers__offers-count">
-                                    <div class="pro-table-cell__inner">
-                                      <div class="pro-table-cell__text"><span>–</span> (<span>–</span>)</div>
-                                    </div>
-                                  </div>
-                                  <div class="pro-table-cell for-offers__time">
-                                    <div class="pro-table-cell__inner">
-                                      <div class="pro-table-cell__text">–</div>
-                                    </div>
-                                  </div>
-                                  <div class="pro-table-row__right-actions-holder w-clearfix">
-                                    <div class="pro-your-own-cancel-offer-button__wrapper w-clearfix">
-                                      <div class="pro-your-own-cancel-offer-button__prompt-wrapper is-hidden">
-                                        <div class="pro-your-own-cancel-offer-button__prompt-button-holder">
-                                          <div class="bem-button pro-button-in-your-own-cancel-prompt">Usuń</div>
-                                        </div>
-                                        <div class="pro-your-own-cancel-offer-button__prompt-button-holder">
-                                          <div class="bem-button pro-button-in-your-own-cancel-prompt is-secondary">Cofnij</div>
-                                        </div>
-                                      </div>
-                                      <div class="pro-your-own-cancel-offer-button__holder">
-                                        <div><span class="font-icon"></span></div>
-                                      </div>
-                                    </div>
-                                    <div class="pro-your-own-row-tag">Twoja</div>
-                                  </div>
-                                </div> -->
+                                 -->
                               </div>
                             </div>
                           </div>
@@ -560,16 +469,16 @@
                                     </div>
                                   </div>
                                   <div class="pro-table-row__right-actions-holder w-clearfix">
-                                    <div class="pro-your-own-cancel-offer-button__wrapper w-clearfix">
-                                      <div class="pro-your-own-cancel-offer-button__prompt-wrapper is-hidden">
+                                    <div js-selector="cancel-offer-buttons-wrapper" class="pro-your-own-cancel-offer-button__wrapper w-clearfix">
+                                      <div js-selector="cancel-offer-confirm-buttons" ng-mouseleave="closeOrder__hideConfirmationButtons($event)" class="pro-your-own-cancel-offer-button__prompt-wrapper is-hidden">
                                         <div class="pro-your-own-cancel-offer-button__prompt-button-holder">
-                                          <div class="bem-button pro-button-in-your-own-cancel-prompt">Usuń</div>
+                                          <div class="bem-button pro-button-in-your-own-cancel-prompt" ng-click="closeOrder__confirmCloseOrder(order.orderId)">Usuń</div>
                                         </div>
                                         <div class="pro-your-own-cancel-offer-button__prompt-button-holder">
-                                          <div class="bem-button pro-button-in-your-own-cancel-prompt is-secondary">Cofnij</div>
+                                          <div ng-click="closeOrder__hideConfirmationButtons($event)" class="bem-button pro-button-in-your-own-cancel-prompt is-secondary">Cofnij</div>
                                         </div>
                                       </div>
-                                      <div class="pro-your-own-cancel-offer-button__holder">
+                                      <div ng-click="closeOrder__showConfirmationButtons($event)" js-selector="cancel-offer-close-button" class="pro-your-own-cancel-offer-button__holder">
                                         <div><span class="font-icon"></span></div>
                                       </div>
                                     </div>
@@ -1130,7 +1039,7 @@
         </div>
       </div>
     </div>
-    <div class="initial-load-overlay">
+    <div class="initial-load-overlay" js-selector="initial-load-overlay">
       <div class="initial-load-overlay__spinner">
         <div animation-spin="true" class="bem-spinner">
         </div>
