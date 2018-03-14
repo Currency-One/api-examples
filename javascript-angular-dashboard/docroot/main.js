@@ -497,6 +497,9 @@ proDashboard.controller('proDashboardController', function($scope) {
         otherCurrency: requestOptions.otherCurrency,
       };
 
+      //TODO Preloader when submitting new order
+      //FlashingNotifications.showAndHideNotification('neutral', 'Wysyłam zlecenie...');
+
       sendRequest({
         endpoint: '/api/v1/market/orders/'+'?'+$.param(requestParams),
         method: 'post',
@@ -543,24 +546,31 @@ proDashboard.controller('proDashboardController', function($scope) {
     };
 
     $scope.addNewOrder__confirmNewOrder = function(inBidsOrInAsks) {
+      var checkPrice;
       if (inBidsOrInAsks === 'inBids') {
-        $scope.addNewOrder__post({
-          pair: $scope.navigation__selectedPair,
-          price: $scope.addNewOrder.inBids.price,
-          volume: $scope.addNewOrder.inBids.volume,
-          buySell: 'SELL',
-          volumeCurrency: $scope.navigation__selectedPair__other,
-          otherCurrency: $scope.navigation__selectedPair__base,
-        });
+        checkPrice = $scope.checkIfOrderPriceIsNotTooFarFromMarket($scope.addNewOrder.inBids.price, $scope.navigation__selectedPair, 'inBids');
+        if (checkPrice) {
+          $scope.addNewOrder__post({
+            pair: $scope.navigation__selectedPair,
+            price: $scope.addNewOrder.inBids.price,
+            volume: $scope.addNewOrder.inBids.volume,
+            buySell: 'SELL',
+            volumeCurrency: $scope.navigation__selectedPair__other,
+            otherCurrency: $scope.navigation__selectedPair__base,
+          });
+        }
       } else if (inBidsOrInAsks === 'inAsks') {
-        $scope.addNewOrder__post({
-          pair: $scope.navigation__selectedPair,
-          price: $scope.addNewOrder.inAsks.price,
-          volume: $scope.addNewOrder.inAsks.volume,
-          buySell: 'SELL',
-          volumeCurrency: $scope.navigation__selectedPair__base,
-          otherCurrency: $scope.navigation__selectedPair__other,
-        });
+        checkPrice = $scope.checkIfOrderPriceIsNotTooFarFromMarket($scope.addNewOrder.inAsks.price, $scope.navigation__selectedPair, 'inAsks');
+        if (checkPrice) {
+          $scope.addNewOrder__post({
+            pair: $scope.navigation__selectedPair,
+            price: $scope.addNewOrder.inAsks.price,
+            volume: $scope.addNewOrder.inAsks.volume,
+            buySell: 'SELL',
+            volumeCurrency: $scope.navigation__selectedPair__base,
+            otherCurrency: $scope.navigation__selectedPair__other,
+          });
+        }
       }
     };
 
@@ -670,6 +680,35 @@ proDashboard.controller('proDashboardController', function($scope) {
       }, 10); //needed to retrigger the CSS transition
     }
 
+    /*----------  Warning when new order is too far from market  ----------*/
+    $scope.checkIfOrderPriceIsNotTooFarFromMarket = function(priceToCheck, pair, inBidsOrInAsks) {
+      var bestMarketPrice = {
+        bid: $scope.orderbook__allPairs[pair].bids[0].price,
+        ask: $scope.orderbook__allPairs[pair].asks[0].price,
+      };
+
+      var treshold = 0.01;
+      var ratio;
+
+      if (inBidsOrInAsks === 'inBids') {
+        ratio = priceToCheck/bestMarketPrice.bid;
+        console.log(ratio);
+        if (ratio > (1 + treshold) ) {
+          return window.confirm('Wprowadzony kurs różni się od rynkowego o ponad 1%. Czy jesteś pewien?');
+        } else {
+          return true;
+        }
+      } else if (inBidsOrInAsks === 'inAsks') {
+        ratio = priceToCheck/bestMarketPrice.ask;
+        console.log(ratio);
+        if (ratio < (1 - treshold)) {
+          return window.confirm('Wprowadzony kurs różni się od rynkowego o ponad 1%. Czy jesteś pewien?');
+        } else {
+          return true;
+        }
+      }
+    };
+
     /*----------  Init  ----------*/
     function proTable__getPublicData() {
       $scope.exchangeRates__get();
@@ -708,8 +747,6 @@ proDashboard.controller('proDashboardController', function($scope) {
     $('[js-selector="initial-load-overlay"]').addClass('is-hidden');
 
     //TODO
-    //Ostrzeżenie przy wpisywaniu zbyt odstającego od rynku kursu
-    //Preloader po kliknięciu w button wysyłający request
-    //Empty state w liście ofert
+    //Preloader po kliknięciu w button wysyłający request tak żeby coś się działo
 
 });

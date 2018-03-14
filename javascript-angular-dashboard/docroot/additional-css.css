@@ -115,3 +115,12 @@ body.pro-dashboard-body {
     -webkit-transition: width 10000ms linear;
     transition: width 10000ms linear;
 }
+
+.pro-table-content__empty-state {
+    padding: 16px 33px;
+    text-align: center;
+}
+
+.pro-table-content-emoty-state__text {
+    opacity: 0.67;
+}

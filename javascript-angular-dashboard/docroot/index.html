@@ -499,6 +499,11 @@
                                     </div>
                                   </div>
                                 </div>
+                                <div ng-show="!(myOrders | filter:navigation__selectedPair).length" class="pro-table-content__empty-state">
+                                  <div class="pro-table-content-emoty-state__text">
+                                    -- Nie masz aktywnych ofert dla tej pary walutowej --
+                                  </div>
+                                </div>
                               </div>
                             </div>
                           </div>
