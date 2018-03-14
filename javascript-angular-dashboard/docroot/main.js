@@ -715,7 +715,7 @@ proDashboard.controller('proDashboardController', function($scope) {
       //$scope.marketPriceVolumes__getAllPairs(); Unused because similar data is downloaded by public API which is faster
       setTimeout(function() {
         $scope.orderbook__getAllPairs();
-      }, 5); //timeout to ensure that API-NONCE is unique (signature is from different timestamp) otherwise api returns error
+      }, 10); //timeout to ensure that API-NONCE is unique (signature is from different timestamp) otherwise api returns error
     }
 
     function proTable__getPrivateData() {
@@ -723,7 +723,7 @@ proDashboard.controller('proDashboardController', function($scope) {
         $scope.walletState__get();
         setTimeout(function() {
           $scope.myOrders__get();
-        }, 10); //timeout to ensure that API-NONCE is unique (signature is from different timestamp)
+        }, 5); //timeout to ensure that API-NONCE is unique (signature is from different timestamp)
       }
     }
 
