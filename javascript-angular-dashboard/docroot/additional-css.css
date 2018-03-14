@@ -31,6 +31,10 @@ body.pro-dashboard-body {
     background-color: #fff6cd;
 }
 
+.pro-table-row.is-highlighted.is-your-own  {
+    background-color: #fff6cd;
+}
+
 .pro-table-row__right-actions-holder {
 	opacity: 0;
 }
