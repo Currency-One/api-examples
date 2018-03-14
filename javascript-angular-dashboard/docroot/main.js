@@ -154,7 +154,6 @@ proDashboard.controller('proDashboardController', function($scope) {
     };
 
     /*----------  Exchange rates table  ----------*/
-    $scope.exchangeRates__response = {};
     $scope.exchangeRates = {};
 
     $scope.exchangeRates__get = function() {
@@ -163,7 +162,6 @@ proDashboard.controller('proDashboardController', function($scope) {
         method: 'get',
         body: '',
         onSuccess: function(response) {
-          $scope.exchangeRates__response = response.data;
 
           $scope.exchangeRates = $.extend($scope.exchangeRates, R.indexBy(R.prop('pair'), response.data));
           $.each($scope.exchangeRates, function(key, value) {
@@ -232,7 +230,6 @@ proDashboard.controller('proDashboardController', function($scope) {
         apikey: $scope.apiCredentials.apiKey,
         secret: $scope.apiCredentials.secret,
         onSuccess: function(response) {
-          $scope.walletState__response = response.data;
           $scope.walletState = $.extend($scope.walletState, R.indexBy(R.prop('currency'), response.data));
           $scope.$applyAsync();
           return response.data;
@@ -243,8 +240,6 @@ proDashboard.controller('proDashboardController', function($scope) {
         }
       });
     };
-
-    $scope.walletState__response = {};
 
     $scope.walletState = {
       PLN: {
@@ -298,6 +293,26 @@ proDashboard.controller('proDashboardController', function($scope) {
       $scope.navigation__authorisationModalIsShown = false;
     };
 
+    /*----------  Market price volumes  ----------*/
+    //Currently unused in the UI because it's slower than the public API, returns too much data without pagination
+    //Use it with ng-repeat="order in marketPriceVolumes['BID_'+navigation__selectedPair]"
+    $scope.marketPriceVolumes = {};
+
+    $scope.marketPriceVolumes__getAllPairs = function() {
+      sendRequestWithoutSign({
+        endpoint: '/api/public/marketPriceVolumes',
+        method: 'get',
+        body: '',
+        onSuccess: function(response) {
+          $scope.marketPriceVolumes = response.data;
+          $scope.$applyAsync();
+        },
+        onError: function(error) {
+          FlashingNotifications.showAndHideNotification('error', 'Problem z pobraniem danych.');
+          console.log(error);
+        }
+      });
+    };
 
     /*----------  Orderbook  ----------*/
     $scope.orderbook__allPairs = {};
@@ -310,8 +325,25 @@ proDashboard.controller('proDashboardController', function($scope) {
         apikey: $scope.apiCredentials.apiKey,
         secret: $scope.apiCredentials.secret,
         onSuccess: function(response) {
-          $scope.orderbook__response = response.data;
           $scope.orderbook__allPairs[pair] = response.data;
+
+          var calculateAccumulatedVolumes = function(orderbookArray, volumeToAccumulate) {
+            if ( $.isArray(orderbookArray) ) {
+              var accumulatedVolumeCalculated = 0;
+              $.each(orderbookArray, function(index, value) {
+                console.log(value[volumeToAccumulate]);
+                accumulatedVolumeCalculated = Number(accumulatedVolumeCalculated).toFixed(2) + Number(value[volumeToAccumulate]).toFixed(2);
+                orderbookArray[index].accumulatedBaseVolume = accumulatedVolumeCalculated;
+              });
+            }
+          };
+
+          calculateAccumulatedVolumes($scope.orderbook__allPairs[pair].asks, "baseVolume");
+          calculateAccumulatedVolumes($scope.orderbook__allPairs[pair].bids, "baseVolume");
+          calculateAccumulatedVolumes($scope.orderbook__allPairs[pair].asks, "marketVolume");
+          calculateAccumulatedVolumes($scope.orderbook__allPairs[pair].bids, "marketVolume");
+          
+          console.log($scope.orderbook__allPairs);
           $scope.$applyAsync();
           return response.data;
         },
@@ -324,7 +356,9 @@ proDashboard.controller('proDashboardController', function($scope) {
 
     $scope.orderbook__getAllPairs = function() {
       $.each(SUPPORTED_CURRENCY_PAIRS, function(index, value) {
-        $scope.orderbook__getPair(value);
+        setTimeout(function() {
+          $scope.orderbook__getPair(value);
+        }, index); //dirty hack so that each request is send separately with different timestamp
       });
     };
 
@@ -437,8 +471,6 @@ proDashboard.controller('proDashboardController', function($scope) {
         apikey: $scope.apiCredentials.apiKey,
         secret: $scope.apiCredentials.secret,
         onSuccess: function(response) {
-          $scope.addNewOrder__response = response.data;
-          console.log(response.data);
 
           if (response.data.orderId) {
             FlashingNotifications.showAndHideNotification('success', 'Dodałeś zlecenie.');
@@ -517,7 +549,6 @@ proDashboard.controller('proDashboardController', function($scope) {
         apikey: $scope.apiCredentials.apiKey,
         secret: $scope.apiCredentials.secret,
         onSuccess: function(response) {
-          $scope.myOrders__response = response.data;
           $scope.myOrders = response.data;
           $scope.$applyAsync();
           return response.data;
@@ -528,8 +559,6 @@ proDashboard.controller('proDashboardController', function($scope) {
         }
       });
     };
-
-    $scope.myOrders__response = {};
 
     $scope.myOrders = [];
 
@@ -543,8 +572,6 @@ proDashboard.controller('proDashboardController', function($scope) {
         apikey: $scope.apiCredentials.apiKey,
         secret: $scope.apiCredentials.secret,
         onSuccess: function(response) {
-          $scope.orderToClose__response = response.data;
-          console.log(response.data);
 
           if (response.data.orderId) {
             FlashingNotifications.showAndHideNotification('success', 'Zamknąłeś zlecenie.');
@@ -603,6 +630,7 @@ proDashboard.controller('proDashboardController', function($scope) {
     /*----------  Init  ----------*/
     function proTable__getPublicData() {
       $scope.exchangeRates__get();
+      //$scope.marketPriceVolumes__getAllPairs(); Unused because similar data is downloaded by public API which is faster
       setTimeout(function() {
         $scope.orderbook__getAllPairs();
       }, 5); //timeout to ensure that API-NONCE is unique (signature is from different timestamp) otherwise api returns error
@@ -640,5 +668,6 @@ proDashboard.controller('proDashboardController', function($scope) {
     //Ostrzeżenie przy wpisywaniu zbyt odstającego od rynku kursu
     //Preloader po kliknięciu w button wysyłający request
     //Pasek postępu pokazujący ile zostało sekund do odświeżenia
+    //Empty state w liście ofert
 
 });

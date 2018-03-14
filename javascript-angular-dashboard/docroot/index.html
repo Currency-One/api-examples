@@ -2,7 +2,6 @@
 
 <head>
   <meta content="width=device-width, initial-scale=1" name="viewport">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <link rel="stylesheet" href="normalize.css">
   <link rel="stylesheet" href="webflow.css">
   <link rel="stylesheet" href="flashing-notifications.css">
@@ -270,7 +269,7 @@
                                 </div>
                               </div>
                               <div class="pro-table-content">
-                                <div class="pro-table-row w-clearfix" ng-repeat="order in orderbook__allPairs[navigation__selectedPair].asks">
+                                <div class="pro-table-row w-clearfix" js-selector="orderbook-row" ng-repeat="order in orderbook__allPairs[navigation__selectedPair].asks">
                                   <div class="pro-table-cell for-offers__rate">
                                     <div class="pro-table-cell__inner">
                                       <div class="pro-table-cell__text is-blue-link" ng-bind="formattedNumber(order.price, 4)" ng-click="addNewOrder__updatePriceInputInAsks(order.price)">–</div>
@@ -300,15 +299,15 @@
                                     <div class="pro-table-purchase-action-wrapper"
                                          ng-mouseenter="orderbook__highlightOrdersToBuy($event)"
                                          ng-mouseleave="orderbook__removeHighlightFromOrdersToBuy($event)">
-                                      <div ng-if="$first" class="pro-table-action__button"
+                                      <div ng-if="$first" class="pro-table-action__button" js-selector="orderbook-action-button"
                                            ng-click="orderbook__showConfirmationButtons($event)">
                                         <div><span class="font-icon pro-table-action-chart-icon"></span>Kup</div>
                                       </div>
-                                      <div ng-if="!$first" class="pro-table-action__button"
+                                      <div ng-if="!$first" class="pro-table-action__button" js-selector="orderbook-action-button"
                                            ng-click="orderbook__showConfirmationButtons($event)">
                                         <div><span class="font-icon pro-table-action-chart-icon"></span>Kup podświetlone</div>
                                       </div>
-                                      <div class="pro-table-action__confirm-buttons is-hidden" ng-mouseleave="orderbook__cancelPurchase($event)">
+                                      <div class="pro-table-action__confirm-buttons is-hidden" js-selector="orderbook-confirm-buttons" ng-mouseleave="orderbook__cancelPurchase($event)">
                                         <div class="pro-button-in-row-confirmation__holder">
                                           <div ng-click="orderbook__confirmPurchase(order.price)" class="bem-button pro-button-in-row-confirmation">Potwierdź</div>
                                         </div>
@@ -1011,22 +1010,6 @@
                     <label for="secret">Kod Secret:</label>
                     <input type="password" class="bem-text-input" ng-model="apiCredentials.secret">
                   </div>
-                  <!-- <div>
-                    <button class="bem-button" ng-click="walletState__get()">Get wallet state</button>
-                    <pre ng-bind="walletState__response|json"></pre>
-                  </div>
-                  <div>
-                    <button class="bem-button" ng-click="exchangeRates__get()">Get exchange rates</button>
-                    <pre ng-bind="exchangeRates__response|json"></pre>
-                  </div> -->
-                  <!-- <div>
-                    <button class="bem-button" ng-click="orderbook__getAllPairs()">Get orderbook</button>
-                    <pre ng-bind="orderbook__allPairs|json"></pre>
-                  </div> -->
-                  <!-- <div>
-                    <button class="bem-button" ng-click="myOrders__get()">Get my orders</button>
-                    <pre ng-bind="myOrders__response|json"></pre>
-                  </div> -->
                 </div>
               </div>
               <div class="modal-window__footer w-clearfix">
@@ -1047,10 +1030,9 @@
     </div>
   </div>
 
-  <script type="text/javascript" src="https://unpkg.com/uiv/dist/uiv.min.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jsSHA/2.3.1/sha256.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js"></script>
-  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E=" crossorigin="anonymous"></script>
+  <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E=" crossorigin="anonymous"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/ramda/0.25.0/ramda.min.js"></script>
   <script type="text/javascript" src="flashing-notifications.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.21.0/moment.min.js"></script>

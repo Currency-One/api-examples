@@ -164,12 +164,17 @@ a {
 .bem-button.pro-button-in-offers-form {
   min-width: 10px;
   padding: 0px 5px;
+  line-height: 21px;
 }
 
 .bem-button.pro-button-in-your-own-cancel-prompt {
   min-width: 10px;
   padding: 0px 5px;
   line-height: 1.33em;
+}
+
+.bem-button.pro-button-in-your-own-cancel-prompt.is-secondary {
+  background-color: #fff;
 }
 
 .bem-button.pro-button-in-row-confirmation {
@@ -1832,7 +1837,7 @@ a {
 
 .pro-your-own-cancel-offer-button__prompt-wrapper {
   float: left;
-  background-color: #fff;
+  background-color: #dbe3eb;
 }
 
 .pro-your-own-cancel-offer-button__prompt-wrapper.is-hidden {
