@@ -276,6 +276,8 @@ proDashboard.controller('proDashboardController', function($scope) {
 
     $scope.navigation__chooseSelectedPair = function(pairToSelect) {
       $scope.navigation__selectedPair = pairToSelect;
+      $scope.addNewOrder__updatePriceInputInBids($scope.orderbook__allPairs[pairToSelect].bids[0].price);
+      $scope.addNewOrder__updatePriceInputInAsks($scope.orderbook__allPairs[pairToSelect].asks[0].price);
     };
 
     $scope.$watch("navigation__selectedPair", function(newVal, oldVal) {
@@ -331,9 +333,8 @@ proDashboard.controller('proDashboardController', function($scope) {
             if ( $.isArray(orderbookArray) ) {
               var accumulatedVolumeCalculated = 0;
               $.each(orderbookArray, function(index, value) {
-                console.log(value[volumeToAccumulate]);
-                accumulatedVolumeCalculated = Number(accumulatedVolumeCalculated).toFixed(2) + Number(value[volumeToAccumulate]).toFixed(2);
-                orderbookArray[index].accumulatedBaseVolume = accumulatedVolumeCalculated;
+                accumulatedVolumeCalculated = Number(accumulatedVolumeCalculated) + Number(value[volumeToAccumulate]);
+                orderbookArray[index][volumeToAccumulate+"__accumulated"] = accumulatedVolumeCalculated.toFixed(2);
               });
             }
           };
@@ -342,8 +343,23 @@ proDashboard.controller('proDashboardController', function($scope) {
           calculateAccumulatedVolumes($scope.orderbook__allPairs[pair].bids, "baseVolume");
           calculateAccumulatedVolumes($scope.orderbook__allPairs[pair].asks, "marketVolume");
           calculateAccumulatedVolumes($scope.orderbook__allPairs[pair].bids, "marketVolume");
-          
-          console.log($scope.orderbook__allPairs);
+
+          var checkIfPriceIsTheSameInOneOfMyOwnOrders = function(orderbookArray) {
+            if ( $.isArray(orderbookArray) ) {
+              $.each(orderbookArray, function(index, value) {
+                $.grep($scope.myOrders, function(arrayElement, elementIndex) {
+                  if (arrayElement.price == value.price) {
+                    value.includesMyOwnOrder = true;
+                  }
+                  return (arrayElement.price == value.price);
+                });
+              });
+            }
+          };
+
+          checkIfPriceIsTheSameInOneOfMyOwnOrders($scope.orderbook__allPairs[pair].asks);
+          checkIfPriceIsTheSameInOneOfMyOwnOrders($scope.orderbook__allPairs[pair].bids);
+
           $scope.$applyAsync();
           return response.data;
         },
@@ -389,12 +405,30 @@ proDashboard.controller('proDashboardController', function($scope) {
       thisRow.find('[js-selector="orderbook-confirm-buttons"]').removeClass('is-hidden');
     };
 
-    $scope.orderbook__confirmPurchase = function(purchasePrice, purchaseVolume) {
-      console.log(purchasePrice);
-      //TODO: calculate purchase volume so that it will buy all the highlighted orders
+    $scope.orderbook__confirmPurchase = function(inBidsOrInAsks, purchasePrice, purchaseVolume) {
       //TODO: preloader after confirming and waiting for response, prevent double submit
       //Should it refresh the state before purchase to prevent errors?
       //Should it calculate this on server?
+
+      if (inBidsOrInAsks === 'inBids') {
+        $scope.addNewOrder__post({
+          pair: $scope.navigation__selectedPair,
+          price: purchasePrice,
+          volume: purchaseVolume,
+          buySell: 'SELL',
+          volumeCurrency: $scope.navigation__selectedPair__base,
+          otherCurrency: $scope.navigation__selectedPair__other,
+        });
+      } else if (inBidsOrInAsks === 'inAsks') {
+        $scope.addNewOrder__post({
+          pair: $scope.navigation__selectedPair,
+          price: purchasePrice,
+          volume: purchaseVolume,
+          buySell: 'SELL',
+          volumeCurrency: $scope.navigation__selectedPair__other,
+          otherCurrency: $scope.navigation__selectedPair__base,
+        });
+      }
     };
 
     /*----------  Adding new orders  ----------*/
@@ -462,8 +496,6 @@ proDashboard.controller('proDashboardController', function($scope) {
         volumeCurrency: requestOptions.volumeCurrency,
         otherCurrency: requestOptions.otherCurrency,
       };
-
-      console.log($.param(requestParams));
 
       sendRequest({
         endpoint: '/api/v1/market/orders/'+'?'+$.param(requestParams),
@@ -627,6 +659,17 @@ proDashboard.controller('proDashboardController', function($scope) {
       proTable__getAllData();
     };
 
+    /*----------  Refreshing cycle progress bar  ----------*/
+    function restartRefreshCycleProgressBar() {
+      //the animation is based on CSS transition
+      //if we change the refresh cycle time we need to change the CSS transition time
+      var progressBarInnerBar = $('[js-selector="pro-progress-bar-inner-bar"]');
+      progressBarInnerBar.removeClass('is-full');
+      setTimeout(function() {
+        progressBarInnerBar.addClass('is-full');
+      }, 10); //needed to retrigger the CSS transition
+    }
+
     /*----------  Init  ----------*/
     function proTable__getPublicData() {
       $scope.exchangeRates__get();
@@ -651,9 +694,11 @@ proDashboard.controller('proDashboardController', function($scope) {
     }
 
     proTable__getAllData();
+    restartRefreshCycleProgressBar();
     setInterval(function() {
       proTable__getAllData();
-    }, 10500);
+      restartRefreshCycleProgressBar();
+    }, 10000);
 
     //Show config modal if no apikey provided
     if ($scope.apiCredentials.apiKey === '') {
@@ -663,11 +708,8 @@ proDashboard.controller('proDashboardController', function($scope) {
     $('[js-selector="initial-load-overlay"]').addClass('is-hidden');
 
     //TODO
-    //Pokazywanie własnych zleceń na liście wszystkich zleceń - oznaczanie "W TYM TWOJA"
-    //Liczenie kwoty skumulowanej w ofertach
     //Ostrzeżenie przy wpisywaniu zbyt odstającego od rynku kursu
     //Preloader po kliknięciu w button wysyłający request
-    //Pasek postępu pokazujący ile zostało sekund do odświeżenia
     //Empty state w liście ofert
 
 });

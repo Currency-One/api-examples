@@ -27,6 +27,10 @@ body.pro-dashboard-body {
  	background-color: rgba(0, 128, 253, 0.24);
 }
 
+.pro-table-row:nth-child(even).is-your-own  {
+    background-color: #fff6cd;
+}
+
 .pro-table-row__right-actions-holder {
 	opacity: 0;
 }
@@ -84,4 +88,30 @@ body.pro-dashboard-body {
 
 .initial-load-overlay.is-hidden {
     display: none;
+}
+
+.pro-your-own-tag__wrapper {
+    display: inline-block;
+}
+
+.pro-progress-bar__wrapper {
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    height: 5px;
+    background-color: rgba(29, 75, 128, .18);
+}
+
+.pro-progress-bar__inner-bar {
+    position: relative;
+    width: 0%;
+    height: 100%;
+    background-color: rgba(42, 58, 76, .31);
+}
+
+.pro-progress-bar__inner-bar.is-full {
+    width: 100%;
+    -webkit-transition: width 10000ms linear;
+    transition: width 10000ms linear;
 }

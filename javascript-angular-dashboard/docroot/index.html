@@ -142,10 +142,18 @@
                                 </div>
                               </div>
                               <div class="pro-table-content">
-                                <div class="pro-table-row w-clearfix" js-selector="orderbook-row" ng-repeat="order in orderbook__allPairs[navigation__selectedPair].bids">
+                                <div class="pro-table-row w-clearfix" 
+                                     js-selector="orderbook-row" 
+                                     ng-repeat="order in orderbook__allPairs[navigation__selectedPair].bids"
+                                     ng-class="{'is-your-own':order.includesMyOwnOrder}">
                                   <div class="pro-table-cell for-offers__rate">
                                     <div class="pro-table-cell__inner">
                                       <div class="pro-table-cell__text is-blue-link" ng-bind="formattedNumber(order.price, 4)" ng-click="addNewOrder__updatePriceInputInBids(order.price)">–</div>
+                                      <div class="pro-your-own-tag__wrapper" ng-if="order.includesMyOwnOrder">
+                                        <div class="pro-your-own-row-tag" title="Masz aktywną ofertę po tym kursie">
+                                          <span class="font-icon pro-your-own-row-flag-icon"></span>
+                                        </div>
+                                      </div>
                                     </div>
                                   </div>
                                   <div class="pro-table-cell for-offers__amount">
@@ -155,7 +163,7 @@
                                   </div>
                                   <div class="pro-table-cell for-offers__amount-accumulated">
                                     <div class="pro-table-cell__inner">
-                                      <div class="pro-table-cell__text">–</div>
+                                      <div class="pro-table-cell__text" ng-bind="formattedNumber(order.marketVolume__accumulated)">–</div>
                                     </div>
                                   </div>
                                   <div class="pro-table-cell for-offers__offers-count">
@@ -184,7 +192,7 @@
                                       </div>
                                       <div class="pro-table-action__confirm-buttons is-hidden" js-selector="orderbook-confirm-buttons" ng-mouseleave="orderbook__cancelPurchase($event)">
                                         <div class="pro-button-in-row-confirmation__holder">
-                                          <div ng-click="orderbook__confirmPurchase(order.price)" class="bem-button pro-button-in-row-confirmation">Potwierdź</div>
+                                          <div ng-click="orderbook__confirmPurchase('inBids', order.price, order.baseVolume__accumulated)" class="bem-button pro-button-in-row-confirmation">Potwierdź</div>
                                         </div>
                                         <div class="pro-button-in-row-confirmation__holder">
                                           <div ng-click="orderbook__cancelPurchase($event)" class="bem-button pro-button-in-row-confirmation is-secondary">Anuluj</div>
@@ -269,10 +277,18 @@
                                 </div>
                               </div>
                               <div class="pro-table-content">
-                                <div class="pro-table-row w-clearfix" js-selector="orderbook-row" ng-repeat="order in orderbook__allPairs[navigation__selectedPair].asks">
+                                <div class="pro-table-row w-clearfix" 
+                                     js-selector="orderbook-row" 
+                                     ng-repeat="order in orderbook__allPairs[navigation__selectedPair].asks"
+                                     ng-class="{'is-your-own':order.includesMyOwnOrder}">
                                   <div class="pro-table-cell for-offers__rate">
                                     <div class="pro-table-cell__inner">
                                       <div class="pro-table-cell__text is-blue-link" ng-bind="formattedNumber(order.price, 4)" ng-click="addNewOrder__updatePriceInputInAsks(order.price)">–</div>
+                                      <div class="pro-your-own-tag__wrapper" ng-if="order.includesMyOwnOrder">
+                                        <div class="pro-your-own-row-tag" title="Masz aktywną ofertę po tym kursie">
+                                          <span class="font-icon pro-your-own-row-flag-icon"></span>
+                                        </div>
+                                      </div>
                                     </div>
                                   </div>
                                   <div class="pro-table-cell for-offers__amount">
@@ -282,7 +298,7 @@
                                   </div>
                                   <div class="pro-table-cell for-offers__amount-accumulated">
                                     <div class="pro-table-cell__inner">
-                                      <div class="pro-table-cell__text">–</div>
+                                      <div class="pro-table-cell__text" ng-bind="formattedNumber(order.baseVolume__accumulated)">–</div>
                                     </div>
                                   </div>
                                   <div class="pro-table-cell for-offers__offers-count">
@@ -309,7 +325,7 @@
                                       </div>
                                       <div class="pro-table-action__confirm-buttons is-hidden" js-selector="orderbook-confirm-buttons" ng-mouseleave="orderbook__cancelPurchase($event)">
                                         <div class="pro-button-in-row-confirmation__holder">
-                                          <div ng-click="orderbook__confirmPurchase(order.price)" class="bem-button pro-button-in-row-confirmation">Potwierdź</div>
+                                          <div ng-click="orderbook__confirmPurchase('inAsks', order.price, order.marketVolume__accumulated)" class="bem-button pro-button-in-row-confirmation">Potwierdź</div>
                                         </div>
                                         <div class="pro-button-in-row-confirmation__holder">
                                           <div ng-click="orderbook__cancelPurchase($event)" class="bem-button pro-button-in-row-confirmation is-secondary">Anuluj</div>
@@ -1028,6 +1044,10 @@
         </div>
       </div>
     </div>
+  </div>
+
+  <div title="Czas do kolejnego odświeżenia" class="pro-progress-bar__wrapper">
+    <div class="pro-progress-bar__inner-bar" js-selector="pro-progress-bar-inner-bar"></div>
   </div>
 
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jsSHA/2.3.1/sha256.js"></script>

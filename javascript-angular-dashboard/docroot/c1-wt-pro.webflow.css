@@ -1664,6 +1664,10 @@ a {
   text-transform: uppercase;
 }
 
+.pro-table-cell__text {
+  display: inline-block;
+}
+
 .pro-table-cell__text.is-blue-link {
   color: #1e90ff;
   font-weight: 600;
@@ -1743,10 +1747,10 @@ a {
   display: inline-block;
   margin-top: 1px;
   padding-top: 0px;
-  padding-right: 7px;
-  padding-left: 7px;
-  float: right;
-  opacity: 0.46;
+  padding-right: 0px;
+  padding-left: 6px;
+  opacity: 0.86;
+  line-height: 1em;
   font-weight: 600;
   text-transform: uppercase;
 }
