@@ -677,7 +677,7 @@ proDashboard.controller('proDashboardController', function($scope) {
       progressBarInnerBar.removeClass('is-full');
       setTimeout(function() {
         progressBarInnerBar.addClass('is-full');
-      }, 10); //needed to retrigger the CSS transition
+      }, 50); //needed to retrigger the CSS transition
     }
 
     /*----------  Warning when new order is too far from market  ----------*/

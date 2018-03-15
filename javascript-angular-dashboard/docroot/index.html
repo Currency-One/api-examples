@@ -77,8 +77,13 @@
                       <div class="pro-card">
                         <div class="pro-card-header w-clearfix">
                           <div class="pro-card-header__left-side">
-                            <div class="pro-card-header__title">Oferty kupna (składasz ofertę wymiany 
-                              <span ng-bind="navigation__selectedPair__other">PLN</span> na <span ng-bind="navigation__selectedPair__base">EUR</span>)
+                            <div class="pro-card-header__title">Oferty kupna 
+                              <span class="pro-card-header__title-subtext">
+                                (wystawiasz 
+                                <span ng-bind="navigation__selectedPair__other">PLN</span> na <span ng-bind="navigation__selectedPair__base">EUR</span>, 
+                                kupując otrzymasz <span ng-bind="navigation__selectedPair__other">PLN</span> za 
+                                <span ng-bind="navigation__selectedPair__base">EUR</span>)
+                              </span>
                             </div>
                           </div>
                           <div class="pro-card-header__right-side"></div>
@@ -212,8 +217,13 @@
                       <div class="pro-card">
                         <div class="pro-card-header w-clearfix">
                           <div class="pro-card-header__left-side">
-                            <div class="pro-card-header__title">Oferty sprzedaży (składasz ofertę wymiany 
-                              <span ng-bind="navigation__selectedPair__base">PLN</span> na <span ng-bind="navigation__selectedPair__other">EUR</span>)
+                            <div class="pro-card-header__title">Oferty sprzedaży
+                              <span class="pro-card-header__title-subtext">
+                                (wystawiasz 
+                                <span ng-bind="navigation__selectedPair__base">PLN</span> na <span ng-bind="navigation__selectedPair__other">EUR</span>, 
+                                kupując otrzymasz <span ng-bind="navigation__selectedPair__base">PLN</span> za 
+                                <span ng-bind="navigation__selectedPair__other">EUR</span>)
+                              </span>
                             </div>
                           </div>
                           <div class="pro-card-header__right-side"></div>
@@ -352,7 +362,9 @@
                       <div class="pro-card">
                         <div class="pro-card-header w-clearfix">
                           <div class="pro-card-header__left-side">
-                            <div class="pro-card-header__title">Ostatnie wymiany EUR / PLN</div>
+                            <div class="pro-card-header__title">
+                              Ostatnie wymiany <span ng-bind="navigation__selectedPair__base">EUR</span> / <span ng-bind="navigation__selectedPair__other">EUR</span>
+                            </div>
                           </div>
                           <div class="pro-card-header__right-side"></div>
                         </div>
@@ -411,7 +423,9 @@
                       <div class="pro-card">
                         <div class="pro-card-header w-clearfix">
                           <div class="pro-card-header__left-side">
-                            <div class="pro-card-header__title">Moje aktywne oferty EUR / PLN</div>
+                            <div class="pro-card-header__title">
+                              Moje aktywne oferty <span ng-bind="navigation__selectedPair__base">EUR</span> / <span ng-bind="navigation__selectedPair__other">EUR</span>
+                            </div>
                           </div>
                           <div class="pro-card-header__right-side"></div>
                         </div>

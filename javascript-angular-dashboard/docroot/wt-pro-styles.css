@@ -843,6 +843,10 @@ body.pro-dashboard-body {
   font-weight: 600;
 }
 
+.pro-card-header__title-subtext {
+  opacity: 0.6;
+}
+
 .pro-card-content {
   min-height: 10px;
   padding-bottom: 5px;
@@ -1016,7 +1020,7 @@ body.pro-dashboard-body {
 }
 
 .pro-table-cell.for-offers__amount {
-  width: 15%;
+  width: 20%;
   text-align: right;
 }
 
@@ -1050,14 +1054,13 @@ body.pro-dashboard-body {
 }
 
 .pro-table-cell.for-my-offers__rate {
-  width: 15%;
+  width: 20%;
   text-align: right;
 }
 
 .pro-table-cell.for-my-offers__amount {
   width: 25%;
   text-align: right;
-  padding-right: 30px;
 }
 
 .pro-table-cell.for-my-offers__offers-count {
@@ -1146,7 +1149,7 @@ body.pro-dashboard-body {
 }
 
 .pro-offer-form__amount-cell {
-  width: 15%;
+  width: 19%;
   float: left;
 }
 
@@ -1371,7 +1374,7 @@ body.pro-dashboard-body {
 }
 
 .pro-progress-bar__wrapper {
-    position: absolute;
+    position: fixed;
     left: 0px;
     right: 0px;
     bottom: 0px;
