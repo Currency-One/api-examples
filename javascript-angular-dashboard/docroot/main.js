@@ -692,7 +692,6 @@ proDashboard.controller('proDashboardController', function($scope) {
 
       if (inBidsOrInAsks === 'inBids') {
         ratio = priceToCheck/bestMarketPrice.bid;
-        console.log(ratio);
         if (ratio > (1 + treshold) ) {
           return window.confirm('Wprowadzony kurs różni się od rynkowego o ponad 1%. Czy jesteś pewien?');
         } else {

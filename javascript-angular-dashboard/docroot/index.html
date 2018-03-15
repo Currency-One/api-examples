@@ -5,8 +5,7 @@
   <link rel="stylesheet" href="normalize.css">
   <link rel="stylesheet" href="webflow.css">
   <link rel="stylesheet" href="flashing-notifications.css">
-  <link rel="stylesheet" href="c1-wt-pro.webflow.css">
-  <link rel="stylesheet" href="additional-css.css">
+  <link rel="stylesheet" href="wt-pro-styles.css">
 </head>
 
 <body class="pro-dashboard-body">
@@ -130,7 +129,7 @@
                                     <div class="pro-table-header-label">Kwota skum.</div>
                                   </div>
                                 </div>
-                                <div class="pro-table-cell for-offers__offers-count">
+                                <!-- <div class="pro-table-cell for-offers__offers-count">
                                   <div class="pro-table-cell__inner">
                                     <div class="pro-table-header-label">Ile ofert</div>
                                   </div>
@@ -139,7 +138,7 @@
                                   <div class="pro-table-cell__inner">
                                     <div class="pro-table-header-label">od kiedy</div>
                                   </div>
-                                </div>
+                                </div> -->
                               </div>
                               <div class="pro-table-content">
                                 <div class="pro-table-row w-clearfix" 
@@ -166,7 +165,7 @@
                                       <div class="pro-table-cell__text" ng-bind="formattedNumber(order.marketVolume__accumulated)">–</div>
                                     </div>
                                   </div>
-                                  <div class="pro-table-cell for-offers__offers-count">
+                                  <!-- <div class="pro-table-cell for-offers__offers-count">
                                     <div class="pro-table-cell__inner">
                                       <div class="pro-table-cell__text"><span>–</span> (<span>–</span>)</div>
                                     </div>
@@ -175,7 +174,7 @@
                                     <div class="pro-table-cell__inner">
                                       <div class="pro-table-cell__text">–</div>
                                     </div>
-                                  </div>
+                                  </div> -->
                                   <div class="pro-table-row__right-actions-holder">
                                     <div class="pro-table-purchase-action-wrapper"
                                          ng-mouseenter="orderbook__highlightOrdersToBuy($event)"
@@ -265,7 +264,7 @@
                                     <div class="pro-table-header-label">Kwota skum.</div>
                                   </div>
                                 </div>
-                                <div class="pro-table-cell for-offers__offers-count">
+                                <!-- <div class="pro-table-cell for-offers__offers-count">
                                   <div class="pro-table-cell__inner">
                                     <div class="pro-table-header-label">Ile ofert</div>
                                   </div>
@@ -274,7 +273,7 @@
                                   <div class="pro-table-cell__inner">
                                     <div class="pro-table-header-label">od kiedy</div>
                                   </div>
-                                </div>
+                                </div> -->
                               </div>
                               <div class="pro-table-content">
                                 <div class="pro-table-row w-clearfix" 
@@ -301,7 +300,7 @@
                                       <div class="pro-table-cell__text" ng-bind="formattedNumber(order.baseVolume__accumulated)">–</div>
                                     </div>
                                   </div>
-                                  <div class="pro-table-cell for-offers__offers-count">
+                                  <!-- <div class="pro-table-cell for-offers__offers-count">
                                     <div class="pro-table-cell__inner">
                                       <div class="pro-table-cell__text"><span>–</span> (<span>–</span>)</div>
                                     </div>
@@ -310,7 +309,7 @@
                                     <div class="pro-table-cell__inner">
                                       <div class="pro-table-cell__text">–</div>
                                     </div>
-                                  </div>
+                                  </div> -->
                                   <div class="pro-table-row__right-actions-holder">
                                     <div class="pro-table-purchase-action-wrapper"
                                          ng-mouseenter="orderbook__highlightOrdersToBuy($event)"
@@ -435,7 +434,7 @@
                                     <div class="pro-table-header-label">Kwota</div>
                                   </div>
                                 </div>
-                                <div class="pro-table-cell for-my-offers__offers-count">
+                                <!-- <div class="pro-table-cell for-my-offers__offers-count">
                                   <div class="pro-table-cell__inner">
                                     <div class="pro-table-header-label">Ile Lepszych ofert</div>
                                   </div>
@@ -444,14 +443,14 @@
                                   <div class="pro-table-cell__inner">
                                     <div class="pro-table-header-label">Kwota lepszych</div>
                                   </div>
-                                </div>
+                                </div> -->
                                 <div class="pro-table-cell for-my-offers__time">
                                   <div class="pro-table-cell__inner">
                                     <div class="pro-table-header-label">Od kiedy</div>
                                   </div>
                                 </div>
                               </div>
-                              <div class="pro-table-content">
+                              <div class="pro-table-content for-my-orders">
                                 <div class="pro-table-row w-clearfix" ng-repeat="order in myOrders | filter:navigation__selectedPair">
                                   <div class="pro-table-cell for-my-offers__currency">
                                     <div class="pro-table-cell__inner">
@@ -468,7 +467,7 @@
                                       <div class="pro-table-cell__text" ng-bind="order.volume">–</div>
                                     </div>
                                   </div>
-                                  <div class="pro-table-cell for-my-offers__offers-count">
+                                  <!-- <div class="pro-table-cell for-my-offers__offers-count">
                                     <div class="pro-table-cell__inner">
                                       <div class="pro-table-cell__text"><span>–</span> (<span>–</span>)</div>
                                     </div>
@@ -477,7 +476,7 @@
                                     <div class="pro-table-cell__inner">
                                       <div class="pro-table-cell__text">–</div>
                                     </div>
-                                  </div>
+                                  </div> -->
                                   <div class="pro-table-cell for-my-offers__time">
                                     <div class="pro-table-cell__inner">
                                       <div class="pro-table-cell__text" ng-bind="formattedTime(order.submitTs)">–</div>
