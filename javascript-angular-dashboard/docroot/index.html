@@ -1,0 +1,1083 @@
+<html>
+
+<head>
+  <meta content="width=device-width, initial-scale=1" name="viewport">
+  <link rel="stylesheet" href="normalize.css">
+  <link rel="stylesheet" href="webflow.css">
+  <link rel="stylesheet" href="flashing-notifications.css">
+  <link rel="stylesheet" href="wt-pro-styles.css">
+</head>
+
+<body class="pro-dashboard-body">
+
+  <!-- Flashing notifications https://github.com/maciejsaw/jQuery-FlashingNotifications --> 
+  <div class="flashing-notifications-wrapper">
+    <div js-selector="flashing-notification__neutral" class="flashing-notification is-transparent is-hidden">
+      <div class="flashing-notification__padding-wrapper">
+        <div class="flashing-notification__box">
+          <div class="flashing-notification__icon-on-right-holder">
+            <div flashing-notifications__action-close-notification="true" class="flashing-notification__icon is-close-icon"></div>
+          </div>
+          <div class="flashing-notification__icon-holder">
+            <div class="flashing-notification__icon is-info-icon"></div>
+          </div>
+          <div js-selector="flashing-notification-text" class="flashing-notification__text">Notification!</div>
+        </div>
+      </div>
+    </div>
+    <div js-selector="flashing-notification__success" class="flashing-notification is-transparent is-hidden">
+      <div class="flashing-notification__padding-wrapper">
+        <div class="flashing-notification__box is-green-success">
+          <div class="flashing-notification__icon-on-right-holder"></div>
+          <div class="flashing-notification__icon-holder">
+            <div class="flashing-notification__icon is-check"></div>
+          </div>
+          <div js-selector="flashing-notification-text" class="flashing-notification__text">Success!</div>
+        </div>
+      </div>
+    </div>
+    <div js-selector="flashing-notification__error" class="flashing-notification is-transparent is-hidden">
+      <div class="flashing-notification__padding-wrapper">
+        <div class="flashing-notification__box is-red-error">
+          <div class="flashing-notification__icon-on-right-holder">
+            <div class="flashing-notification__icon is-close-icon" flashing-notifications__action-close-notification="true"></div>
+          </div>
+          <div class="flashing-notification__icon-holder">
+            <div class="flashing-notification__icon is-error"></div>
+          </div>
+          <div js-selector="flashing-notification-text" class="flashing-notification__text">Oops... Something went wrong.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- End of flashing notifications https://github.com/maciejsaw/jQuery-FlashingNotifications --> 
+
+  <div id="app" ng-app="proDashboard" ng-controller="proDashboardController">
+    <div id="content-from-webflow">
+      <div class="pro-body">
+        <div>
+          <div class="pro-topbar w-clearfix">
+            <div class="pro-topbar__logo-holder w-clearfix">
+              <div class="pro-topbar__logo"></div>
+            </div>
+            <div class="pro-topbar__right-side">
+              <div class="pro-topbar__right-side-button-holder">
+                <div ng-click="navigation__showAuthorisationModal()" class="pro-topbar__right-side-button">
+                  <span class="font-icon pro-top-bar-settings-icon"></span> Konfiguracja
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="pro-below-topbar">
+            <div class="pro-main-content">
+              <div class="pro-main-column">
+                <div class="pro-main-column__row w-clearfix">
+                  <div class="pro-main-column__left-side">
+                    <div class="pro-widget-wrapper">
+                      <div class="pro-card">
+                        <div class="pro-card-header w-clearfix">
+                          <div class="pro-card-header__left-side">
+                            <div class="pro-card-header__title">Oferty kupna 
+                              <span class="pro-card-header__title-subtext">
+                                (wystawiasz 
+                                <span ng-bind="navigation__selectedPair__other">PLN</span> na <span ng-bind="navigation__selectedPair__base">EUR</span>, 
+                                kupując otrzymasz <span ng-bind="navigation__selectedPair__other">PLN</span> za 
+                                <span ng-bind="navigation__selectedPair__base">EUR</span>)
+                              </span>
+                            </div>
+                          </div>
+                          <div class="pro-card-header__right-side"></div>
+                        </div>
+                        <div class="pro-card-content">
+                          <div class="pro-card-content__inner">
+                            <div class="pro-table">
+                              <div class="pro-offer-form">
+                                <div class="pro-add-offer-row__form" js-selector="add-offer-form-row">
+                                  <div class="form-block-css-reset">
+                                    <form class="form-block-css-reset w-clearfix">
+                                      <div class="pro-offer-form__rate-cell">
+                                        <input type="text" class="bem-text-input pro-input-in-offers-form w-input" maxlength="6" name="kurs-2" data-name="Kurs 2" placeholder="Kurs" required=""
+                                               ng-model="addNewOrder.inBids.price">
+                                      </div>
+                                      <div class="pro-offer-form__amount-cell">
+                                        <input type="text" class="bem-text-input pro-input-in-offers-form w-input" maxlength="256" name="kwota-2" data-name="Kwota 2" placeholder="Kwota" required=""
+                                               ng-model="addNewOrder.inBids.volume">
+                                      </div>
+                                      <div class="pro-offer-form__button-cell" js-selector="offer-button-cell">
+                                        <input type="submit" onClick="event.preventDefault()" ng-click="addNewOrder__showConfirmationButtons($event)" value="Wystaw" class="bem-button pro-button-in-offers-form w-button">
+                                      </div>
+                                      <div class="pro-add-offer-row__confirm-buttons is-hidden" js-selector="add-offer-form-confirm-buttons">
+                                        <div class="pro-add-offer-row__prompt-button-holder">
+                                          <div class="bem-button pro-button-in-offers-form is-secondary" ng-click="addNewOrder__hideConfirmationButtons($event)">Anuluj</div>
+                                        </div>
+                                        <div class="pro-add-offer-row__prompt-button-holder">
+                                          <div class="bem-button pro-button-in-offers-form" ng-click="addNewOrder__confirmNewOrder('inBids'); addNewOrder__hideConfirmationButtons($event);">Potwierdź</div>
+                                        </div>
+                                      </div>
+                                    </form>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="pro-table-header w-clearfix">
+                                <div class="pro-table-cell for-offers__rate">
+                                  <div class="pro-table-cell__inner">
+                                    <div class="pro-table-header-label">Kurs</div>
+                                  </div>
+                                </div>
+                                <div class="pro-table-cell for-offers__amount">
+                                  <div class="pro-table-cell__inner">
+                                    <div class="pro-table-header-label">Kwota w <span ng-bind="navigation__selectedPair__other"></span></div>
+                                  </div>
+                                </div>
+                                <div class="pro-table-cell for-offers__amount-accumulated">
+                                  <div class="pro-table-cell__inner">
+                                    <div class="pro-table-header-label">Kwota skum.</div>
+                                  </div>
+                                </div>
+                                <!-- <div class="pro-table-cell for-offers__offers-count">
+                                  <div class="pro-table-cell__inner">
+                                    <div class="pro-table-header-label">Ile ofert</div>
+                                  </div>
+                                </div>
+                                <div class="pro-table-cell for-offers__time">
+                                  <div class="pro-table-cell__inner">
+                                    <div class="pro-table-header-label">od kiedy</div>
+                                  </div>
+                                </div> -->
+                              </div>
+                              <div class="pro-table-content">
+                                <div class="pro-table-row w-clearfix" 
+                                     js-selector="orderbook-row" 
+                                     ng-repeat="order in orderbook__allPairs[navigation__selectedPair].bids"
+                                     ng-class="{'is-your-own':order.includesMyOwnOrder}">
+                                  <div class="pro-table-cell for-offers__rate">
+                                    <div class="pro-table-cell__inner">
+                                      <div class="pro-table-cell__text is-blue-link" ng-bind="formattedNumber(order.price, 4)" ng-click="addNewOrder__updatePriceInputInBids(order.price)">–</div>
+                                      <div class="pro-your-own-tag__wrapper" ng-if="order.includesMyOwnOrder">
+                                        <div class="pro-your-own-row-tag" title="Masz aktywną ofertę po tym kursie">
+                                          <span class="font-icon pro-your-own-row-flag-icon"></span>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="pro-table-cell for-offers__amount">
+                                    <div class="pro-table-cell__inner">
+                                      <div class="pro-table-cell__text" ng-bind="formattedNumber(order.marketVolume)">–</div>
+                                    </div>
+                                  </div>
+                                  <div class="pro-table-cell for-offers__amount-accumulated">
+                                    <div class="pro-table-cell__inner">
+                                      <div class="pro-table-cell__text" ng-bind="formattedNumber(order.marketVolume__accumulated)">–</div>
+                                    </div>
+                                  </div>
+                                  <!-- <div class="pro-table-cell for-offers__offers-count">
+                                    <div class="pro-table-cell__inner">
+                                      <div class="pro-table-cell__text"><span>–</span> (<span>–</span>)</div>
+                                    </div>
+                                  </div>
+                                  <div class="pro-table-cell for-offers__time">
+                                    <div class="pro-table-cell__inner">
+                                      <div class="pro-table-cell__text">–</div>
+                                    </div>
+                                  </div> -->
+                                  <div class="pro-table-row__right-actions-holder">
+                                    <div class="pro-table-purchase-action-wrapper"
+                                         ng-mouseenter="orderbook__highlightOrdersToBuy($event)"
+                                         ng-mouseleave="orderbook__removeHighlightFromOrdersToBuy($event)">
+                                      <div ng-if="$first" class="pro-table-action__button"
+                                           ng-click="orderbook__showConfirmationButtons($event)"
+                                           js-selector="orderbook-action-button">
+                                        <div><span class="font-icon pro-table-action-chart-icon"></span>Kup</div>
+                                      </div>
+                                      <div ng-if="!$first" class="pro-table-action__button"
+                                           ng-click="orderbook__showConfirmationButtons($event)"
+                                           js-selector="orderbook-action-button">
+                                        <div><span class="font-icon pro-table-action-chart-icon"></span>Kup podświetlone</div>
+                                      </div>
+                                      <div class="pro-table-action__confirm-buttons is-hidden" js-selector="orderbook-confirm-buttons" ng-mouseleave="orderbook__cancelPurchase($event)">
+                                        <div class="pro-button-in-row-confirmation__holder">
+                                          <div ng-click="orderbook__confirmPurchase('inBids', order.price, order.baseVolume__accumulated)" class="bem-button pro-button-in-row-confirmation">Potwierdź</div>
+                                        </div>
+                                        <div class="pro-button-in-row-confirmation__holder">
+                                          <div ng-click="orderbook__cancelPurchase($event)" class="bem-button pro-button-in-row-confirmation is-secondary">Anuluj</div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="pro-main-column__right-side">
+                    <div class="pro-widget-wrapper">
+                      <div class="pro-card">
+                        <div class="pro-card-header w-clearfix">
+                          <div class="pro-card-header__left-side">
+                            <div class="pro-card-header__title">Oferty sprzedaży
+                              <span class="pro-card-header__title-subtext">
+                                (wystawiasz 
+                                <span ng-bind="navigation__selectedPair__base">PLN</span> na <span ng-bind="navigation__selectedPair__other">EUR</span>, 
+                                kupując otrzymasz <span ng-bind="navigation__selectedPair__base">PLN</span> za 
+                                <span ng-bind="navigation__selectedPair__other">EUR</span>)
+                              </span>
+                            </div>
+                          </div>
+                          <div class="pro-card-header__right-side"></div>
+                        </div>
+                        <div class="pro-card-content">
+                          <div class="pro-card-content__inner">
+                            <div class="pro-table">
+                              <div class="pro-offer-form">
+                                <div class="pro-add-offer-row__form" js-selector="add-offer-form-row">
+                                  <div class="form-block-css-reset">
+                                    <form class="form-block-css-reset w-clearfix">
+                                      <div class="pro-offer-form__rate-cell">
+                                        <input type="text" class="bem-text-input pro-input-in-offers-form w-input" maxlength="6" name="kurs-2" data-name="Kurs 2" placeholder="Kurs" required=""
+                                               ng-model="addNewOrder.inAsks.price">
+                                      </div>
+                                      <div class="pro-offer-form__amount-cell">
+                                        <input type="text" class="bem-text-input pro-input-in-offers-form w-input" maxlength="256" name="kwota-2" data-name="Kwota 2" placeholder="Kwota" required=""
+                                               ng-model="addNewOrder.inAsks.volume">
+                                      </div>
+                                      <div class="pro-offer-form__button-cell" js-selector="offer-button-cell">
+                                        <input type="submit" onClick="event.preventDefault()" ng-click="addNewOrder__showConfirmationButtons($event)" value="Wystaw" class="bem-button pro-button-in-offers-form w-button">
+                                      </div>
+                                      <div class="pro-add-offer-row__confirm-buttons is-hidden" js-selector="add-offer-form-confirm-buttons">
+                                        <div class="pro-add-offer-row__prompt-button-holder">
+                                          <div class="bem-button pro-button-in-offers-form is-secondary" ng-click="addNewOrder__hideConfirmationButtons($event)">Anuluj</div>
+                                        </div>
+                                        <div class="pro-add-offer-row__prompt-button-holder">
+                                          <div class="bem-button pro-button-in-offers-form" ng-click="addNewOrder__confirmNewOrder('inAsks'); addNewOrder__hideConfirmationButtons($event);">Potwierdź</div>
+                                        </div>
+                                      </div>
+                                    </form>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="pro-table-header w-clearfix">
+                                <div class="pro-table-cell for-offers__rate">
+                                  <div class="pro-table-cell__inner">
+                                    <div class="pro-table-header-label">Kurs</div>
+                                  </div>
+                                </div>
+                                <div class="pro-table-cell for-offers__amount">
+                                  <div class="pro-table-cell__inner">
+                                    <div class="pro-table-header-label">Kwota w <span ng-bind="navigation__selectedPair__base"></span></div>
+                                  </div>
+                                </div>
+                                <div class="pro-table-cell for-offers__amount-accumulated">
+                                  <div class="pro-table-cell__inner">
+                                    <div class="pro-table-header-label">Kwota skum.</div>
+                                  </div>
+                                </div>
+                                <!-- <div class="pro-table-cell for-offers__offers-count">
+                                  <div class="pro-table-cell__inner">
+                                    <div class="pro-table-header-label">Ile ofert</div>
+                                  </div>
+                                </div>
+                                <div class="pro-table-cell for-offers__time">
+                                  <div class="pro-table-cell__inner">
+                                    <div class="pro-table-header-label">od kiedy</div>
+                                  </div>
+                                </div> -->
+                              </div>
+                              <div class="pro-table-content">
+                                <div class="pro-table-row w-clearfix" 
+                                     js-selector="orderbook-row" 
+                                     ng-repeat="order in orderbook__allPairs[navigation__selectedPair].asks"
+                                     ng-class="{'is-your-own':order.includesMyOwnOrder}">
+                                  <div class="pro-table-cell for-offers__rate">
+                                    <div class="pro-table-cell__inner">
+                                      <div class="pro-table-cell__text is-blue-link" ng-bind="formattedNumber(order.price, 4)" ng-click="addNewOrder__updatePriceInputInAsks(order.price)">–</div>
+                                      <div class="pro-your-own-tag__wrapper" ng-if="order.includesMyOwnOrder">
+                                        <div class="pro-your-own-row-tag" title="Masz aktywną ofertę po tym kursie">
+                                          <span class="font-icon pro-your-own-row-flag-icon"></span>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="pro-table-cell for-offers__amount">
+                                    <div class="pro-table-cell__inner">
+                                      <div class="pro-table-cell__text" ng-bind="formattedNumber(order.baseVolume)">–</div>
+                                    </div>
+                                  </div>
+                                  <div class="pro-table-cell for-offers__amount-accumulated">
+                                    <div class="pro-table-cell__inner">
+                                      <div class="pro-table-cell__text" ng-bind="formattedNumber(order.baseVolume__accumulated)">–</div>
+                                    </div>
+                                  </div>
+                                  <!-- <div class="pro-table-cell for-offers__offers-count">
+                                    <div class="pro-table-cell__inner">
+                                      <div class="pro-table-cell__text"><span>–</span> (<span>–</span>)</div>
+                                    </div>
+                                  </div>
+                                  <div class="pro-table-cell for-offers__time">
+                                    <div class="pro-table-cell__inner">
+                                      <div class="pro-table-cell__text">–</div>
+                                    </div>
+                                  </div> -->
+                                  <div class="pro-table-row__right-actions-holder">
+                                    <div class="pro-table-purchase-action-wrapper"
+                                         ng-mouseenter="orderbook__highlightOrdersToBuy($event)"
+                                         ng-mouseleave="orderbook__removeHighlightFromOrdersToBuy($event)">
+                                      <div ng-if="$first" class="pro-table-action__button" js-selector="orderbook-action-button"
+                                           ng-click="orderbook__showConfirmationButtons($event)">
+                                        <div><span class="font-icon pro-table-action-chart-icon"></span>Kup</div>
+                                      </div>
+                                      <div ng-if="!$first" class="pro-table-action__button" js-selector="orderbook-action-button"
+                                           ng-click="orderbook__showConfirmationButtons($event)">
+                                        <div><span class="font-icon pro-table-action-chart-icon"></span>Kup podświetlone</div>
+                                      </div>
+                                      <div class="pro-table-action__confirm-buttons is-hidden" js-selector="orderbook-confirm-buttons" ng-mouseleave="orderbook__cancelPurchase($event)">
+                                        <div class="pro-button-in-row-confirmation__holder">
+                                          <div ng-click="orderbook__confirmPurchase('inAsks', order.price, order.marketVolume__accumulated)" class="bem-button pro-button-in-row-confirmation">Potwierdź</div>
+                                        </div>
+                                        <div class="pro-button-in-row-confirmation__holder">
+                                          <div ng-click="orderbook__cancelPurchase($event)" class="bem-button pro-button-in-row-confirmation is-secondary">Anuluj</div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <!-- <div class="pro-table-forex-divider">
+                                  <div class="pro-table-forex-divider__line"></div>
+                                  <div class="pro-table-forex-divider__text">FOREX</div>
+                                </div>
+                                 -->
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="pro-main-column__row w-clearfix">
+                  <div class="pro-main-column__left-side">
+                    <div class="pro-widget-wrapper">
+                      <div class="pro-card">
+                        <div class="pro-card-header w-clearfix">
+                          <div class="pro-card-header__left-side">
+                            <div class="pro-card-header__title">
+                              Ostatnie wymiany <span ng-bind="navigation__selectedPair__base">EUR</span> / <span ng-bind="navigation__selectedPair__other">EUR</span>
+                            </div>
+                          </div>
+                          <div class="pro-card-header__right-side"></div>
+                        </div>
+                        <div class="pro-card-content">
+                          <div class="pro-card-content__inner">
+                            <div class="pro-table">
+                              <div class="pro-table-header w-clearfix">
+                                <div class="pro-table-cell for-last-transactions__time">
+                                  <div class="pro-table-cell__inner">
+                                    <div class="pro-table-header-label">Kiedy</div>
+                                  </div>
+                                </div>
+                                <div class="pro-table-cell for-last-transactions__rate">
+                                  <div class="pro-table-cell__inner">
+                                    <div class="pro-table-header-label">Kurs</div>
+                                  </div>
+                                </div>
+                                <div class="pro-table-cell for-last-transactions__amount">
+                                  <div class="pro-table-cell__inner">
+                                    <div class="pro-table-header-label">Kwota</div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="pro-table-content">
+                                <div class="pro-table-row w-clearfix" ng-repeat="lastExchange in exchangeRates[navigation__selectedPair].lastExchanges">
+                                  <div class="pro-table-cell for-last-transactions__time">
+                                    <div class="pro-table-cell__inner">
+                                      <div class="pro-table-cell__text" ng-bind="formattedTime(lastExchange.ts)">–</div>
+                                    </div>
+                                  </div>
+                                  <div class="pro-table-cell for-last-transactions__rate">
+                                    <div class="pro-table-cell__inner">
+                                      <div class="pro-number-with-bar-chart">
+                                        <div class="pro-number-with-bar-chart__text" ng-bind="formattedNumber(lastExchange.price, 4)">–</div>
+                                        <div class="pro-number-with-bar-chart__bar-wrapper">
+                                          <div class="pro-number-with-bar-chart__bar-inner" style="width: {{exchangeRates__calculateBarChartWidth(lastExchange.price)}}%"></div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="pro-table-cell for-last-transactions__amount">
+                                    <div class="pro-table-cell__inner">
+                                      <div class="pro-table-cell__text" ng-bind="formattedNumber(lastExchange.volume)">–</div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="pro-main-column__right-side">
+                    <div class="pro-widget-wrapper">
+                      <div class="pro-card">
+                        <div class="pro-card-header w-clearfix">
+                          <div class="pro-card-header__left-side">
+                            <div class="pro-card-header__title">
+                              Moje aktywne oferty <span ng-bind="navigation__selectedPair__base">EUR</span> / <span ng-bind="navigation__selectedPair__other">EUR</span>
+                            </div>
+                          </div>
+                          <div class="pro-card-header__right-side"></div>
+                        </div>
+                        <div class="pro-card-content">
+                          <div class="pro-card-content__inner">
+                            <div class="pro-table">
+                              <div class="pro-table-header w-clearfix">
+                                <div class="pro-table-cell for-my-offers__currency">
+                                  <div class="pro-table-cell__inner">
+                                    <div class="pro-table-header-label">Sprzedaję</div>
+                                  </div>
+                                </div>
+                                <div class="pro-table-cell for-my-offers__rate">
+                                  <div class="pro-table-cell__inner">
+                                    <div class="pro-table-header-label">Kurs</div>
+                                  </div>
+                                </div>
+                                <div class="pro-table-cell for-my-offers__amount">
+                                  <div class="pro-table-cell__inner">
+                                    <div class="pro-table-header-label">Kwota</div>
+                                  </div>
+                                </div>
+                                <!-- <div class="pro-table-cell for-my-offers__offers-count">
+                                  <div class="pro-table-cell__inner">
+                                    <div class="pro-table-header-label">Ile Lepszych ofert</div>
+                                  </div>
+                                </div>
+                                <div class="pro-table-cell for-my-offers__amount-accumulated">
+                                  <div class="pro-table-cell__inner">
+                                    <div class="pro-table-header-label">Kwota lepszych</div>
+                                  </div>
+                                </div> -->
+                                <div class="pro-table-cell for-my-offers__time">
+                                  <div class="pro-table-cell__inner">
+                                    <div class="pro-table-header-label">Od kiedy</div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="pro-table-content for-my-orders">
+                                <div class="pro-table-row w-clearfix" ng-repeat="order in myOrders | filter:navigation__selectedPair">
+                                  <div class="pro-table-cell for-my-offers__currency">
+                                    <div class="pro-table-cell__inner">
+                                      <div class="pro-table-cell__text" ng-bind="order.volumeCurrency">–</div>
+                                    </div>
+                                  </div>
+                                  <div class="pro-table-cell for-my-offers__rate">
+                                    <div class="pro-table-cell__inner">
+                                      <div class="pro-table-cell__text" ng-bind="order.price">–</div>
+                                    </div>
+                                  </div>
+                                  <div class="pro-table-cell for-my-offers__amount">
+                                    <div class="pro-table-cell__inner">
+                                      <div class="pro-table-cell__text" ng-bind="order.volume">–</div>
+                                    </div>
+                                  </div>
+                                  <!-- <div class="pro-table-cell for-my-offers__offers-count">
+                                    <div class="pro-table-cell__inner">
+                                      <div class="pro-table-cell__text"><span>–</span> (<span>–</span>)</div>
+                                    </div>
+                                  </div>
+                                  <div class="pro-table-cell for-my-offers__amount-accumulated">
+                                    <div class="pro-table-cell__inner">
+                                      <div class="pro-table-cell__text">–</div>
+                                    </div>
+                                  </div> -->
+                                  <div class="pro-table-cell for-my-offers__time">
+                                    <div class="pro-table-cell__inner">
+                                      <div class="pro-table-cell__text" ng-bind="formattedTime(order.submitTs)">–</div>
+                                    </div>
+                                  </div>
+                                  <div class="pro-table-row__right-actions-holder w-clearfix">
+                                    <div js-selector="cancel-offer-buttons-wrapper" class="pro-your-own-cancel-offer-button__wrapper w-clearfix">
+                                      <div js-selector="cancel-offer-confirm-buttons" ng-mouseleave="closeOrder__hideConfirmationButtons($event)" class="pro-your-own-cancel-offer-button__prompt-wrapper is-hidden">
+                                        <div class="pro-your-own-cancel-offer-button__prompt-button-holder">
+                                          <div class="bem-button pro-button-in-your-own-cancel-prompt" ng-click="closeOrder__confirmCloseOrder(order.orderId)">Usuń</div>
+                                        </div>
+                                        <div class="pro-your-own-cancel-offer-button__prompt-button-holder">
+                                          <div ng-click="closeOrder__hideConfirmationButtons($event)" class="bem-button pro-button-in-your-own-cancel-prompt is-secondary">Cofnij</div>
+                                        </div>
+                                      </div>
+                                      <div ng-click="closeOrder__showConfirmationButtons($event)" js-selector="cancel-offer-close-button" class="pro-your-own-cancel-offer-button__holder">
+                                        <div><span class="font-icon"></span></div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div ng-show="!(myOrders | filter:navigation__selectedPair).length" class="pro-table-content__empty-state">
+                                  <div class="pro-table-content-emoty-state__text">
+                                    -- Nie masz aktywnych ofert dla tej pary walutowej --
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="pro-left-sidebar">
+                <div class="pro-widget-wrapper">
+                  <div class="pro-card">
+                    <div class="pro-card-header w-clearfix">
+                      <div class="pro-card-header__left-side">
+                        <div class="pro-card-header__title">Stan portfela</div>
+                      </div>
+                      <div class="pro-card-header__right-side"></div>
+                    </div>
+                    <div class="pro-card-content">
+                      <div class="pro-card-content__inner">
+                        <div class="pro-table">
+                          <div class="pro-table-header w-clearfix">
+                            <div class="pro-table-cell for-wallet-state__currency">
+                              <div class="pro-table-cell__inner">
+                                <div class="pro-table-header-label">Waluta</div>
+                              </div>
+                            </div>
+                            <div class="pro-table-cell for-wallet-state__available">
+                              <div class="pro-table-cell__inner">
+                                <div class="pro-table-header-label">Dostępne</div>
+                              </div>
+                            </div>
+                            <div class="pro-table-cell for-wallet-state__on-market">
+                              <div class="pro-table-cell__inner">
+                                <div class="pro-table-header-label">Wystawione</div>
+                              </div>
+                            </div>
+                            <div class="pro-table-cell for-wallet-state__total">
+                              <div class="pro-table-cell__inner">
+                                <div class="pro-table-header-label">Razem</div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="pro-table-content">
+                            <div class="pro-table-row w-clearfix">
+                              <div class="pro-table-cell for-wallet-state__currency">
+                                <div class="pro-table-cell__inner">
+                                  <div class="pro-table-cell__text">PLN</div>
+                                </div>
+                              </div>
+                              <div class="pro-table-cell for-wallet-state__available">
+                                <div class="pro-table-cell__inner">
+                                  <div ng-bind="formattedNumber(walletState.PLN.balanceAvailable)" class="pro-table-cell__text">–</div>
+                                </div>
+                              </div>
+                              <div class="pro-table-cell for-wallet-state__on-market">
+                                <div class="pro-table-cell__inner">
+                                  <div ng-bind="formattedNumber(walletState.PLN.balanceReserved)" class="pro-table-cell__text">–</div>
+                                </div>
+                              </div>
+                              <div class="pro-table-cell for-wallet-state__total">
+                                <div class="pro-table-cell__inner">
+                                  <div ng-bind="formattedNumber(walletState.PLN.balanceAll)" class="pro-table-cell__text">–</div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="pro-table-row is-even-row w-clearfix">
+                              <div class="pro-table-cell for-wallet-state__currency">
+                                <div class="pro-table-cell__inner">
+                                  <div class="pro-table-cell__text">EUR</div>
+                                </div>
+                              </div>
+                              <div class="pro-table-cell for-wallet-state__available">
+                                <div class="pro-table-cell__inner">
+                                  <div ng-bind="formattedNumber(walletState.EUR.balanceAvailable)" class="pro-table-cell__text">–</div>
+                                </div>
+                              </div>
+                              <div class="pro-table-cell for-wallet-state__on-market">
+                                <div class="pro-table-cell__inner">
+                                  <div ng-bind="formattedNumber(walletState.EUR.balanceReserved)" class="pro-table-cell__text">–</div>
+                                </div>
+                              </div>
+                              <div class="pro-table-cell for-wallet-state__total">
+                                <div class="pro-table-cell__inner">
+                                  <div ng-bind="formattedNumber(walletState.EUR.balanceAll)" class="pro-table-cell__text">–</div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="pro-table-row w-clearfix">
+                              <div class="pro-table-cell for-wallet-state__currency">
+                                <div class="pro-table-cell__inner">
+                                  <div class="pro-table-cell__text">USD</div>
+                                </div>
+                              </div>
+                              <div class="pro-table-cell for-wallet-state__available">
+                                <div class="pro-table-cell__inner">
+                                  <div ng-bind="formattedNumber(walletState.USD.balanceAvailable)" class="pro-table-cell__text">–</div>
+                                </div>
+                              </div>
+                              <div class="pro-table-cell for-wallet-state__on-market">
+                                <div class="pro-table-cell__inner">
+                                  <div ng-bind="formattedNumber(walletState.USD.balanceReserved)" class="pro-table-cell__text">–</div>
+                                </div>
+                              </div>
+                              <div class="pro-table-cell for-wallet-state__total">
+                                <div class="pro-table-cell__inner">
+                                  <div ng-bind="formattedNumber(walletState.USD.balanceAll)" class="pro-table-cell__text">–</div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="pro-table-row is-even-row w-clearfix">
+                              <div class="pro-table-cell for-wallet-state__currency">
+                                <div class="pro-table-cell__inner">
+                                  <div class="pro-table-cell__text">GBP</div>
+                                </div>
+                              </div>
+                              <div class="pro-table-cell for-wallet-state__available">
+                                <div class="pro-table-cell__inner">
+                                  <div ng-bind="formattedNumber(walletState.GBP.balanceAvailable)" class="pro-table-cell__text">–</div>
+                                </div>
+                              </div>
+                              <div class="pro-table-cell for-wallet-state__on-market">
+                                <div class="pro-table-cell__inner">
+                                  <div ng-bind="formattedNumber(walletState.GBP.balanceReserved)" class="pro-table-cell__text">–</div>
+                                </div>
+                              </div>
+                              <div class="pro-table-cell for-wallet-state__total">
+                                <div class="pro-table-cell__inner">
+                                  <div ng-bind="formattedNumber(walletState.GBP.balanceAll)" class="pro-table-cell__text">–</div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="pro-table-row w-clearfix">
+                              <div class="pro-table-cell for-wallet-state__currency">
+                                <div class="pro-table-cell__inner">
+                                  <div class="pro-table-cell__text">CHF</div>
+                                </div>
+                              </div>
+                              <div class="pro-table-cell for-wallet-state__available">
+                                <div class="pro-table-cell__inner">
+                                  <div ng-bind="formattedNumber(walletState.CHF.balanceAvailable)" class="pro-table-cell__text">–</div>
+                                </div>
+                              </div>
+                              <div class="pro-table-cell for-wallet-state__on-market">
+                                <div class="pro-table-cell__inner">
+                                  <div ng-bind="formattedNumber(walletState.CHF.balanceReserved)" class="pro-table-cell__text">–</div>
+                                </div>
+                              </div>
+                              <div class="pro-table-cell for-wallet-state__total">
+                                <div class="pro-table-cell__inner">
+                                  <div ng-bind="formattedNumber(walletState.CHF.balanceAll)" class="pro-table-cell__text">–</div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="pro-widget-wrapper">
+                  <div class="pro-card">
+                    <div class="pro-card-header w-clearfix">
+                      <div class="pro-card-header__left-side">
+                        <div class="pro-card-header__title">Kursy</div>
+                      </div>
+                      <div class="pro-card-header__right-side"></div>
+                    </div>
+                    <div class="pro-card-content">
+                      <div class="pro-card-content__inner">
+                        <div class="pro-table">
+                          <div class="pro-table-header w-clearfix">
+                            <div class="pro-table-cell for-rates__pair">
+                              <div class="pro-table-cell__inner">
+                                <div class="pro-table-header-label">Para</div>
+                              </div>
+                            </div>
+                            <div class="pro-table-cell for-rates__avg">
+                              <div class="pro-table-cell__inner">
+                                <div class="pro-table-header-label">Średni</div>
+                              </div>
+                            </div>
+                            <div class="pro-table-cell for-rates__we-sell">
+                              <div class="pro-table-cell__inner">
+                                <div class="pro-table-header-label">Kupno</div>
+                              </div>
+                            </div>
+                            <div class="pro-table-cell for-rates__we-buy">
+                              <div class="pro-table-cell__inner">
+                                <div class="pro-table-header-label">Sprzedaż</div>
+                              </div>
+                            </div>
+                            <div class="pro-table-cell for-rates__spread">
+                              <div class="pro-table-cell__inner">
+                                <div class="pro-table-header-label">Spread</div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="pro-table-content">
+                            <div class="pro-table-row is-clickable w-clearfix"
+                                 ng-click="navigation__chooseSelectedPair('EUR_PLN')"
+                                 ng-class="navigation__selectedPair==='EUR_PLN' ? 'is-selected' : '' " >
+                              <div class="pro-table-cell for-rates__pair">
+                                <div class="pro-table-cell__inner">
+                                  <div class="pro-table-cell__text">EUR / PLN</div>
+                                </div>
+                              </div>
+                              <div class="pro-table-cell for-rates__avg">
+                                <div class="pro-table-cell__inner">
+                                  <div ng-bind="formattedNumber(exchangeRates.EUR_PLN.bestOffers.forex_now, 4)" class="pro-table-cell__text">–</div>
+                                </div>
+                              </div>
+                              <div class="pro-table-cell for-rates__we-buy">
+                                <div class="pro-table-cell__inner">
+                                  <div ng-bind="formattedNumber(exchangeRates.EUR_PLN.bestOffers.bid_now, 4)" class="pro-table-cell__text">–</div>
+                                </div>
+                              </div>
+                              <div class="pro-table-cell for-rates__we-sell">
+                                <div class="pro-table-cell__inner">
+                                  <div ng-bind="formattedNumber(exchangeRates.EUR_PLN.bestOffers.ask_now, 4)" class="pro-table-cell__text">–</div>
+                                </div>
+                              </div>
+                              <div class="pro-table-cell for-rates__spread">
+                                <div class="pro-table-cell__inner">
+                                  <div ng-bind="formattedNumber(exchangeRates.EUR_PLN.bestOffers.spread_now, 4)" class="pro-table-cell__text">–</div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="pro-table-row is-even-row is-clickable w-clearfix"
+                                 ng-click="navigation__chooseSelectedPair('USD_PLN')"
+                                 ng-class="navigation__selectedPair==='USD_PLN' ? 'is-selected' : '' " >
+                              <div class="pro-table-cell for-rates__pair">
+                                <div class="pro-table-cell__inner">
+                                  <div class="pro-table-cell__text">USD / PLN</div>
+                                </div>
+                              </div>
+                              <div class="pro-table-cell for-rates__avg">
+                                <div class="pro-table-cell__inner">
+                                  <div ng-bind="formattedNumber(exchangeRates.USD_PLN.bestOffers.forex_now, 4)" class="pro-table-cell__text">–</div>
+                                </div>
+                              </div>
+                              <div class="pro-table-cell for-rates__we-buy">
+                                <div class="pro-table-cell__inner">
+                                  <div ng-bind="formattedNumber(exchangeRates.USD_PLN.bestOffers.bid_now, 4)" class="pro-table-cell__text">–</div>
+                                </div>
+                              </div>
+                              <div class="pro-table-cell for-rates__we-sell">
+                                <div class="pro-table-cell__inner">
+                                  <div ng-bind="formattedNumber(exchangeRates.USD_PLN.bestOffers.ask_now, 4)" class="pro-table-cell__text">–</div>
+                                </div>
+                              </div>
+                              <div class="pro-table-cell for-rates__spread">
+                                <div class="pro-table-cell__inner">
+                                  <div ng-bind="formattedNumber(exchangeRates.USD_PLN.bestOffers.spread_now, 4)" class="pro-table-cell__text">–</div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="pro-table-row is-clickable w-clearfix"
+                                 ng-click="navigation__chooseSelectedPair('CHF_PLN')"
+                                 ng-class="navigation__selectedPair==='CHF_PLN' ? 'is-selected' : '' " >
+                              <div class="pro-table-cell for-rates__pair">
+                                <div class="pro-table-cell__inner">
+                                  <div class="pro-table-cell__text">CHF / PLN</div>
+                                </div>
+                              </div>
+                              <div class="pro-table-cell for-rates__avg">
+                                <div class="pro-table-cell__inner">
+                                  <div ng-bind="formattedNumber(exchangeRates.CHF_PLN.bestOffers.forex_now, 4)" class="pro-table-cell__text">–</div>
+                                </div>
+                              </div>
+                              <div class="pro-table-cell for-rates__we-buy">
+                                <div class="pro-table-cell__inner">
+                                  <div ng-bind="formattedNumber(exchangeRates.CHF_PLN.bestOffers.bid_now, 4)" class="pro-table-cell__text">–</div>
+                                </div>
+                              </div>
+                              <div class="pro-table-cell for-rates__we-sell">
+                                <div class="pro-table-cell__inner">
+                                  <div ng-bind="formattedNumber(exchangeRates.CHF_PLN.bestOffers.ask_now, 4)" class="pro-table-cell__text">–</div>
+                                </div>
+                              </div>
+                              <div class="pro-table-cell for-rates__spread">
+                                <div class="pro-table-cell__inner">
+                                  <div ng-bind="formattedNumber(exchangeRates.CHF_PLN.bestOffers.spread_now, 4)" class="pro-table-cell__text">–</div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="pro-table-row is-even-row is-clickable w-clearfix"
+                                 ng-click="navigation__chooseSelectedPair('GBP_PLN')"
+                                 ng-class="navigation__selectedPair==='GBP_PLN' ? 'is-selected' : '' " >
+                              <div class="pro-table-cell for-rates__pair">
+                                <div class="pro-table-cell__inner">
+                                  <div class="pro-table-cell__text">GBP / PLN</div>
+                                </div>
+                              </div>
+                              <div class="pro-table-cell for-rates__avg">
+                                <div class="pro-table-cell__inner">
+                                  <div ng-bind="formattedNumber(exchangeRates.GBP_PLN.bestOffers.forex_now, 4)" class="pro-table-cell__text">–</div>
+                                </div>
+                              </div>
+                              <div class="pro-table-cell for-rates__we-buy">
+                                <div class="pro-table-cell__inner">
+                                  <div ng-bind="formattedNumber(exchangeRates.GBP_PLN.bestOffers.bid_now, 4)" class="pro-table-cell__text">–</div>
+                                </div>
+                              </div>
+                              <div class="pro-table-cell for-rates__we-sell">
+                                <div class="pro-table-cell__inner">
+                                  <div ng-bind="formattedNumber(exchangeRates.GBP_PLN.bestOffers.ask_now, 4)" class="pro-table-cell__text">–</div>
+                                </div>
+                              </div>
+                              <div class="pro-table-cell for-rates__spread">
+                                <div class="pro-table-cell__inner">
+                                  <div ng-bind="formattedNumber(exchangeRates.GBP_PLN.bestOffers.spread_now, 4)" class="pro-table-cell__text">–</div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="pro-table-row is-clickable w-clearfix"
+                                 ng-click="navigation__chooseSelectedPair('EUR_USD')"
+                                 ng-class="navigation__selectedPair==='EUR_USD' ? 'is-selected' : '' " >
+                              <div class="pro-table-cell for-rates__pair">
+                                <div class="pro-table-cell__inner">
+                                  <div class="pro-table-cell__text">EUR / USD</div>
+                                </div>
+                              </div>
+                              <div class="pro-table-cell for-rates__avg">
+                                <div class="pro-table-cell__inner">
+                                  <div ng-bind="formattedNumber(exchangeRates.EUR_USD.bestOffers.forex_now, 4)" class="pro-table-cell__text">–</div>
+                                </div>
+                              </div>
+                              <div class="pro-table-cell for-rates__we-buy">
+                                <div class="pro-table-cell__inner">
+                                  <div ng-bind="formattedNumber(exchangeRates.EUR_USD.bestOffers.bid_now, 4)" class="pro-table-cell__text">–</div>
+                                </div>
+                              </div>
+                              <div class="pro-table-cell for-rates__we-sell">
+                                <div class="pro-table-cell__inner">
+                                  <div ng-bind="formattedNumber(exchangeRates.EUR_USD.bestOffers.ask_now, 4)" class="pro-table-cell__text">–</div>
+                                </div>
+                              </div>
+                              <div class="pro-table-cell for-rates__spread">
+                                <div class="pro-table-cell__inner">
+                                  <div ng-bind="formattedNumber(exchangeRates.EUR_USD.bestOffers.spread_now, 4)" class="pro-table-cell__text">–</div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="pro-table-row is-even-row is-clickable w-clearfix"
+                                 ng-click="navigation__chooseSelectedPair('EUR_GBP')"
+                                 ng-class="navigation__selectedPair==='EUR_GBP' ? 'is-selected' : '' " >
+                              <div class="pro-table-cell for-rates__pair">
+                                <div class="pro-table-cell__inner">
+                                  <div class="pro-table-cell__text">EUR / GBP</div>
+                                </div>
+                              </div>
+                              <div class="pro-table-cell for-rates__avg">
+                                <div class="pro-table-cell__inner">
+                                  <div ng-bind="formattedNumber(exchangeRates.EUR_GBP.bestOffers.forex_now, 4)" class="pro-table-cell__text">–</div>
+                                </div>
+                              </div>
+                              <div class="pro-table-cell for-rates__we-buy">
+                                <div class="pro-table-cell__inner">
+                                  <div ng-bind="formattedNumber(exchangeRates.EUR_GBP.bestOffers.bid_now, 4)" class="pro-table-cell__text">–</div>
+                                </div>
+                              </div>
+                              <div class="pro-table-cell for-rates__we-sell">
+                                <div class="pro-table-cell__inner">
+                                  <div ng-bind="formattedNumber(exchangeRates.EUR_GBP.bestOffers.ask_now, 4)" class="pro-table-cell__text">–</div>
+                                </div>
+                              </div>
+                              <div class="pro-table-cell for-rates__spread">
+                                <div class="pro-table-cell__inner">
+                                  <div ng-bind="formattedNumber(exchangeRates.EUR_GBP.bestOffers.spread_now, 4)" class="pro-table-cell__text">–</div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="pro-table-row is-clickable w-clearfix"
+                              ng-click="navigation__chooseSelectedPair('EUR_CHF')"
+                              ng-class="navigation__selectedPair==='EUR_CHF' ? 'is-selected' : '' " >
+                              <div class="pro-table-cell for-rates__pair">
+                                <div class="pro-table-cell__inner">
+                                  <div class="pro-table-cell__text">EUR / CHF</div>
+                                </div>
+                              </div>
+                              <div class="pro-table-cell for-rates__avg">
+                                <div class="pro-table-cell__inner">
+                                  <div ng-bind="formattedNumber(exchangeRates.EUR_CHF.bestOffers.forex_now, 4)" class="pro-table-cell__text">–</div>
+                                </div>
+                              </div>
+                              <div class="pro-table-cell for-rates__we-buy">
+                                <div class="pro-table-cell__inner">
+                                  <div ng-bind="formattedNumber(exchangeRates.EUR_CHF.bestOffers.bid_now, 4)" class="pro-table-cell__text">–</div>
+                                </div>
+                              </div>
+                              <div class="pro-table-cell for-rates__we-sell">
+                                <div class="pro-table-cell__inner">
+                                  <div ng-bind="formattedNumber(exchangeRates.EUR_CHF.bestOffers.ask_now, 4)" class="pro-table-cell__text">–</div>
+                                </div>
+                              </div>
+                              <div class="pro-table-cell for-rates__spread">
+                                <div class="pro-table-cell__inner">
+                                  <div ng-bind="formattedNumber(exchangeRates.EUR_CHF.bestOffers.spread_now, 4)" class="pro-table-cell__text">–</div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="pro-table-row is-even-row is-clickable w-clearfix"
+                              ng-click="navigation__chooseSelectedPair('GBP_USD')"
+                              ng-class="navigation__selectedPair==='GBP_USD' ? 'is-selected' : '' " >
+                              <div class="pro-table-cell for-rates__pair">
+                                <div class="pro-table-cell__inner">
+                                  <div class="pro-table-cell__text">GBP / USD</div>
+                                </div>
+                              </div>
+                              <div class="pro-table-cell for-rates__avg">
+                                <div class="pro-table-cell__inner">
+                                  <div ng-bind="formattedNumber(exchangeRates.GBP_USD.bestOffers.forex_now, 4)" class="pro-table-cell__text">–</div>
+                                </div>
+                              </div>
+                              <div class="pro-table-cell for-rates__we-buy">
+                                <div class="pro-table-cell__inner">
+                                  <div ng-bind="formattedNumber(exchangeRates.GBP_USD.bestOffers.bid_now, 4)" class="pro-table-cell__text">–</div>
+                                </div>
+                              </div>
+                              <div class="pro-table-cell for-rates__we-sell">
+                                <div class="pro-table-cell__inner">
+                                  <div ng-bind="formattedNumber(exchangeRates.GBP_USD.bestOffers.ask_now, 4)" class="pro-table-cell__text">–</div>
+                                </div>
+                              </div>
+                              <div class="pro-table-cell for-rates__spread">
+                                <div class="pro-table-cell__inner">
+                                  <div ng-bind="formattedNumber(exchangeRates.GBP_USD.bestOffers.spread_now, 4)" class="pro-table-cell__text">–</div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="pro-table-row is-clickable w-clearfix"
+                              ng-click="navigation__chooseSelectedPair('USD_CHF')"
+                              ng-class="navigation__selectedPair==='USD_CHF' ? 'is-selected' : '' " >
+                              <div class="pro-table-cell for-rates__pair">
+                                <div class="pro-table-cell__inner">
+                                  <div class="pro-table-cell__text">USD / CHF</div>
+                                </div>
+                              </div>
+                              <div class="pro-table-cell for-rates__avg">
+                                <div class="pro-table-cell__inner">
+                                  <div ng-bind="formattedNumber(exchangeRates.USD_CHF.bestOffers.forex_now, 4)" class="pro-table-cell__text">–</div>
+                                </div>
+                              </div>
+                              <div class="pro-table-cell for-rates__we-buy">
+                                <div class="pro-table-cell__inner">
+                                  <div ng-bind="formattedNumber(exchangeRates.USD_CHF.bestOffers.bid_now, 4)" class="pro-table-cell__text">–</div>
+                                </div>
+                              </div>
+                              <div class="pro-table-cell for-rates__we-sell">
+                                <div class="pro-table-cell__inner">
+                                  <div ng-bind="formattedNumber(exchangeRates.USD_CHF.bestOffers.ask_now, 4)" class="pro-table-cell__text">–</div>
+                                </div>
+                              </div>
+                              <div class="pro-table-cell for-rates__spread">
+                                <div class="pro-table-cell__inner">
+                                  <div ng-bind="formattedNumber(exchangeRates.USD_CHF.bestOffers.spread_now, 4)" class="pro-table-cell__text">–</div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="pro-table-row is-even-row is-clickable w-clearfix"
+                              ng-click="navigation__chooseSelectedPair('GBP_CHF')"
+                              ng-class="navigation__selectedPair==='GBP_CHF' ? 'is-selected' : '' " >
+                              <div class="pro-table-cell for-rates__pair">
+                                <div class="pro-table-cell__inner">
+                                  <div class="pro-table-cell__text">GBP / CHF</div>
+                                </div>
+                              </div>
+                              <div class="pro-table-cell for-rates__avg">
+                                <div class="pro-table-cell__inner">
+                                  <div ng-bind="formattedNumber(exchangeRates.GBP_CHF.bestOffers.forex_now, 4)" class="pro-table-cell__text">–</div>
+                                </div>
+                              </div>
+                              <div class="pro-table-cell for-rates__we-buy">
+                                <div class="pro-table-cell__inner">
+                                  <div ng-bind="formattedNumber(exchangeRates.GBP_CHF.bestOffers.bid_now, 4)" class="pro-table-cell__text">–</div>
+                                </div>
+                              </div>
+                              <div class="pro-table-cell for-rates__we-sell">
+                                <div class="pro-table-cell__inner">
+                                  <div ng-bind="formattedNumber(exchangeRates.GBP_CHF.bestOffers.ask_now, 4)" class="pro-table-cell__text">–</div>
+                                </div>
+                              </div>
+                              <div class="pro-table-cell for-rates__spread">
+                                <div class="pro-table-cell__inner">
+                                  <div ng-bind="formattedNumber(exchangeRates.GBP_CHF.bestOffers.spread_now, 4)" class="pro-table-cell__text">–</div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--authorization config -->
+    <div ng-if="navigation__authorisationModalIsShown" class="pro-authorization-modal" style="position: fixed; top: 0; right: 0; bottom: 0; left: 0; background-color: rgba(0, 0, 0, 0.5); z-index: 2;">
+      <div class="modal-wrapper">
+        <div class="modal-wrapper__inner">
+          <div class="modal-window">
+            <div class="modal-window__content is-wider">
+              <div class="modal-window__close-icon" ng-click="navigation__hideAuthorisationModal()">
+                <div><span class="font-icon modal-window__fonticon-close-icon"></span></div>
+              </div>
+              <div class="modal-window__header">
+                <div class="modal-window__title">
+                  <h4>KONFIGURACJA</h4>
+                </div>
+              </div>
+              <div class="modal-window__body">
+                <div class="bem-card-row in-modal">
+                  <div>Aby skorzystać z tego panelu musisz posiadać klucz API. Nie wiesz o co chodzi? Skontaktuj się z Biurem Obsługi Klienta</div>
+                  <div class="generic-form__fieldset">
+                    <label for="apikey">ID / Apikey:</label>
+                    <input type="password" class="bem-text-input" ng-model="apiCredentials.apiKey">
+                  </div>
+                  <div class="generic-form__fieldset">
+                    <label for="secret">Kod Secret:</label>
+                    <input type="password" class="bem-text-input" ng-model="apiCredentials.secret">
+                  </div>
+                </div>
+              </div>
+              <div class="modal-window__footer w-clearfix">
+                <div class="modal-window__footer-buttons on-left">
+                  <div ng-click="navigation__hideAuthorisationModal(); refreshData();" class="bem-button">Zamknij</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="initial-load-overlay" js-selector="initial-load-overlay">
+      <div class="initial-load-overlay__spinner">
+        <div animation-spin="true" class="bem-spinner">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div title="Czas do kolejnego odświeżenia" class="pro-progress-bar__wrapper">
+    <div class="pro-progress-bar__inner-bar" js-selector="pro-progress-bar-inner-bar"></div>
+  </div>
+
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jsSHA/2.3.1/sha256.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js"></script>
+  <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E=" crossorigin="anonymous"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/ramda/0.25.0/ramda.min.js"></script>
+  <script type="text/javascript" src="flashing-notifications.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.21.0/moment.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/node-uuid/1.4.8/uuid.min.js"></script>
+  <script type="text/javascript" src="moment.custom.locale.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.6/angular.js"></script>
+  <script type="text/javascript" src="main.js"></script>
+</body>
+
+</html>
