@@ -1,0 +1,15 @@
+{
+    "env": {
+        "browser": true,
+        "es6": true
+    },
+    "rules": {
+        "no-new": "off",
+        "new-cap": "off"
+    },
+    "globals": {
+        "Vue": true,
+        "axios": true,
+        "jsSHA": true
+    }
+}
