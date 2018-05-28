@@ -5,6 +5,14 @@
 #
 # Program runs on CHF_PLN pair, always tries to sell 0.10 CHF at price 0.0001 better than others, but not closer than 0.0040 from FX.
 #
+# Program steps:
+# Program runs a loop every 5 secs with following steps:
+# 1. Gets current FX rate from Walutomat website
+# 2. Gets current best offer at selected currency pair
+# 3. Gets current list of user's own active offers
+# 4. Checks if any of users own offers is best offer. If not, then places new offer, at price 1 pips better, but no closer than 40 pips to FX rate
+# 5. Cancels all other users own offers that are not best.
+#
 # Keep in mind that this is just an example program, you are using it at your own risk.
 #
 # Usage:
