@@ -11,12 +11,13 @@
 # APIKEY=myapikey SECRET=myapisecret python example-always-best-price.py
 #
 
+import hashlib
+import hmac
+import os
 import requests
 import time
-import hmac
-import hashlib
 import uuid
-import os
+
 
 # Program parameters
 pair = 'CHF_PLN'
@@ -39,49 +40,59 @@ def main():
     loopStep()
     time.sleep(5)
 
+
 def loopStep():
   forexRate = getForexRate(pair)
   bestPrice = getBestSellPrice(pair, volumeCurrency == pair[:3])
   delta = -1 if volumeCurrency == pair[:3] else 1 # figure out if we're minimizing or maximizing the price
 
   orders = request('/api/v1/market/orders/')
-  existingOrders = filter(lambda order: order.get('market') == pair and order.get('buySell') == 'SELL' and order.get('volumeCurrency') == volumeCurrency, orders)
-  ordersAtNotBestPrice = filter(lambda order: bestPrice + delta * float(order.get('price')) < 0, existingOrders)
-  ordersAtBestPrice = filter(lambda order: bestPrice + delta * float(order.get('price')) == 0, existingOrders)
+  existingOrders = filter(lambda order: 
+    order['market'] == pair 
+    and order['buySell'] == 'SELL' 
+    and order['volumeCurrency'] == volumeCurrency, orders)
+  ordersAtNotBestPrice = filter(lambda order: bestPrice + delta * float(order['price']) < 0, existingOrders)
+  ordersAtBestPrice = filter(lambda order: bestPrice + delta * float(order['price']) == 0, existingOrders)
   
-  print pair+' SELL '+volumeCurrency+' forex: '+str(forexRate)+', current best: '+str(bestPrice)+' has '+str(len(ordersAtBestPrice))+' best offers, cancelling '+str(len(ordersAtNotBestPrice))+' offers'
+  print('{0} SELL {1}, forex: {2}, current best: {3}, orders at best price: {4}, orders to cancel: {5}'
+    .format(pair, volumeCurrency, forexRate, bestPrice, len(ordersAtBestPrice), len(ordersAtNotBestPrice)))
 
   if not ordersAtBestPrice:
     placementPrice = float(bestPrice) + delta * pricePips
     if abs(forexRate - placementPrice) < priceLimitPips:
-      print 'not placing, closer than '+str(priceLimitPips)+' to forex'
-    print 'placing order '+str(placementPrice)
-    placement = 'pair='+pair+'&price='+str(placementPrice)+'&buySell=SELL&volume='+volume+'&volumeCurrency='+volumeCurrency+'&otherCurrency='+otherCurrency
-    request(method='POST', uri='/api/v1/market/orders?submitId='+str(uuid.uuid4())+'&'+placement)
+      print('not placing, closer than {0} to forex'.format(priceLimitPips))
+    print('placing order {0}'.format(placementPrice))
+    placement = 'pair={0}&price={1}&buySell=SELL&volume={2}&volumeCurrency={3}&otherCurrency={4}'.format(
+      pair, placementPrice, volume, volumeCurrency, otherCurrency)
+    request(method='POST', uri='/api/v1/market/orders?submitId={0}&{1}'.format(uuid.uuid4(), placement))
   
   for order in ordersAtNotBestPrice:
-    print 'cancelling order '+order.get('price')
-    request(method='POST', uri='/api/v1/market/orders/close/'+order.get('orderId'))
+    print('cancelling order {0}'.format(order['price']))
+    request(method='POST', uri='/api/v1/market/orders/close/{0}'.format(order['orderId']))
+
 
 def getBestSellPrice(pair, isSellingPrimary):
-  bestOffers = requests.get('https://api.walutomat.pl/api/v1/public/market/orderbook/'+pair).json()
-  bestSellPrice = float(bestOffers.get('asks')[0].get('price'))
-  bestBuyPrice = float(bestOffers.get('bids')[0].get('price'))
+  bestOffers = requests.get('https://api.walutomat.pl/api/v1/public/market/orderbook/{0}'.format(pair)).json()
+  bestSellPrice = float(bestOffers['asks'][0]['price'])
+  bestBuyPrice = float(bestOffers['bids'][0]['price'])
   return bestSellPrice if isSellingPrimary else bestBuyPrice
 
+
 def getForexRate(pair):
-  r = requests.get('https://user.walutomat.pl/api/public/marketBrief/'+pair)
-  return float(r.json().get("bestOffers").get("forex_now"));
+  r = requests.get('https://user.walutomat.pl/api/public/marketBrief/{0}'.format(pair))
+  return float(r.json()['bestOffers']['forex_now'])
+
 
 def request(uri, method='GET'):
-  ts = str(int(time.time()*1000))
+  ts = str(int(time.time() * 1000))
   sign = hmac.new(secret, msg=uri+ts, digestmod=hashlib.sha256).hexdigest()
   headers = {
     'X-API-KEY': apikey,
     'X-API-NONCE': ts,
     'X-API-SIGNATURE': sign
   }
-  r = requests.request(method=method, url='https://api.walutomat.pl'+uri, headers=headers)
+  r = requests.request(method=method, url='https://api.walutomat.pl' + uri, headers=headers)
   return r.json()
+
 
 main()
