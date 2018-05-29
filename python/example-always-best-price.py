@@ -44,6 +44,8 @@ secret = os.environ['SECRET']
 if not apikey or not secret:
   raise ValueError('APIKEY and/or SECRET is missing')
 
+FOURPLACES = decimal.Decimal('0.0001')
+
 def main():
   while True:
     loopStep()
@@ -72,7 +74,7 @@ def loopStep():
       print('not placing, closer than {0} to forex'.format(priceLimitPips))
     print('placing order {0}'.format(placementPrice))
     placement = 'pair={0}&price={1}&buySell=SELL&volume={2}&volumeCurrency={3}&otherCurrency={4}'.format(
-      pair, placementPrice, volume, volumeCurrency, otherCurrency)
+      pair, placementPrice.quantize(FOURPLACES), volume, volumeCurrency, otherCurrency)
     request(method='POST', uri='/api/v1/market/orders?submitId={0}&{1}'.format(uuid.uuid4(), placement))
   
   for order in ordersAtNotBestPrice:
@@ -89,7 +91,7 @@ def getBestSellPrice(pair, isSellingPrimary):
 
 def getForexRate(pair):
   r = requests.get('https://user.walutomat.pl/api/public/marketBrief/{0}'.format(pair))
-  return decimal.Decimal(r.json()['bestOffers']['forex_now'])
+  return decimal.Decimal(r.json()['bestOffers']['forex_now']).quantize(FOURPLACES)
 
 
 def request(uri, method='GET'):
@@ -101,7 +103,7 @@ def request(uri, method='GET'):
     'X-API-SIGNATURE': sign
   }
   r = requests.request(method=method, url='https://api.walutomat.pl' + uri, headers=headers)
-  if r.status_code != 200:
+  if r.status_code >= 300:
     raise RuntimeError(r.text)
   return r.json()
 
