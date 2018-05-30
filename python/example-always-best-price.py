@@ -19,7 +19,7 @@
 # APIKEY=myapikey SECRET=myapisecret python example-always-best-price.py
 #
 
-import decimal
+from decimal import Decimal
 import hashlib
 import hmac
 import os
@@ -33,8 +33,8 @@ pair = 'CHF_PLN'
 volume = '0.10'
 volumeCurrency = 'CHF'
 otherCurrency = 'PLN'
-pricePips = decimal.Decimal('0.0001')
-priceLimitPips = decimal.Decimal('0.0040')
+pricePips = Decimal('0.0001')
+priceLimitPips = Decimal('0.0040')
 
 
 # Credentials
@@ -44,7 +44,7 @@ secret = os.environ['SECRET']
 if not apikey or not secret:
   raise ValueError('APIKEY and/or SECRET is missing')
 
-FOURPLACES = decimal.Decimal('0.0001')
+FOURPLACES = Decimal('0.0001')
 
 def main():
   while True:
@@ -55,15 +55,15 @@ def main():
 def loopStep():
   forexRate = getForexRate(pair)
   bestPrice = getBestSellPrice(pair, volumeCurrency == pair[:3])
-  delta = decimal.Decimal(-1 if volumeCurrency == pair[:3] else 1) # figure out if we're minimizing or maximizing the price
+  delta = Decimal(-1 if volumeCurrency == pair[:3] else 1) # figure out if we're minimizing or maximizing the price
 
   orders = request('/api/v1/market/orders/')
   existingOrders = filter(lambda order: 
     order['market'] == pair 
     and order['buySell'] == 'SELL' 
     and order['volumeCurrency'] == volumeCurrency, orders)
-  ordersAtNotBestPrice = filter(lambda order: bestPrice + delta * decimal.Decimal(order['price']) < 0, existingOrders)
-  ordersAtBestPrice = filter(lambda order: bestPrice + delta * decimal.Decimal(order['price']) == 0, existingOrders)
+  ordersAtNotBestPrice = filter(lambda order: bestPrice + delta * Decimal(order['price']) < 0, existingOrders)
+  ordersAtBestPrice = filter(lambda order: bestPrice + delta * Decimal(order['price']) == 0, existingOrders)
   
   print('{0} SELL {1}, forex: {2}, current best: {3}, orders at best price: {4}, orders to cancel: {5}'
     .format(pair, volumeCurrency, forexRate, bestPrice, len(ordersAtBestPrice), len(ordersAtNotBestPrice)))
@@ -84,14 +84,14 @@ def loopStep():
 
 def getBestSellPrice(pair, isSellingPrimary):
   bestOffers = requests.get('https://api.walutomat.pl/api/v1/public/market/orderbook/{0}'.format(pair)).json()
-  bestSellPrice = decimal.Decimal(bestOffers['asks'][0]['price'])
-  bestBuyPrice = decimal.Decimal(bestOffers['bids'][0]['price'])
+  bestSellPrice = Decimal(bestOffers['asks'][0]['price'])
+  bestBuyPrice = Decimal(bestOffers['bids'][0]['price'])
   return bestSellPrice if isSellingPrimary else bestBuyPrice
 
 
 def getForexRate(pair):
   r = requests.get('https://user.walutomat.pl/api/public/marketBrief/{0}'.format(pair))
-  return decimal.Decimal(r.json()['bestOffers']['forex_now']).quantize(FOURPLACES)
+  return Decimal(r.json()['bestOffers']['forex_now']).quantize(FOURPLACES)
 
 
 def request(uri, method='GET'):
