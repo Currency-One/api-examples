@@ -36,7 +36,15 @@ echo "\n\nMy balance:\n" . $res->getBody();
 
 
 # Check my balance
-$uri = '/api/v1/market/orders?submitId='.Uuid::uuid4().'&pair=EUR_PLN&price=4.231&buySell=BUY&volume=1.00&volumeCurrency=EUR&otherCurrency=PLN';
+$uri = '/api/v1/market/orders?' . http_build_query([
+    'submitId' => (string)Uuid::uuid4(),
+    'pair' => 'EUR_PLN',
+    'price' => '4.231', 
+    'buySell' => 'BUY',
+    'volume' => '1.00',
+    'volumeCurrency' => 'EUR',
+    'otherCurrency' => 'PLN'
+]);
 $ts = round(microtime(true) * 1000);
 $sign = hash_hmac("sha256", $uri.$ts, $secret);
 $headers = [
