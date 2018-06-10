@@ -15,7 +15,7 @@ public class Example
     public static final String SECRET = System.getProperty("secret");
 
     public static void main( String[] args ) throws Exception {
-            System.out.println("Current best offers");
+            System.out.println("Current order book");
             System.out.println(Example.getOrderbook());
             System.out.println("\nMy balance");
             System.out.println(Example.getBalance());
@@ -46,7 +46,7 @@ public class Example
     public static String makeUnsignedRequest(String uri) throws IOException {
         URL url = new URL("https://api.walutomat.pl" + uri);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        return connectionResponseToString(connection);
+        return responseBody(connection);
     }
 
     public static String makeSignedRequest(String method, String uri) throws Exception {
@@ -59,34 +59,29 @@ public class Example
         connection.setRequestProperty("X-API-KEY", APIKEY);
         connection.setRequestProperty("X-API-NONCE", ts.toString());
         connection.setRequestProperty("X-API-SIGNATURE", signature);
-        return connectionResponseToString(connection);
+        return responseBody(connection);
     }
 
-    public static String connectionResponseToString(HttpURLConnection connection) throws IOException {
+    public static String responseBody(HttpURLConnection connection) throws IOException {
         try (InputStream is = connection.getInputStream()) {
             return inputStreamToString(is); 
         } catch (IOException e) {
             try (InputStream is = connection.getErrorStream()) {
-                throw new IllegalArgumentException(inputStreamToString(is));
+                throw new RuntimeException(inputStreamToString(is));
             }
         }
     }
 
     public static String inputStreamToString(InputStream is) {
-        java.util.Scanner s = new java.util.Scanner(is, "UTF8").useDelimiter("\\A");
+        java.util.Scanner s = new java.util.Scanner(is, "UTF-8").useDelimiter("\\A");
         return s.hasNext() ? s.next() : "";
     }
 
     public static String encode(String key, String data) throws Exception {
-        try {
-            Mac sha256_HMAC = Mac.getInstance("HmacSHA256");
-            SecretKeySpec secret_key = new SecretKeySpec(key.getBytes("UTF-8"), "HmacSHA256");
-            sha256_HMAC.init(secret_key);
-
-            return bytesToHex(sha256_HMAC.doFinal(data.getBytes("UTF-8")));
-        } catch (UnsupportedEncodingException ex) {
-            return null;
-        }
+        Mac sha256_HMAC = Mac.getInstance("HmacSHA256");
+        SecretKeySpec secret_key = new SecretKeySpec(key.getBytes("UTF-8"), "HmacSHA256");
+        sha256_HMAC.init(secret_key);
+        return bytesToHex(sha256_HMAC.doFinal(data.getBytes("UTF-8")));
     }
 
     public static String bytesToHex(byte[] bytes) {
