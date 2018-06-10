@@ -11,8 +11,8 @@ import javax.crypto.spec.SecretKeySpec;
 
 public class Example 
 {
-    public static String APIKEY = System.getProperty("apiKey");
-    public static String SECRET = System.getProperty("secret");
+    public static final String APIKEY = System.getProperty("apiKey");
+    public static final String SECRET = System.getProperty("secret");
 
     public static void main( String[] args ) throws Exception {
             System.out.println("Current best offers");
@@ -33,8 +33,14 @@ public class Example
 
     public static String placeOrder() throws Exception {
         String uuid = UUID.randomUUID().toString();
-        return makeSignedRequest("POST", "/api/v1/market/orders?submitId=" 
-            + uuid + "&pair=EUR_PLN&price=4.231&buySell=BUY&volume=1.00&volumeCurrency=EUR&otherCurrency=PLN");
+        return makeSignedRequest("POST", "/api/v1/market/orders"
+            + "?submitId=" + uuid 
+            + "&pair=EUR_PLN"
+            + "&price=4.231"
+            + "&buySell=BUY"
+            + "&volume=1.00"
+            + "&volumeCurrency=EUR"
+            + "&otherCurrency=PLN");
     }
 
     public static String makeUnsignedRequest(String uri) throws IOException {
@@ -57,13 +63,17 @@ public class Example
     }
 
     public static String connectionResponseToString(HttpURLConnection connection) throws IOException {
-        InputStream is;
-        if (200 <= connection.getResponseCode() && connection.getResponseCode() <= 299) {
-            is = connection.getInputStream(); 
-        } else {
-            is = connection.getErrorStream();
+        try (InputStream is = connection.getInputStream()) {
+            return inputStreamToString(is); 
+        } catch (IOException e) {
+            try (InputStream is = connection.getErrorStream()) {
+                throw new IllegalArgumentException(inputStreamToString(is));
+            }
         }
-        java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
+    }
+
+    public static String inputStreamToString(InputStream is) {
+        java.util.Scanner s = new java.util.Scanner(is, "UTF8").useDelimiter("\\A");
         return s.hasNext() ? s.next() : "";
     }
 
