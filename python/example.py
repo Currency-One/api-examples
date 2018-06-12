@@ -1,55 +1,60 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
+import hashlib
+import hmac
 import requests
 import time
-import hmac
-import hashlib
 import uuid
 
+
+API_BASE = 'https://api.walutomat.pl'
+
+
 # Credentials
-apikey=None
-secret=None
+api_key = None
+secret = None
+assert api_key is not None
+assert secret is not None
 
 # Get current offers
-print 'Current best offers:'
-r = requests.get('https://api.walutomat.pl/api/v1/public/market/orderbook/EUR_PLN')
-print r.text
+print('Current best offers:')
+print(requests.get(f'{API_BASE}/api/v1/public/market/orderbook/EUR_PLN').text)
 
-if not apikey or not secret:
-  raise Error('apikey and/or secret is required')
 
 # Check my balance
 uri = '/api/v1/account/balances'
-ts = str(int(time.time()*1000))
-sign = hmac.new(secret, msg=uri+ts, digestmod=hashlib.sha256).hexdigest()
+ts = str(int(time.time() * 1000))
+sign = hmac.new(secret, msg=uri + ts, digestmod=hashlib.sha256).hexdigest()
 headers = {
-  'X-API-KEY': apikey,
+  'X-API-KEY': api_key,
   'X-API-NONCE': ts,
   'X-API-SIGNATURE': sign
 }
-r = requests.get('https://api.walutomat.pl'+uri, headers=headers)
-print 'My balance: ' + r.text
+response = requests.get(f'{API_BASE}{uri}', headers=headers).text
+print(f'My balance: {response}')
+
 
 # Place order
-uri = '/api/v1/market/orders?submitId='+str(uuid.uuid4())+'&pair=EUR_PLN&price=4.231&buySell=BUY&volume=1.00&volumeCurrency=EUR&otherCurrency=PLN'
-ts = str(int(time.time()*1000))
-sign = hmac.new(secret, msg=uri+ts, digestmod=hashlib.sha256).hexdigest()
+uri = '/api/v1/market/orders?submitId={}&pair=EUR_PLN&price=4.231&buySell=BUY&volume=1.00&volumeCurrency=EUR&otherCurrency=PLN'.format(uuid.uuid4())
+ts = str(int(time.time() * 1000))
+sign = hmac.new(secret, msg=uri + ts, digestmod=hashlib.sha256).hexdigest()
 headers = {
-  'X-API-KEY': apikey,
+  'X-API-KEY': api_key,
   'X-API-NONCE': ts,
   'X-API-SIGNATURE': sign
 }
-r = requests.post('https://api.walutomat.pl'+uri, headers=headers)
-print 'Placing an order: ' + r.text
+response = requests.post(f'{API_BASE}{uri}', headers=headers).text
+print(f'Placing an order: {response}')
+
 
 # Withdrawing an order
 uri = '/api/v1/market/orders/close/5137bdb7-acde-41ff-aeb2-0908af0bd3d9'
-ts = str(int(time.time()*1000))
-sign = hmac.new(secret, msg=uri+ts, digestmod=hashlib.sha256).hexdigest()
+ts = str(int(time.time() * 1000))
+sign = hmac.new(secret, msg=uri + ts, digestmod=hashlib.sha256).hexdigest()
 headers = {
-  'X-API-KEY': apikey,
+  'X-API-KEY': api_key,
   'X-API-NONCE': ts,
   'X-API-SIGNATURE': sign
 }
-r = requests.post('https://api.walutomat.pl'+uri, headers=headers)
-print 'Withdraw an order: ' + r.text
+response = requests.post(f'{API_BASE}{uri}', headers=headers).text
+print(f'Withdraw an order: {response}')
