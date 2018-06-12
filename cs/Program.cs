@@ -8,26 +8,26 @@ namespace WalutomatApiExample
 {
     class Program
     {
-		static String pubkey = Environment.GetEnvironmentVariable("APIKEY");
-		static String secret = Environment.GetEnvironmentVariable("SECRET");
-        
+        static String pubkey = Environment.GetEnvironmentVariable("APIKEY");
+        static String secret = Environment.GetEnvironmentVariable("SECRET");
+
         static void Main(string[] args)
         {
             RunAsync().GetAwaiter().GetResult();
         }
 
-		static async Task RunAsync()
-		{
+        static async Task RunAsync()
+        {
             Console.WriteLine("Current orderbook:\n{0}", await GetOrderbook());
             Console.WriteLine("My balance:\n{0}", await GetBalance());
             Console.WriteLine("Placing an order:\n{0}", await PlaceOrder());
 
             Console.ReadLine(); // keep applicaion window open until someone reads it's output
-		}
+        }
 
         static async Task<String> GetOrderbook()
         {
-            return await RequestAsync("/api/v1/public/market/orderbook/EUR_PLN");	
+            return await RequestAsync("/api/v1/public/market/orderbook/EUR_PLN");
         }
 
         static async Task<String> GetBalance()
@@ -70,20 +70,20 @@ namespace WalutomatApiExample
             byte[] hash = hmac.ComputeHash(docBytes);
             string signature = BitConverter.ToString(hash).Replace("-", "").ToLower();
 
-			HttpClient client = new HttpClient();
-			client.BaseAddress = new Uri("https://api.walutomat.pl/");
-			client.DefaultRequestHeaders.Accept.Clear();
-			client.DefaultRequestHeaders.Add("X-API-KEY", pubkey);
-			client.DefaultRequestHeaders.Add("X-API-NONCE", ts);
-			client.DefaultRequestHeaders.Add("X-API-SIGNATURE", signature);
+            HttpClient client = new HttpClient();
+            client.BaseAddress = new Uri("https://api.walutomat.pl/");
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Add("X-API-KEY", pubkey);
+            client.DefaultRequestHeaders.Add("X-API-NONCE", ts);
+            client.DefaultRequestHeaders.Add("X-API-SIGNATURE", signature);
 
             HttpRequestMessage requestMessage = new HttpRequestMessage(method, uri);
             HttpResponseMessage response = await client.SendAsync(requestMessage);
-			if (response.IsSuccessStatusCode)
-			{
-				return await response.Content.ReadAsStringAsync();
-			}
-			throw new InvalidOperationException(await response.Content.ReadAsStringAsync());
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadAsStringAsync();
+            }
+            throw new InvalidOperationException(await response.Content.ReadAsStringAsync());
         }
 
     }
