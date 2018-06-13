@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 #
 # This example program uses walutomat API to watch a currency pair on Walutomat market and keep placing best offer. 
 # It uses price limit to avoid placing offers too close to Forex rate. It also automatically cancels all not best offers.
@@ -31,81 +31,85 @@ import uuid
 # Program parameters
 pair = 'CHF_PLN'
 volume = '0.10'
-volumeCurrency = 'CHF'
-otherCurrency = 'PLN'
-pricePips = Decimal('0.0001')
-priceLimitPips = Decimal('0.0040')
+volume_currency = 'CHF'
+other_currency = 'PLN'
+price_pips = Decimal('0.0001')
+price_limit_pips = Decimal('0.0040')
 
 
 # Credentials
-apikey = os.environ['APIKEY']
+api_key = os.environ['APIKEY']
 secret = os.environ['SECRET']
+assert api_key
+assert secret
 
-if not apikey or not secret:
-  raise ValueError('APIKEY and/or SECRET is missing')
 
 FOURPLACES = Decimal('0.0001')
 
+
 def main():
-  while True:
-    loopStep()
-    time.sleep(5)
+    while True:
+        loop_step()
+        time.sleep(5)
 
 
-def loopStep():
-  forexRate = getForexRate(pair)
-  bestPrice = getBestSellPrice(pair, volumeCurrency == pair[:3])
-  delta = Decimal(-1 if volumeCurrency == pair[:3] else 1) # figure out if we're minimizing or maximizing the price
+def loop_step():
+    forex_rate = get_forex_rate(pair)
+    best_price = get_best_sell_price(pair, volume_currency == pair[:3])
+    delta = Decimal(-1 if volume_currency == pair[:3] else 1)  # figure out if we're minimizing or maximizing the price
+    orders = request('/api/v1/market/orders/')
+    existing_orders = [
+        o for o in orders
+        if (
+            o['market'] == pair and
+            o['buySell'] == 'SELL' and
+            o['volumeCurrency'] == volume_currency
+        )
+    ]
+    orders_at_not_best_price = [o for o in existing_orders if best_price + delta * Decimal(o['price']) < 0]
+    orders_at_best_price = [o for o in existing_orders if best_price + delta * Decimal(o['price']) == 0]
+    print('{} SELL {}, forex: {}, current best: {}, orders at best price: {}, orders to cancel: {}'.format(
+        pair, volume_currency, forex_rate, best_price, len(orders_at_best_price), len(orders_at_not_best_price)))
 
-  orders = request('/api/v1/market/orders/')
-  existingOrders = filter(lambda order: 
-    order['market'] == pair 
-    and order['buySell'] == 'SELL' 
-    and order['volumeCurrency'] == volumeCurrency, orders)
-  ordersAtNotBestPrice = filter(lambda order: bestPrice + delta * Decimal(order['price']) < 0, existingOrders)
-  ordersAtBestPrice = filter(lambda order: bestPrice + delta * Decimal(order['price']) == 0, existingOrders)
-  
-  print('{0} SELL {1}, forex: {2}, current best: {3}, orders at best price: {4}, orders to cancel: {5}'
-    .format(pair, volumeCurrency, forexRate, bestPrice, len(ordersAtBestPrice), len(ordersAtNotBestPrice)))
+    if not orders_at_best_price:
+        placement_price = best_price + delta * price_pips
+        if abs(forex_rate - placement_price) < price_limit_pips:
+            print('not placing, closer than {} to forex'.format(price_limit_pips))
+        print('placing order {}'.format(placement_price))
+        placement = 'pair={}&price={}&buySell=SELL&volume={}&volumeCurrency={}&otherCurrency={}'.format(
+            pair, placement_price.quantize(FOURPLACES), volume, volume_currency, other_currency)
+        requests.post(method='POST', uri='/api/v1/market/orders?submitId={}&{}'.format(uuid.uuid4(), placement))
 
-  if not ordersAtBestPrice:
-    placementPrice = bestPrice + delta * pricePips
-    if abs(forexRate - placementPrice) < priceLimitPips:
-      print('not placing, closer than {0} to forex'.format(priceLimitPips))
-    print('placing order {0}'.format(placementPrice))
-    placement = 'pair={0}&price={1}&buySell=SELL&volume={2}&volumeCurrency={3}&otherCurrency={4}'.format(
-      pair, placementPrice.quantize(FOURPLACES), volume, volumeCurrency, otherCurrency)
-    request(method='POST', uri='/api/v1/market/orders?submitId={0}&{1}'.format(uuid.uuid4(), placement))
-  
-  for order in ordersAtNotBestPrice:
-    print('cancelling order {0}'.format(order['price']))
-    request(method='POST', uri='/api/v1/market/orders/close/{0}'.format(order['orderId']))
-
-
-def getBestSellPrice(pair, isSellingPrimary):
-  bestOffers = requests.get('https://api.walutomat.pl/api/v1/public/market/orderbook/{0}'.format(pair)).json()
-  bestSellPrice = Decimal(bestOffers['asks'][0]['price'])
-  bestBuyPrice = Decimal(bestOffers['bids'][0]['price'])
-  return bestSellPrice if isSellingPrimary else bestBuyPrice
+    for order in orders_at_not_best_price:
+        print('cancelling order {}'.format(order['price']))
+        request(method='POST', uri='/api/v1/market/orders/close/{0}'.format(order['orderId']))
 
 
-def getForexRate(pair):
-  r = requests.get('https://user.walutomat.pl/api/public/marketBrief/{0}'.format(pair))
-  return Decimal(r.json()['bestOffers']['forex_now']).quantize(FOURPLACES)
+def get_best_sell_price(pair, is_selling_primary):
+    best_offers = requests.get('https://api.walutomat.pl/api/v1/public/market/orderbook/{0}'.format(pair)).json()
+    best_sell_price = Decimal(best_offers['asks'][0]['price'])
+    best_buy_price = Decimal(best_offers['bids'][0]['price'])
+    return best_sell_price if is_selling_primary else best_buy_price
+
+
+def get_forex_rate(pair):
+    r = requests.get('https://user.walutomat.pl/api/public/marketBrief/{0}'.format(pair))
+    return Decimal(r.json()['bestOffers']['forex_now']).quantize(FOURPLACES)
 
 
 def request(uri, method='GET'):
-  ts = str(int(time.time() * 1000))
-  sign = hmac.new(secret, msg=uri+ts, digestmod=hashlib.sha256).hexdigest()
-  headers = {
-    'X-API-KEY': apikey,
-    'X-API-NONCE': ts,
-    'X-API-SIGNATURE': sign
-  }
-  r = requests.request(method=method, url='https://api.walutomat.pl' + uri, headers=headers)
-  if r.status_code >= 300:
-    raise RuntimeError(r.text)
-  return r.json()
+    ts = str(int(time.time() * 1000))
+    sign = hmac.new(secret, msg=uri + ts, digestmod=hashlib.sha256).hexdigest()
+    headers = {
+        'X-API-KEY': api_key,
+        'X-API-NONCE': ts,
+        'X-API-SIGNATURE': sign
+    }
+    r = requests.request(method=method, url='https://api.walutomat.pl' + uri, headers=headers)
+    if r.status_code >= 300:
+        raise RuntimeError(r.text)
+    return r.json()
 
 
-main()
+if __name__ == '__main__':
+    main()
