@@ -75,10 +75,11 @@ def loop_step():
         placement_price = best_price + delta * price_pips
         if abs(forex_rate - placement_price) < price_limit_pips:
             print('not placing, closer than {} to forex'.format(price_limit_pips))
-        print('placing order {}'.format(placement_price))
-        placement = 'pair={}&price={}&buySell=SELL&volume={}&volumeCurrency={}&otherCurrency={}'.format(
-            pair, placement_price.quantize(FOURPLACES), volume, volume_currency, other_currency)
-        requests.post(method='POST', uri='/api/v1/market/orders?submitId={}&{}'.format(uuid.uuid4(), placement))
+        else:
+            print('placing order {}'.format(placement_price))
+            placement = 'pair={}&price={}&buySell=SELL&volume={}&volumeCurrency={}&otherCurrency={}'.format(
+                pair, placement_price.quantize(FOURPLACES), volume, volume_currency, other_currency)
+            request(method='POST', uri='/api/v1/market/orders?submitId={}&{}'.format(uuid.uuid4(), placement))
 
     for order in orders_at_not_best_price:
         print('cancelling order {}'.format(order['price']))
