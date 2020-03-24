@@ -3,3 +3,5 @@ php/composer.phar
 *.class
 cs/bin
 cs/obj
+api_key
+*.key
