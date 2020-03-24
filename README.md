@@ -17,7 +17,7 @@ They demonstrate working connection signing and aim to be as minimal as possible
 - /nodejs - JavaScript in browser example, that uses Node.js to proxy requests to Walutomat API
 - /nodejs_simple - JavaScript/Node.js sample script
 - /php - PHP sample script
-- /python/example.py, Python sample script
+- /python/API-v1/example.py, Python sample script
 - /vba - Visual Basic for Applications script
 
 Sample applications
@@ -26,5 +26,5 @@ Sample applications
 Examples of non-trivial functionality that can be built on top of Walutomat API.
 
 - /javascript-angular-dashboard - Example dashboard written using Walutomat API, requires Node.js 
-- /python/example-always-best-price.py - sample bot that keeps placing the best offer on selected currency pair
+- /python/API-v1/example-always-best-price.py - sample bot that keeps placing the best offer on selected currency pair
 

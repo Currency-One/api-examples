@@ -15,14 +15,14 @@ URI = '/api/v2.0.0/account/balances'
 private_key = crypto.load_privatekey(crypto.FILETYPE_PEM, open('./private.key').read())
 
 ts = datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
-dataToSign = f'{ts}{URI}'
+data_to_sign = f'{ts}{URI}'
 
-signature = crypto.sign(private_key, dataToSign, "sha256") 
-signatureBase64 = base64.b64encode(signature)
+signature = crypto.sign(private_key, data_to_sign, "sha256") 
+signature_base64 = base64.b64encode(signature)
 
 headers = {
   'X-API-Key': API_KEY,
-  'X-API-Signature': signatureBase64,
+  'X-API-Signature': signature_base64,
   'X-API-Timestamp': ts
 }
 
