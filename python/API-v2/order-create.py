@@ -16,7 +16,7 @@ URI = '/api/v2.0.0/market_fx/orders'
 
 private_key = crypto.load_privatekey(crypto.FILETYPE_PEM, open('./private.key').read())
 
-ts = datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+ts = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
 submit_id = uuid.uuid4()
 
 body = {
@@ -32,7 +32,7 @@ body = {
 urlencoded = urllib.parse.urlencode(body)
 data_to_sign = f'{ts}{URI}{urlencoded}'
 
-signature = crypto.sign(private_key, data_to_sign, "sha256") 
+signature = crypto.sign(private_key, data_to_sign, 'sha256') 
 signature_base64 = base64.b64encode(signature)
 
 headers = {
