@@ -1,5 +1,7 @@
 # Python API v2 examples
 
+The examples below are compliant with [**Walutomat API Documentation**](https://api.walutomat.pl/v2.0.0/ )
+
 ## Requirements
 
 1. In order to execute the scripts, they first need to be **executable**. To make them executable, type the command below in the current directory:
@@ -30,6 +32,8 @@ When the API KEY is generated, copy its value to **./api_key** and save the file
 ## Examples
 
 ### Return wallet balance
+[**Documentation**](https://api.walutomat.pl/v2.0.0/#operation/getBalances)
+
 ```bash
 $ python3 wallet-get.py
 ```
@@ -39,6 +43,8 @@ Your current wallet balance is: {"success":true,"result":[{"currency":"PLN","bal
 ```
 
 ### Create order
+[**Documentation**](https://api.walutomat.pl/v2.0.0/#operation/newOrder)
+
 ```bash
 $ python3 order-create.py
 ```
@@ -48,6 +54,7 @@ Created order: {"success":true,"duplicate":false,"result":{"orderId":"c9bd63ef-7
 ```
 
 ### Withdraw order
+[**Documentation**](https://api.walutomat.pl/v2.0.0/#operation/cancelOrder)
 
 To withdraw an order, it needs to be created beforehand. Please use the **create-order** API for that. Once orderId is returned, edit **./order-withdraw.py** file as shown below:
 
@@ -72,6 +79,8 @@ Withdrawn order: {"success":true,"errors":[],"result":{"orderId":"c9bd63ef-7988-
 ```
 
 ### Return active orders
+[**Documentation**](https://api.walutomat.pl/v2.0.0/#operation/findActiveOrders)
+
 ```bash
 $ python3 offers-get.py
 ```
