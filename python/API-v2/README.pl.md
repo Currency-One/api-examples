@@ -1,6 +1,6 @@
 # Python API v2 examples
 
-The examples below are compliant with [**Walutomat API Documentation**](https://api.walutomat.pl/v2.0.0/ )
+The examples below are compliant with [**Walutomat API v2 Documentation**](https://api.walutomat.pl/v2.0.0/ )
 
 ## Requirements
 
@@ -32,7 +32,7 @@ When the API KEY is generated, copy its value to **./api_key** and save the file
 ## Examples
 
 ### Return wallet balance
-[**Documentation**](https://api.walutomat.pl/v2.0.0/#operation/getBalances)
+[**Wallet balance documentation**](https://api.walutomat.pl/v2.0.0/#operation/getBalances)
 
 ```bash
 $ python3 wallet-get.py
@@ -59,7 +59,7 @@ Your current wallet balance is: {
 ```
 
 ### Create order
-[**Documentation**](https://api.walutomat.pl/v2.0.0/#operation/newOrder)
+[**Create order documentation**](https://api.walutomat.pl/v2.0.0/#operation/newOrder)
 
 ```bash
 $ python3 order-create.py
@@ -77,7 +77,7 @@ Created order:
 ```
 
 ### Withdraw order
-[**Documentation**](https://api.walutomat.pl/v2.0.0/#operation/cancelOrder)
+[**Withdraw order documentation**](https://api.walutomat.pl/v2.0.0/#operation/cancelOrder)
 
 To withdraw an order, it needs to be created beforehand. Please use the **create-order** API for that. Once orderId is returned, edit **./order-withdraw.py** file as shown below:
 
@@ -126,7 +126,7 @@ Withdrawn order:
 ```
 
 ### Return active orders
-[**Documentation**](https://api.walutomat.pl/v2.0.0/#operation/findActiveOrders)
+[**Active orders documentation**](https://api.walutomat.pl/v2.0.0/#operation/findActiveOrders)
 
 ```bash
 $ python3 offers-get.py
