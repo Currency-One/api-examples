@@ -39,7 +39,23 @@ $ python3 wallet-get.py
 ```
 Output:
 ```
-Your current wallet balance is: {"success":true,"result":[{"currency":"PLN","balanceTotal":"555555481997.00","balanceAvailable":"555555481231.24","balanceReserved":"765.76"},{"currency":"EUR","balanceTotal":"2055030.46","balanceAvailable":"2055030.46","balanceReserved":"0.00"}]}
+Your current wallet balance is: {
+   "success":true,
+   "result":[
+      {
+         "currency":"PLN",
+         "balanceTotal":"555555481997.00",
+         "balanceAvailable":"555555481231.24",
+         "balanceReserved":"765.76"
+      },
+      {
+         "currency":"EUR",
+         "balanceTotal":"2055030.46",
+         "balanceAvailable":"2055030.46",
+         "balanceReserved":"0.00"
+      }
+   ]
+}
 ```
 
 ### Create order
@@ -50,7 +66,14 @@ $ python3 order-create.py
 ```
 Output:
 ```
-Created order: {"success":true,"duplicate":false,"result":{"orderId":"c9bd63ef-7988-4ea3-9d26-b3d0f5b2b3f9"}}
+Created order:
+{
+   "success":true,
+   "duplicate":false,
+   "result":{
+      "orderId":"c9bd63ef-7988-4ea3-9d26-b3d0f5b2b3f9"
+   }
+}
 ```
 
 ### Withdraw order
@@ -75,7 +98,31 @@ $ python3 order-withdraw.py
 ```
 Output:
 ```
-Withdrawn order: {"success":true,"errors":[],"result":{"orderId":"c9bd63ef-7988-4ea3-9d26-b3d0f5b2b3f9","submitId":"ffaeb678-7ef8-4850-ba1b-7ecebf844710","submitTs":"2020-03-24T09:31:53.285691Z","updateTs":"2020-03-24T09:33:32.230450Z","status":"CLOSED","completion":0,"currencyPair":"EURPLN","buySell":"BUY","volume":"90.00","volumeCurrency":"EUR","limitPrice":"4.2456","soldAmount":"0.00","soldCurrency":"PLN","boughtAmount":"0.00","boughtCurrency":"EUR","commissionRate":"0.0020"}}
+Withdrawn order: 
+{
+   "success":true,
+   "errors":[
+
+   ],
+   "result":{
+      "orderId":"c9bd63ef-7988-4ea3-9d26-b3d0f5b2b3f9",
+      "submitId":"ffaeb678-7ef8-4850-ba1b-7ecebf844710",
+      "submitTs":"2020-03-24T09:31:53.285691Z",
+      "updateTs":"2020-03-24T09:33:32.230450Z",
+      "status":"CLOSED",
+      "completion":0,
+      "currencyPair":"EURPLN",
+      "buySell":"BUY",
+      "volume":"90.00",
+      "volumeCurrency":"EUR",
+      "limitPrice":"4.2456",
+      "soldAmount":"0.00",
+      "soldCurrency":"PLN",
+      "boughtAmount":"0.00",
+      "boughtCurrency":"EUR",
+      "commissionRate":"0.0020"
+   }
+}
 ```
 
 ### Return active orders
@@ -86,5 +133,46 @@ $ python3 offers-get.py
 ```
 Output:
 ```
-List of active offers: {"success":true,"result":[{"orderId":"070620ac-a8df-41f9-81fb-23364485cb3a","submitId":"3ab310db-9ce4-49d6-b8c4-5ed7875bca95","submitTs":"2020-03-23T15:09:16.039163Z","updateTs":"2020-03-23T15:09:16.201646Z","status":"ACTIVE","completion":0,"currencyPair":"EURPLN","buySell":"BUY","volume":"90.00","volumeCurrency":"EUR","limitPrice":"4.2456","soldAmount":"0.00","soldCurrency":"PLN","boughtAmount":"0.00","boughtCurrency":"EUR","commissionRate":"0.0020"},{"orderId":"0dd866a6-51dd-429b-9e85-f9d202b173d2","submitId":"7663343e-918f-475f-99c0-9e0a8443df11","submitTs":"2020-03-23T14:30:04.905401Z","updateTs":"2020-03-23T14:30:05.074236Z","status":"ACTIVE","completion":0,"currencyPair":"EURPLN","buySell":"BUY","volume":"90.00","volumeCurrency":"EUR","limitPrice":"4.2456","soldAmount":"0.00","soldCurrency":"PLN","boughtAmount":"0.00","boughtCurrency":"EUR","commissionRate":"0.0020"}]}
+List of active offers: 
+{
+   "success":true,
+   "result":[
+      {
+         "orderId":"070620ac-a8df-41f9-81fb-23364485cb3a",
+         "submitId":"3ab310db-9ce4-49d6-b8c4-5ed7875bca95",
+         "submitTs":"2020-03-23T15:09:16.039163Z",
+         "updateTs":"2020-03-23T15:09:16.201646Z",
+         "status":"ACTIVE",
+         "completion":0,
+         "currencyPair":"EURPLN",
+         "buySell":"BUY",
+         "volume":"90.00",
+         "volumeCurrency":"EUR",
+         "limitPrice":"4.2456",
+         "soldAmount":"0.00",
+         "soldCurrency":"PLN",
+         "boughtAmount":"0.00",
+         "boughtCurrency":"EUR",
+         "commissionRate":"0.0020"
+      },
+      {
+         "orderId":"0dd866a6-51dd-429b-9e85-f9d202b173d2",
+         "submitId":"7663343e-918f-475f-99c0-9e0a8443df11",
+         "submitTs":"2020-03-23T14:30:04.905401Z",
+         "updateTs":"2020-03-23T14:30:05.074236Z",
+         "status":"ACTIVE",
+         "completion":0,
+         "currencyPair":"EURPLN",
+         "buySell":"BUY",
+         "volume":"90.00",
+         "volumeCurrency":"EUR",
+         "limitPrice":"4.2456",
+         "soldAmount":"0.00",
+         "soldCurrency":"PLN",
+         "boughtAmount":"0.00",
+         "boughtCurrency":"EUR",
+         "commissionRate":"0.0020"
+      }
+   ]
+}
 ```
