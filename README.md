@@ -2,7 +2,7 @@ API Examples
 ============
 
 Code samples that showcase Walutomat API usage in different programming languages:
-To learn more about Walutomat API visit http://api.walutomat.pl/
+To learn more about Walutomat API visit https://api.walutomat.pl/v2.0.0/
 
 
 "Hello world" examples
@@ -25,6 +25,6 @@ Sample applications
 
 Examples of non-trivial functionality that can be built on top of Walutomat API.
 
-- /javascript-angular-dashboard - Example dashboard written using Walutomat API, requires Node.js 
+- /javascript-angular-dashboard - Example dashboard written using Walutomat API, requires Node.js
 - /python/API-v1/example-always-best-price.py - sample bot that keeps placing the best offer on selected currency pair
 
