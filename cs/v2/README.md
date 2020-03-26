@@ -1,4 +1,4 @@
-# .Net API v2 examples
+# C# API v2 examples
 
 The examples below are compliant with [**Walutomat API v2 Documentation**](https://api.walutomat.pl/v2.0.0/ )
 
