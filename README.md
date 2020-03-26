@@ -12,7 +12,7 @@ All following examples feature similar functionality: print current offers, prin
 They demonstrate working connection signing and aim to be as minimal as possible for ease of understanding.
 
 - /bash/example.sh - Bash script
-- /cs - C# sample project
+- /cs/API-v1/ - C# sample project
 - /java - Java sample class
 - /nodejs - JavaScript in browser example, that uses Node.js to proxy requests to Walutomat API
 - /nodejs_simple - JavaScript/Node.js sample script
