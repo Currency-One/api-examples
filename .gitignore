@@ -5,5 +5,5 @@ cs/bin
 cs/obj
 api_key
 *.key
-*bin*
+*cs/**/bin
 *cs/**/obj
