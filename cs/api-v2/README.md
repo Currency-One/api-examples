@@ -12,7 +12,7 @@ $ openssl rsa -in ./private.key -pubout -out ./public.key
 
 ### API KEY
 Once the RSA Key pair is generated, the API KEY can be obtained in your **Walutomat** account. Make sure to use the **public.key**. The API KEY can be seen **only once**.
-![api_key_eng](./images/api_key.png)
+![api_key_eng](../../images/api_key.png)
 
 When the API KEY is generated, copy its value to **./api_key** and save the file.
 
@@ -22,7 +22,7 @@ When the API KEY is generated, copy its value to **./api_key** and save the file
 ### [Return wallet balance](https://api.walutomat.pl/v2.0.0/#operation/getBalances)
 
 ```bash
-$ dotnet run wallet
+$ dotnet run wallet-balance
 ```
 Output:
 ```
