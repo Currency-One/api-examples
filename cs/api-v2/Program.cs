@@ -28,8 +28,12 @@ namespace WalutomatApiV2Example
                 case "order-create":
                     CreateOrder();
                     break;
+                case "account-history":
+                    GetAccountHistory();
+                    break;
                 case "order-withdraw":
-                    if (args.Length == 2) {
+                    if (args.Length == 2)
+                    {
                         WithdrawOrder(args[1]);
                         return;
                     }
@@ -128,6 +132,22 @@ namespace WalutomatApiV2Example
             Console.WriteLine(res.Content.ReadAsStringAsync().Result);
         }
 
+        static void GetAccountHistory()
+        {
+            string now = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ");
+            string endpoint = "/api/v2.0.0/account/history";
+            string stringToSign = now + endpoint;
+
+            var http = new HttpClient();
+            var req = new HttpRequestMessage(HttpMethod.Get, host + endpoint);
+            req.Headers.Add("X-API-Key", GetApiKey());
+            req.Headers.Add("X-API-Signature", Sign(stringToSign));
+            req.Headers.Add("X-API-Timestamp", now);
+
+            var res = http.SendAsync(req).Result;
+            Console.WriteLine(res.Content.ReadAsStringAsync().Result);
+        }
+
         static string Sign(string stringToSign)
         {
             var privateKey = File.ReadAllText("private.key");
@@ -152,7 +172,7 @@ namespace WalutomatApiV2Example
 
         static void WriteDefaultMessage()
         {
-            Console.WriteLine("Run the program with any of these arguments: \n* orders-active, \n* wallet-balance, \n* order-create, \n* order-withdraw {orderId}");
+            Console.WriteLine("Run the program with any of these arguments: \n* orders-active, \n* wallet-balance, \n* order-create, \n* account-history, \n* order-withdraw {orderId}");
         }
     }
 }

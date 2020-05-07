@@ -144,3 +144,219 @@ Output:
    ]
 }
 ```
+### [Return account history](https://api.walutomat.pl/v2.0.0/#operation/getBalances)
+
+```
+{
+   "success":true,
+   "result":[
+      {
+         "historyItemId":14,
+         "transactionId":"3bdd4079-eb8c-441e-81b6-1c5406b285c6",
+         "ts":"2020-05-07T10:32:13.549Z",
+         "operationAmount":"-1500.00 PLN",
+         "balanceAfter":"12409.17 PLN",
+         "operationDetails":[
+            {
+               "key":"destinationAccount",
+               "value":"PL90116010741762535309877248"
+            },
+            {
+               "key":"ownerName",
+               "value":"John Wick"
+            },
+            {
+               "key":"ownerAddress",
+               "value":"Engestroma 20/4, 60-571 Poznań PL"
+            },
+            {
+               "key":"country",
+               "value":"PL"
+            },
+            {
+               "key":"transferTitle",
+               "value":"ID 3bdd4079 Przelew z Walutomatu"
+            }
+         ],
+         "currency":"PLN",
+         "operationType":"PAYOUT",
+         "operationDetailedType":"PAYOUT",
+         "submitId":"653d79df-f17a-4961-a356-dd7387df7f98"
+      },
+      {
+         "historyItemId":13,
+         "transactionId":"0616b0f8-9609-42ac-94d8-98ab5f0b7e72",
+         "ts":"2020-05-07T09:54:50.537Z",
+         "operationAmount":"150.00 PLN",
+         "balanceAfter":"13909.17 PLN",
+         "operationDetails":[
+            {
+               "key":"ownerName",
+               "value":"John Doe"
+            },
+            {
+               "key":"ownerAddress",
+               "value":"Kochanowskiego 13, 02-152 Warszawa PL"
+            },
+            {
+               "key":"country",
+               "value":"PL"
+            },
+            {
+               "key":"transferTitle",
+               "value":"ID 0616b0f8 Przelew od John Wick (via Walutomat.pl)"
+            }
+         ],
+         "currency":"PLN",
+         "correctingEntry":true,
+         "operationType":"PAYOUT",
+         "operationDetailedType":"THIRD_PARTY_PAYOUT",
+         "submitId":"54ea21c0-f436-49db-b682-909c681c7c45"
+      },
+      {
+         "historyItemId":12,
+         "transactionId":"0616b0f8-9609-42ac-94d8-98ab5f0b7e72",
+         "ts":"2020-05-07T09:53:15.466Z",
+         "operationAmount":"-150.00 PLN",
+         "balanceAfter":"13759.17 PLN",
+         "operationDetails":[
+            {
+               "key":"ownerName",
+               "value":"John Doe"
+            },
+            {
+               "key":"ownerAddress",
+               "value":"Kochanowskiego 13, 02-152 Warszawa PL"
+            },
+            {
+               "key":"country",
+               "value":"PL"
+            },
+            {
+               "key":"transferTitle",
+               "value":"ID 0616b0f8 Przelew od John Wick (via Walutomat.pl)"
+            }
+         ],
+         "currency":"PLN",
+         "operationType":"PAYOUT",
+         "operationDetailedType":"THIRD_PARTY_PAYOUT",
+         "submitId":"54ea21c0-f436-49db-b682-909c681c7c45"
+      },
+      {
+         "historyItemId":11,
+         "transactionId":"adc4eedf-c888-498b-84cb-2b30a3c5209f/f3b5e8be-c453-483f-9ebc-607a7adf1ba3",
+         "ts":"2020-05-07T09:51:47.056Z",
+         "operationAmount":"-1090.83 PLN",
+         "balanceAfter":"13909.17 PLN",
+         "operationDetails":[
+            {
+               "key":"orderId",
+               "value":"adc4eedf-c888-498b-84cb-2b30a3c5209f"
+            },
+            {
+               "key":"currencyPair",
+               "value":"EUR_PLN"
+            },
+            {
+               "key":"buySell",
+               "value":"BUY"
+            },
+            {
+               "key":"orderVolume",
+               "value":"250.00 EUR"
+            }
+         ],
+         "currency":"PLN",
+         "operationType":"MARKET_FX",
+         "operationDetailedType":"MARKET_FX",
+         "submitId":"03ed4904-9652-4f75-901f-b237bb596901"
+      },
+      {
+         "historyItemId":10,
+         "transactionId":"adc4eedf-c888-498b-84cb-2b30a3c5209f/f3b5e8be-c453-483f-9ebc-607a7adf1ba3",
+         "ts":"2020-05-07T09:51:47.056Z",
+         "operationAmount":"-0.50 EUR",
+         "balanceAfter":"250.00 EUR",
+         "operationDetails":[
+            {
+               "key":"orderId",
+               "value":"adc4eedf-c888-498b-84cb-2b30a3c5209f"
+            },
+            {
+               "key":"currencyPair",
+               "value":"EUR_PLN"
+            },
+            {
+               "key":"buySell",
+               "value":"BUY"
+            },
+            {
+               "key":"orderVolume",
+               "value":"250.00 EUR"
+            }
+         ],
+         "currency":"EUR",
+         "operationType":"COMMISSION",
+         "operationDetailedType":"MARKET_FX_FEE",
+         "submitId":"03ed4904-9652-4f75-901f-b237bb596901"
+      },
+      {
+         "historyItemId":9,
+         "transactionId":"adc4eedf-c888-498b-84cb-2b30a3c5209f/f3b5e8be-c453-483f-9ebc-607a7adf1ba3",
+         "ts":"2020-05-07T09:51:47.056Z",
+         "operationAmount":"250.50 EUR",
+         "balanceAfter":"250.50 EUR",
+         "operationDetails":[
+            {
+               "key":"orderId",
+               "value":"adc4eedf-c888-498b-84cb-2b30a3c5209f"
+            },
+            {
+               "key":"currencyPair",
+               "value":"EUR_PLN"
+            },
+            {
+               "key":"buySell",
+               "value":"BUY"
+            },
+            {
+               "key":"orderVolume",
+               "value":"250.00 EUR"
+            }
+         ],
+         "currency":"EUR",
+         "operationType":"MARKET_FX",
+         "operationDetailedType":"MARKET_FX",
+         "submitId":"03ed4904-9652-4f75-901f-b237bb596901"
+      },
+      {
+         "historyItemId":7,
+         "transactionId":"payIn1588845034645",
+         "ts":"2020-05-07T09:50:59.069Z",
+         "operationAmount":"15000.00 PLN",
+         "balanceAfter":"15000.00 PLN",
+         "operationDetails":[
+            {
+               "key":"transferTitle",
+               "value":"WX24512483WX"
+            },
+            {
+               "key":"senderName",
+               "value":"string"
+            },
+            {
+               "key":"sourceAccount",
+               "value":"PL90116010741762535309877248"
+            },
+            {
+               "key":"destinationAccount",
+               "value":"PL69249000050000460013105533"
+            }
+         ],
+         "currency":"PLN",
+         "operationType":"PAYIN",
+         "operationDetailedType":"PAYIN"
+      }
+   ]
+}
+```
