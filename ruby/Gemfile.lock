@@ -1,0 +1,21 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    base64 (0.1.0)
+    json (2.3.1)
+    openssl (2.2.0)
+    securerandom (0.1.0)
+    uri (0.10.0)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  base64
+  json
+  openssl
+  securerandom
+  uri
+
+BUNDLED WITH
+   2.1.4
