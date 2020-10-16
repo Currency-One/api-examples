@@ -5,8 +5,8 @@ You will find the official **Walutomat API v2 Documentation** [here](https://api
 
 The following examples show basic functionality of: priting **current offers**, fetching customer's **wallet balance**, **placing** and **withdrawing** an **order**.
 
-#### Click here to see [**C# examples**](./cs/api-v2/README.md)
-#### Click here to see [**Python examples**](./python/api-v2/README.md)
+#### Click here to see [**C# examples**](./cs/README.md)
+#### Click here to see [**Python examples**](./python/README.md)
 
 ---
 
@@ -31,5 +31,5 @@ Sample applications
 Examples of non-trivial functionality that can be built on top of Walutomat API.
 
 - /javascript-angular-dashboard - Example dashboard written using Walutomat API, requires Node.js 
-- /python/api-v1/example-always-best-price.py - sample bot that keeps placing the best offer on selected currency pair
+- /python/example-always-best-price.py - sample bot that keeps placing the best offer on selected currency pair
 
