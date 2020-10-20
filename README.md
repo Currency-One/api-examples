@@ -7,6 +7,7 @@ The following examples show basic functionality of: priting **current offers**, 
 
 #### Click here to see [**C# examples**](./cs/README.md)
 #### Click here to see [**Python examples**](./python/README.md)
+#### Click here to see [**Ruby examples**](./ruby/README.md)
 
 ---
 

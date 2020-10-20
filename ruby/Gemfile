@@ -1,0 +1,7 @@
+source "https://rubygems.org"
+
+gem "securerandom"
+gem "uri"
+gem "json"
+gem "openssl"
+gem "base64"
