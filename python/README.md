@@ -24,7 +24,7 @@ $ openssl rsa -in ./private.key -pubout -out ./public.key
 
 ### API KEY
 Once the RSA Key pair is generated, the API KEY can be obtained in your **Walutomat** account. Make sure to use the **public.key**. 
-![api_key_eng](../../images/api_key.png)
+![api_key_eng](../images/api_key.png)
 
 When the API KEY is generated, copy its value to **./api_key** and save the file.
 
